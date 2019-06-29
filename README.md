@@ -1,2 +1,2 @@
 # VRGymRoomGen
-Prototype Code for Automatic Room Generation fro VRGym
+Prototype Code for Automatic Scene Generation fro VRGym
