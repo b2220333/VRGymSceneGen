@@ -13,9 +13,9 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #endif
 #define SCENEGENUNREAL_Shapenet_generated_h
 
-#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_RPC_WRAPPERS
-#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_RPC_WRAPPERS_NO_PURE_DECLS
-#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_INCLASS_NO_PURE_DECLS \
+#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_RPC_WRAPPERS
+#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_RPC_WRAPPERS_NO_PURE_DECLS
+#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesAShapenet(); \
 	friend struct Z_Construct_UClass_AShapenet_Statics; \
@@ -24,7 +24,7 @@ public: \
 	DECLARE_SERIALIZER(AShapenet)
 
 
-#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_INCLASS \
+#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_INCLASS \
 private: \
 	static void StaticRegisterNativesAShapenet(); \
 	friend struct Z_Construct_UClass_AShapenet_Statics; \
@@ -33,7 +33,7 @@ public: \
 	DECLARE_SERIALIZER(AShapenet)
 
 
-#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_STANDARD_CONSTRUCTORS \
+#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_STANDARD_CONSTRUCTORS \
 	/** Standard constructor, called after all reflected properties have been initialized */ \
 	NO_API AShapenet(const FObjectInitializer& ObjectInitializer); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(AShapenet) \
@@ -46,7 +46,7 @@ private: \
 public:
 
 
-#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_ENHANCED_CONSTRUCTORS \
+#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	NO_API AShapenet(AShapenet&&); \
@@ -57,26 +57,26 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(AShapenet); \
 	DEFINE_DEFAULT_CONSTRUCTOR_CALL(AShapenet)
 
 
-#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_PRIVATE_PROPERTY_OFFSET
-#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_9_PROLOG
-#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_GENERATED_BODY_LEGACY \
+#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_PRIVATE_PROPERTY_OFFSET
+#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_11_PROLOG
+#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_GENERATED_BODY_LEGACY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_PRIVATE_PROPERTY_OFFSET \
-	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_RPC_WRAPPERS \
-	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_INCLASS \
-	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_STANDARD_CONSTRUCTORS \
+	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_PRIVATE_PROPERTY_OFFSET \
+	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_RPC_WRAPPERS \
+	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_INCLASS \
+	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_STANDARD_CONSTRUCTORS \
 public: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 
-#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_GENERATED_BODY \
+#define SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_PRIVATE_PROPERTY_OFFSET \
-	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_RPC_WRAPPERS_NO_PURE_DECLS \
-	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_INCLASS_NO_PURE_DECLS \
-	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_12_ENHANCED_CONSTRUCTORS \
+	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_PRIVATE_PROPERTY_OFFSET \
+	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_RPC_WRAPPERS_NO_PURE_DECLS \
+	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_INCLASS_NO_PURE_DECLS \
+	SceneGenUnreal_Source_SceneGenUnreal_Shapenet_h_14_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 

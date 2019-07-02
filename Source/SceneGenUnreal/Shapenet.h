@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Shapenet.generated.h"
 
+
+
 UCLASS()
 class SCENEGENUNREAL_API AShapenet : public AActor
 {
@@ -22,6 +24,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
 
 	
 	

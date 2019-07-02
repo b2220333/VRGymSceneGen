@@ -1,55 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <None Include="..\..\SceneGenUnreal.uproject" />
-    <Filter Include="Source">
-      <UniqueIdentifier>{63940F58-ED8F-4A0A-BF0A-770EF3920BBE}</UniqueIdentifier>
-    </Filter>
-    <None Include="..\..\Source\SceneGenUnreal.Target.cs">
-      <Filter>Source</Filter>
-    </None>
-    <None Include="..\..\Source\SceneGenUnrealEditor.Target.cs">
-      <Filter>Source</Filter>
-    </None>
-    <Filter Include="Config">
-      <UniqueIdentifier>{4C759D62-D7D0-435D-84BF-F730CEE9B41C}</UniqueIdentifier>
-    </Filter>
-    <None Include="..\..\Config\DefaultEditor.ini">
-      <Filter>Config</Filter>
-    </None>
-    <None Include="..\..\Config\DefaultEngine.ini">
-      <Filter>Config</Filter>
-    </None>
-    <None Include="..\..\Config\DefaultGame.ini">
-      <Filter>Config</Filter>
-    </None>
-    <Filter Include="Source\SceneGenUnreal">
-      <UniqueIdentifier>{E771A605-63F3-44E8-B95C-7BFDA7F6F894}</UniqueIdentifier>
-    </Filter>
-    <None Include="..\..\Source\SceneGenUnreal\SceneGenUnreal.Build.cs">
-      <Filter>Source\SceneGenUnreal</Filter>
-    </None>
-    <ClCompile Include="..\..\Source\SceneGenUnreal\SceneGenUnreal.cpp">
-      <Filter>Source\SceneGenUnreal</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\Source\SceneGenUnreal\SceneGenUnreal.h">
-      <Filter>Source\SceneGenUnreal</Filter>
-    </ClInclude>
-    <ClCompile Include="..\..\Source\SceneGenUnreal\SceneGenUnrealGameModeBase.cpp">
-      <Filter>Source\SceneGenUnreal</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\Source\SceneGenUnreal\SceneGenUnrealGameModeBase.h">
-      <Filter>Source\SceneGenUnreal</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\Source\SceneGenUnreal\Shapenet.h">
-      <Filter>Source\SceneGenUnreal</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\Source\SceneGenUnreal\Shapenet.cpp">
-      <Filter>Source\SceneGenUnreal</Filter>
-    </ClCompile>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\SceneGenUnreal.uproject" />
+		<Filter Include="Source">
+			<UniqueIdentifier>{6CC2912A-06B5-4427-9471-D300FC82AB46}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Source\SceneGenUnreal.Target.cs">
+			<Filter>Source</Filter>
+		</None >
+		<None Include="..\..\Source\SceneGenUnrealEditor.Target.cs">
+			<Filter>Source</Filter>
+		</None >
+		<Filter Include="Config">
+			<UniqueIdentifier>{D8DD6BEA-084C-4900-A329-03B59C3FF01B}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Config\DefaultEditor.ini">
+			<Filter>Config</Filter>
+		</None >
+		<None Include="..\..\Config\DefaultEngine.ini">
+			<Filter>Config</Filter>
+		</None >
+		<None Include="..\..\Config\DefaultGame.ini">
+			<Filter>Config</Filter>
+		</None >
+		<Filter Include="Source\SceneGenUnreal">
+			<UniqueIdentifier>{7C1802A5-711D-48DD-B9AF-485B0DF2D380}</UniqueIdentifier>
+		</Filter>
+		<None Include="..\..\Source\SceneGenUnreal\SceneGenUnreal.Build.cs">
+			<Filter>Source\SceneGenUnreal</Filter>
+		</None >
+		<ClCompile Include="..\..\Source\SceneGenUnreal\SceneGenUnreal.cpp">
+			<Filter>Source\SceneGenUnreal</Filter>
+		</ClCompile >
+		<ClInclude Include="..\..\Source\SceneGenUnreal\SceneGenUnreal.h">
+			<Filter>Source\SceneGenUnreal</Filter>
+		</ClInclude >
+		<ClCompile Include="..\..\Source\SceneGenUnreal\SceneGenUnrealGameModeBase.cpp">
+			<Filter>Source\SceneGenUnreal</Filter>
+		</ClCompile >
+		<ClInclude Include="..\..\Source\SceneGenUnreal\SceneGenUnrealGameModeBase.h">
+			<Filter>Source\SceneGenUnreal</Filter>
+		</ClInclude >
+		<ClCompile Include="..\..\Source\SceneGenUnreal\Shapenet.cpp">
+			<Filter>Source\SceneGenUnreal</Filter>
+		</ClCompile >
+		<ClInclude Include="..\..\Source\SceneGenUnreal\Shapenet.h">
+			<Filter>Source\SceneGenUnreal</Filter>
+		</ClInclude >
+	</ItemGroup>
 </Project>

@@ -24,6 +24,7 @@
 /wd4838
 /we4668
 /I .
+/I ThirdParty
 /I ..\Intermediate\Build\Win64\UE4Editor\Inc\Engine
 /I Runtime
 /I Runtime\Engine\Classes
@@ -398,12 +399,13 @@
 /I Runtime\AudioMixer
 /I Runtime\AudioMixer\Public\Components
 /I Runtime\AudioMixer\Public\DSP
-/I ThirdParty
 /I ThirdParty\libSampleRate\Public
 /I ThirdParty\libSampleRate
 /I "C:\Users\jamqd\Documents\Unreal Projects\SceneGenUnreal\Intermediate\Build\Win64\UE4Editor\Inc\SceneGenUnreal"
 /I "C:\Users\jamqd\Documents\Unreal Projects\SceneGenUnreal\Source"
 /I "C:\Users\jamqd\Documents\Unreal Projects\SceneGenUnreal\Source\SceneGenUnreal"
+/I ThirdParty\FBX\2018.1.1\include
+/I ThirdParty\FBX\2018.1.1\include\fbxsdk
 /I "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.21.27702\INCLUDE"
 /I "C:\Program Files (x86)\Windows Kits\NETFXSDK\4.6\include\um"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt"
