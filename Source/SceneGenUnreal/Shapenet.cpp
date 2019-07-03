@@ -2,7 +2,7 @@
 
 #include "Shapenet.h"
 #include "fbxsdk.h"
-#include <string>
+
 #include "FbxImporter.h"
 
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
@@ -16,6 +16,13 @@ AShapenet::AShapenet()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+
+	FString synset = "04554684";
+	FString hash = "fcc0bdba1a95be2546cde67a6a1ea328";
+
+	importMesh(synset, hash);
+
 
 	/*
 		testing import FBX third party library
@@ -69,7 +76,7 @@ bool AShapenet::importMesh(FString synset, FString hash)
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("BaseMesh"));
 	RootComponent = BaseMesh;
 
-	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model.model";
+	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>BaseMeshAsset(*path);
 	UStaticMesh* Asset = BaseMeshAsset.Object;

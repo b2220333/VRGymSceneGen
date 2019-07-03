@@ -9,6 +9,6 @@ public class SceneGenUnrealEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 
-		ExtraModuleNames.AddRange( new string[] { "SceneGenUnreal" } );
+		ExtraModuleNames.AddRange( new string[] { "SceneGenUnreal", "ShapenetImportModule" } );
 	}
 }
