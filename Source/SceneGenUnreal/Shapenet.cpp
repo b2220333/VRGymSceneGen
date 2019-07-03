@@ -64,11 +64,14 @@ void AShapenet::Tick(float DeltaTime)
 }
 
 
-bool AShapenet::importMesh(FText synset, FText hash)
+bool AShapenet::importMesh(FString synset, FString hash)
 {
 	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("BaseMesh"));
 	RootComponent = BaseMesh;
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>BaseMeshAsset(TEXT("/Game/ShapenetModels/dresser/baseDrawer.baseDrawer"));
+
+	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model.model";
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>BaseMeshAsset(*path);
 	UStaticMesh* Asset = BaseMeshAsset.Object;
 	BaseMesh->SetStaticMesh(Asset);
 	return false;
