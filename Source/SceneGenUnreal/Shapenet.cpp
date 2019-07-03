@@ -5,6 +5,10 @@
 #include <string>
 #include "FbxImporter.h"
 
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Components/StaticMeshComponent.h"
+#include "Runtime/Engine/Classes/Engine/StaticMesh.h"
+
 
 
 // Sets default values
@@ -62,5 +66,10 @@ void AShapenet::Tick(float DeltaTime)
 
 bool AShapenet::importMesh(FText synset, FText hash)
 {
+	BaseMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("BaseMesh"));
+	RootComponent = BaseMesh;
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>BaseMeshAsset(TEXT("/Game/ShapenetModels/dresser/baseDrawer.baseDrawer"));
+	UStaticMesh* Asset = BaseMeshAsset.Object;
+	BaseMesh->SetStaticMesh(Asset);
 	return false;
 }

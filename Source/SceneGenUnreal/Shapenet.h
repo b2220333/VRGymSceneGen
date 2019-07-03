@@ -27,5 +27,6 @@ public:
 
 	bool importMesh(FText synset, FText hash);
 	
+	UStaticMeshComponent* BaseMesh;
 	
 };
