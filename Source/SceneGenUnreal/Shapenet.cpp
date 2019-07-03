@@ -59,3 +59,8 @@ void AShapenet::Tick(float DeltaTime)
 
 }
 
+
+bool AShapenet::importMesh(FText synset, FText hash)
+{
+	return false;
+}

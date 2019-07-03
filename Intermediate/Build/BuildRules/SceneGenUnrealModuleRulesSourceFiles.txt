@@ -1,3 +1,0 @@
-C:\Users\jamqd\Documents\Unreal Projects\SceneGenUnreal\Source\SceneGenUnreal\SceneGenUnreal.Build.cs
-C:\Users\jamqd\Documents\Unreal Projects\SceneGenUnreal\Source\SceneGenUnreal.Target.cs
-C:\Users\jamqd\Documents\Unreal Projects\SceneGenUnreal\Source\SceneGenUnrealEditor.Target.cs
