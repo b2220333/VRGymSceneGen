@@ -17,4 +17,8 @@ void FShapenetImportModule::ShutdownModule()
 	UE_LOG(ShapenetImportModule, Warning, TEXT("ShapenetImportModule: Log Ended"));
 }
 
+bool FShapenetImportModule::importOBJ(FString synset, FString hash)
+{
+	return false;
+}
 #undef LOCTEXT_NAMESPACE
