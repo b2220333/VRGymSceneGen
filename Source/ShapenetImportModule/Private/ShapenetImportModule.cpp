@@ -6,6 +6,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 
+#include "FbxImporter.h"
+
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
 IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
 
@@ -14,10 +16,19 @@ IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
 void FShapenetImportModule::StartupModule()
 {
 	UE_LOG(ShapenetImportModule, Warning, TEXT("ShapenetImportModule: Log Started"));
-	//FString synset = "04554684";
-	FString synset = "234214123";
+	/*
+		original test
+
+	FString synset = "04554684";
+	//FString synset = "234214123wrong";
 	FString hash = "fcc0bdba1a95be2546cde67a6a1ea328";
 	bool test = modelAlreadyImported(synset, hash);
+
+	*/
+
+	FString synset = "02818832";
+	FString hash = "1aa55867200ea789465e08d496c0420f";
+	importOBJ(synset, hash);
 }
 
 void FShapenetImportModule::ShutdownModule()
@@ -27,11 +38,14 @@ void FShapenetImportModule::ShutdownModule()
 
 bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 {
+	// do not import if model already imported
 	if (modelAlreadyImported(synset, hash)) {
 		return true;
 	}
-	
 
+	//FString path = "/02818832/1aa55867200ea789465e08d496c0420f";
+	UnFbx::FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
+	//UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
 
 	return false;
 }
@@ -39,21 +53,13 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 bool FShapenetImportModule::modelAlreadyImported(FString synset, FString hash)
 {
 	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
-	UE_LOG(ShapenetImportModule, Warning, TEXT("here1"));
-	
-	
-	
-	//static ConstructorHelpers::FObjectFinder<UStaticMesh>BaseMeshAsset(*path);
 	
 	UStaticMesh* mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
-	
-	
-	UE_LOG(ShapenetImportModule, Warning, TEXT("here2"));
+
 	if (mesh != nullptr) {
 		UE_LOG(ShapenetImportModule, Warning, TEXT("ShapenetImportModule: Model Already Exists"));
 		return true;
 	}
-	UE_LOG(ShapenetImportModule, Warning, TEXT("ShapenetImportModule: Model Does Not Already Exist"));
 	return false;
 }
 

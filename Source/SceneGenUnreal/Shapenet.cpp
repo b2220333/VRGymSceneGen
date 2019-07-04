@@ -1,9 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Shapenet.h"
+/*
 #include "fbxsdk.h"
 
 #include "FbxImporter.h"
+
+*/
 
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
@@ -22,7 +25,6 @@ AShapenet::AShapenet()
 	FString hash = "fcc0bdba1a95be2546cde67a6a1ea328";
 
 	importMesh(synset, hash);
-
 
 	/*
 		testing import FBX third party library
@@ -78,8 +80,8 @@ bool AShapenet::importMesh(FString synset, FString hash)
 
 	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>BaseMeshAsset(*path);
-	UStaticMesh* Asset = BaseMeshAsset.Object;
+	//static ConstructorHelpers::FObjectFinder<UStaticMesh>BaseMeshAsset(*path);
+	UStaticMesh* Asset = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
 	BaseMesh->SetStaticMesh(Asset);
 	return false;
 }
