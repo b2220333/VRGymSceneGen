@@ -7,6 +7,7 @@
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 
 #include "FbxImporter.h"
+#include "Editor/UnrealEd/Classes/Factories/FbxAssetImportData.h"
 
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
 IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
@@ -43,11 +44,39 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 		return true;
 	}
 
-	//FString path = "/02818832/1aa55867200ea789465e08d496c0420f";
-	UnFbx::FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
+	UE_LOG(LogTemp, Warning, TEXT("StartImport"));
+
+	FString path = shapenetDir + "/" + synset + "/" + hash + "/models/model_normalized.obj";
+	FString destPath = "/Game/ShapenetOBJ/" + synset + "/" + hash;
+	//UnFbx::FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
 	//UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
 
-	return false;
+	UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
+	factory->ImportUI->StaticMeshImportData->ImportUniformScale = 300;
+	factory->ImportUI->StaticMeshImportData->bCombineMeshes = true;
+	
+	//factory->ImportUI->StaticMeshImportData->ImportRotation = FRotator(90.0f, 0.0f, 0.0f);
+
+	bool canceled = false;
+	UPackage* Package = CreatePackage(NULL, *destPath); //Create package if not exist
+	factory->ImportObject(factory->ResolveSupportedClass(), Package, FName("model_normalized"), RF_Public | RF_Standalone, path, nullptr, canceled);
+	
+	if (canceled == true)
+	{
+		// import failed 
+		UE_LOG(LogTemp, Warning, TEXT("Import canceled."));
+		return false;
+	}
+	/*
+	bool bSaved = UPackage::SavePackage(Package, ImportedMesh, EObjectFlags::RF_Public, *PackageFileName, GError, nullptr, true, true);
+	if (bSaved == false)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Could not save package"));
+		return false;
+	}
+	*/
+	UE_LOG(LogTemp, Warning, TEXT("Saved package"));
+	return true;
 }
 
 bool FShapenetImportModule::modelAlreadyImported(FString synset, FString hash)
