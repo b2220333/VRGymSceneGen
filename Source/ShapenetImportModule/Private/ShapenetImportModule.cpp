@@ -8,6 +8,7 @@
 
 #include "FbxImporter.h"
 #include "Editor/UnrealEd/Classes/Factories/FbxAssetImportData.h"
+#include "Runtime/AssetRegistry/Public/AssetRegistryModule.h"
 
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
 IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
@@ -47,7 +48,7 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 	UE_LOG(LogTemp, Warning, TEXT("importOBJ: Starting Import"));
 
 	FString path = shapenetDir + "/" + synset + "/" + hash + "/models/model_normalized.obj";
-	FString destPath = "/Game/ShapenetOBJ/" + synset + "/" + hash + "/";
+	FString destPath = "/Game/ShapenetOBJ/" + synset + "/" + hash + "/" + "model_normalized";
 	//UnFbx::FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
 	//UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
 
@@ -67,7 +68,8 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 
 	bool canceled = false;
 	UPackage* Package = CreatePackage(NULL, *destPath); //Create package if not exist
-	factory->ImportObject(factory->ResolveSupportedClass(), Package, FName("model_normalized"), RF_Public | RF_Standalone, path, nullptr, canceled);
+	Package->FullyLoad();
+	UStaticMesh* mesh = Cast<UStaticMesh>(factory->ImportObject(factory->ResolveSupportedClass(), Package, FName("model_normalized"), RF_Public | RF_Standalone, path, nullptr, canceled));
 
 	factory->ImportUI->StaticMeshImportData->ImportUniformScale = 999999999;
 	factory->ImportUI->AnimSequenceImportData->ImportUniformScale = 999999999;
@@ -84,14 +86,17 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 		UE_LOG(LogTemp, Warning, TEXT("importOBJ: Import canceled."));
 		return false;
 	}
-	/*
-	bool bSaved = UPackage::SavePackage(Package, ImportedMesh, EObjectFlags::RF_Public, *PackageFileName, GError, nullptr, true, true);
+	
+	FString fileName = "model_normalized.uasset";
+	FAssetRegistryModule::AssetCreated(mesh);
+
+	bool bSaved = UPackage::SavePackage(Package, mesh, EObjectFlags::RF_Public | EObjectFlags::RF_Standalone, *fileName, GError, nullptr, true, true);
 	if (bSaved == false)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("importOBJ: Could not save package"));
 		return false;
 	}
-	*/
+	
 	UE_LOG(LogTemp, Warning, TEXT("importOBJ: Import complete"));
 	return true;
 }
