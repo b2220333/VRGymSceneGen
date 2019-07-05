@@ -30,7 +30,7 @@ void FShapenetImportModule::StartupModule()
 
 	FString synset = "02818832";
 	FString hash = "1aa55867200ea789465e08d496c0420f";
-	importOBJ(synset, hash);
+	//importOBJ(synset, hash);
 }
 
 void FShapenetImportModule::ShutdownModule()
