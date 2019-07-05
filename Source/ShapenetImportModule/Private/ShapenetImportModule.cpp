@@ -10,6 +10,10 @@
 #include "Editor/UnrealEd/Classes/Factories/FbxAssetImportData.h"
 #include "Runtime/AssetRegistry/Public/AssetRegistryModule.h"
 
+#include "Runtime/Core/Public/Misc/OutputDevice.h"
+#include "Runtime/Core/Public/Misc/FeedbackContext.h"
+#include "Editor/UnrealEd/Public/FeedbackContextEditor.h"
+
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
 IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
 
@@ -30,7 +34,7 @@ void FShapenetImportModule::StartupModule()
 
 	FString synset = "02818832";
 	FString hash = "1aa55867200ea789465e08d496c0420f";
-	//importOBJ(synset, hash);
+	importOBJ(synset, hash);
 }
 
 void FShapenetImportModule::ShutdownModule()
@@ -69,6 +73,7 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 	bool canceled = false;
 	UPackage* Package = CreatePackage(NULL, *destPath); //Create package if not exist
 	Package->FullyLoad();
+	//FFeedbackContextEditor warn = FFeedbackContextEditor();
 	UStaticMesh* mesh = Cast<UStaticMesh>(factory->ImportObject(factory->ResolveSupportedClass(), Package, FName("model_normalized"), RF_Public | RF_Standalone, path, nullptr, canceled));
 
 	factory->ImportUI->StaticMeshImportData->ImportUniformScale = 999999999;
@@ -87,10 +92,14 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 		return false;
 	}
 	
-	FString fileName = "model_normalized.uasset";
 	FAssetRegistryModule::AssetCreated(mesh);
+	
+	FString RelativePath = FPaths::GameContentDir();
+	FString FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*RelativePath) + "ShapenetObj/" + synset + "/" + hash + "/" + "model_normalized.uasset";
+	
+	UE_LOG(LogTemp, Warning, TEXT("path: %s"), *FullPath);
 
-	bool bSaved = UPackage::SavePackage(Package, mesh, EObjectFlags::RF_Public | EObjectFlags::RF_Standalone, *fileName, GError, nullptr, true, true);
+	bool bSaved = UPackage::SavePackage(Package, mesh, EObjectFlags::RF_Public | EObjectFlags::RF_Standalone, *FullPath, GError, nullptr, true, true);
 	if (bSaved == false)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("importOBJ: Could not save package"));
