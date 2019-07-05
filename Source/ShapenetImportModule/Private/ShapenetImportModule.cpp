@@ -44,38 +44,55 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 		return true;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("StartImport"));
+	UE_LOG(LogTemp, Warning, TEXT("importOBJ: Starting Import"));
 
 	FString path = shapenetDir + "/" + synset + "/" + hash + "/models/model_normalized.obj";
-	FString destPath = "/Game/ShapenetOBJ/" + synset + "/" + hash;
+	FString destPath = "/Game/ShapenetOBJ/" + synset + "/" + hash + "/";
 	//UnFbx::FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
 	//UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
 
 	UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
-	factory->ImportUI->StaticMeshImportData->ImportUniformScale = 300;
-	factory->ImportUI->StaticMeshImportData->bCombineMeshes = true;
 	
+	//factory->ImportUI->StaticMeshImportData->bConvertScene = true;
+	factory->ImportUI->StaticMeshImportData->ImportUniformScale = 999999999;
+	factory->ImportUI->AnimSequenceImportData->ImportUniformScale = 999999999;
+	factory->ImportUI->SkeletalMeshImportData->ImportUniformScale = 999999999;
+	factory->ImportUI->TextureImportData->ImportUniformScale = 999999999;
+	//factory->ImportUI->StaticMeshImportData->bCombineMeshes = true;
+
+	FString test = FString::SanitizeFloat(factory->ImportUI->StaticMeshImportData->ImportUniformScale);
+	UE_LOG(LogTemp, Warning, TEXT("uniform scale: %s"), *test);
+
 	//factory->ImportUI->StaticMeshImportData->ImportRotation = FRotator(90.0f, 0.0f, 0.0f);
 
 	bool canceled = false;
 	UPackage* Package = CreatePackage(NULL, *destPath); //Create package if not exist
 	factory->ImportObject(factory->ResolveSupportedClass(), Package, FName("model_normalized"), RF_Public | RF_Standalone, path, nullptr, canceled);
-	
+
+	factory->ImportUI->StaticMeshImportData->ImportUniformScale = 999999999;
+	factory->ImportUI->AnimSequenceImportData->ImportUniformScale = 999999999;
+	factory->ImportUI->SkeletalMeshImportData->ImportUniformScale = 999999999;
+	factory->ImportUI->TextureImportData->ImportUniformScale = 999999999;
+
+
+	test = FString::SanitizeFloat(factory->ImportUI->StaticMeshImportData->ImportUniformScale);
+	UE_LOG(LogTemp, Warning, TEXT("uniform scale: %s"), *test);
+
 	if (canceled == true)
 	{
 		// import failed 
-		UE_LOG(LogTemp, Warning, TEXT("Import canceled."));
+		UE_LOG(LogTemp, Warning, TEXT("importOBJ: Import canceled."));
 		return false;
 	}
 	/*
 	bool bSaved = UPackage::SavePackage(Package, ImportedMesh, EObjectFlags::RF_Public, *PackageFileName, GError, nullptr, true, true);
 	if (bSaved == false)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Could not save package"));
+		UE_LOG(LogTemp, Warning, TEXT("importOBJ: Could not save package"));
 		return false;
 	}
 	*/
-	UE_LOG(LogTemp, Warning, TEXT("Saved package"));
+	UE_LOG(LogTemp, Warning, TEXT("importOBJ: Import complete"));
 	return true;
 }
 
@@ -86,7 +103,7 @@ bool FShapenetImportModule::modelAlreadyImported(FString synset, FString hash)
 	UStaticMesh* mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
 
 	if (mesh != nullptr) {
-		UE_LOG(ShapenetImportModule, Warning, TEXT("ShapenetImportModule: Model Already Exists"));
+		UE_LOG(ShapenetImportModule, Warning, TEXT("modelAlreadyImported: Model Already Exists"));
 		return true;
 	}
 	return false;
