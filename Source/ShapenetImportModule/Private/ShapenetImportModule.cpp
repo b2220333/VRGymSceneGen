@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 
+#include "fbxsdk.h"
 #include "FbxImporter.h"
 #include "Editor/UnrealEd/Classes/Factories/FbxAssetImportData.h"
 #include "Runtime/AssetRegistry/Public/AssetRegistryModule.h"
@@ -13,6 +14,9 @@
 #include "Runtime/Core/Public/Misc/OutputDevice.h"
 #include "Runtime/Core/Public/Misc/FeedbackContext.h"
 #include "Editor/UnrealEd/Public/FeedbackContextEditor.h"
+
+#include "Developer/AssetTools/Public/AssetToolsModule.h"
+#include "Editor/UnrealEd/Public/AutomatedAssetImportData.h"
 
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
 IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
@@ -42,6 +46,25 @@ void FShapenetImportModule::ShutdownModule()
 	UE_LOG(ShapenetImportModule, Warning, TEXT("ShapenetImportModule: Log Ended"));
 }
 
+bool FShapenetImportModule::expImport(FString synset, FString hash)
+{
+	TArray<FString> filesToImport;
+	FString srcPath = TEXT("C:/MyProject/Content/Raw/dog.fbx");
+	srcPath = srcPath.Replace(TEXT("\\"), TEXT("/"));
+	filesToImport.Add(srcPath);
+
+	UAutomatedAssetImportData* importData = NewObject<UAutomatedAssetImportData>();
+	importData->bReplaceExisting = true;
+	importData->DestinationPath = TEXT("C:/MyProject/Content/Imported/Dog");
+	importData->Filenames = filesToImport;
+
+	FAssetToolsModule& AssetToolsModule = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools");
+	auto importedAssets = AssetToolsModule.Get().ImportAssetsAutomated(importData);
+	
+	return false;
+}
+
+
 bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 {
 	// do not import if model already imported
@@ -57,7 +80,7 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 	//UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
 
 	UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
-	
+
 	//factory->ImportUI->StaticMeshImportData->bConvertScene = true;
 	factory->ImportUI->StaticMeshImportData->ImportUniformScale = 999999999;
 	factory->ImportUI->AnimSequenceImportData->ImportUniformScale = 999999999;
@@ -73,13 +96,20 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 	bool canceled = false;
 	UPackage* Package = CreatePackage(NULL, *destPath); //Create package if not exist
 	Package->FullyLoad();
-	//FFeedbackContextEditor warn = FFeedbackContextEditor();
-	UStaticMesh* mesh = Cast<UStaticMesh>(factory->ImportObject(factory->ResolveSupportedClass(), Package, FName("model_normalized"), RF_Public | RF_Standalone, path, nullptr, canceled));
 
+	//FFeedbackContextEditor warn = FFeedbackContextEditor();
+	
+	// UStaticMesh* mesh = Cast<UStaticMesh>(factory->ImportObject(factory->ResolveSupportedClass(), Package, FName("model_normalized"), RF_Public | RF_Standalone, path, nullptr, canceled));
+
+	UStaticMesh* mesh = Cast<UStaticMesh>(factory->FactoryCreateFile(factory->ResolveSupportedClass(), Package, FName("model_normalized"), RF_Public | RF_Standalone, path, nullptr, GWarn, canceled));
+
+
+	/*
 	factory->ImportUI->StaticMeshImportData->ImportUniformScale = 999999999;
 	factory->ImportUI->AnimSequenceImportData->ImportUniformScale = 999999999;
 	factory->ImportUI->SkeletalMeshImportData->ImportUniformScale = 999999999;
 	factory->ImportUI->TextureImportData->ImportUniformScale = 999999999;
+	*/
 
 
 	test = FString::SanitizeFloat(factory->ImportUI->StaticMeshImportData->ImportUniformScale);

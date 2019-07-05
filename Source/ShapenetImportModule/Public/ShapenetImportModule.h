@@ -19,4 +19,6 @@ public:
 	FString shapenetDir = "C://Users/jamqd/data/ShapeNetCore.v2";
 	bool modelAlreadyImported(FString synset, FString hash);
 
+	bool expImport(FString synset, FString hash);
+
 };
