@@ -18,6 +18,8 @@
 #include "Developer/AssetTools/Public/AssetToolsModule.h"
 #include "Editor/UnrealEd/Public/AutomatedAssetImportData.h"
 
+#include "Editor/UnrealEd/Public/FileHelpers.h"
+
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
 IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
 
@@ -36,15 +38,15 @@ void FShapenetImportModule::StartupModule()
 
 	*/
 
-	/*
-	FString synset = "02818832";
-	FString hash = "1aa55867200ea789465e08d496c0420f";
-	importOBJ(synset, hash);
+	
+	//FString synset = "02818832";
+	//FString hash = "1aa55867200ea789465e08d496c0420f";
+	//importOBJ(synset, hash);
 
-	*/
 
-	FString synset = "04379243";
-	FString hash = "1a00aa6b75362cc5b324368d54a7416f";
+
+	//FString synset = "04379243";
+	//FString hash = "1a00aa6b75362cc5b324368d54a7416f";
 	expImport(synset, hash);
 
 }
@@ -80,6 +82,11 @@ bool FShapenetImportModule::expImport(FString synset, FString hash)
 	auto importedAssets = AssetToolsModule.Get().ImportAssetsAutomated(importData);
 	
 	UE_LOG(LogTemp, Warning, TEXT("expImport: Finished Import"));
+	bool bOutPackagesNeededSaving;
+	FEditorFileUtils::SaveDirtyPackages(false, true, true, false, true, false, &bOutPackagesNeededSaving);
+	if (!bOutPackagesNeededSaving) {
+		UE_LOG(LogTemp, Warning, TEXT("expImport: Nothing to save"));
+	}
 	return true;
 }
 
