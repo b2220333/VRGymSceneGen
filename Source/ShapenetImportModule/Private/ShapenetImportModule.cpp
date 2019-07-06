@@ -36,9 +36,17 @@ void FShapenetImportModule::StartupModule()
 
 	*/
 
+	/*
 	FString synset = "02818832";
 	FString hash = "1aa55867200ea789465e08d496c0420f";
 	importOBJ(synset, hash);
+
+	*/
+
+	FString synset = "04379243";
+	FString hash = "1a00aa6b75362cc5b324368d54a7416f";
+	expImport(synset, hash);
+
 }
 
 void FShapenetImportModule::ShutdownModule()
@@ -48,20 +56,31 @@ void FShapenetImportModule::ShutdownModule()
 
 bool FShapenetImportModule::expImport(FString synset, FString hash)
 {
+	UE_LOG(LogTemp, Warning, TEXT("expImport: Starting Import"));
 	TArray<FString> filesToImport;
-	FString srcPath = TEXT("C:/MyProject/Content/Raw/dog.fbx");
-	srcPath = srcPath.Replace(TEXT("\\"), TEXT("/"));
+	FString srcPath = shapenetDir + "/" + synset + "/" + hash + "/models/model_normalized.obj";
 	filesToImport.Add(srcPath);
 
 	UAutomatedAssetImportData* importData = NewObject<UAutomatedAssetImportData>();
 	importData->bReplaceExisting = true;
-	importData->DestinationPath = TEXT("C:/MyProject/Content/Imported/Dog");
+
+	UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
+	importData->Factory = factory;
+
+	UE_LOG(LogTemp, Warning, TEXT("expImport: Created FBX factory"));
+
+	FString RelativePath = FPaths::GameContentDir();
+	FString FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*RelativePath) + "ShapenetObj/" + synset + "/" + hash;
+	FString test = "/Game/ShapenetOBJ/" + synset + "/" + hash + "/";
+
+	importData->DestinationPath = *test;
 	importData->Filenames = filesToImport;
 
 	FAssetToolsModule& AssetToolsModule = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools");
 	auto importedAssets = AssetToolsModule.Get().ImportAssetsAutomated(importData);
 	
-	return false;
+	UE_LOG(LogTemp, Warning, TEXT("expImport: Finished Import"));
+	return true;
 }
 
 
