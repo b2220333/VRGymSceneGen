@@ -45,9 +45,9 @@ void FShapenetImportModule::StartupModule()
 
 
 
-	//FString synset = "04379243";
-	//FString hash = "1a00aa6b75362cc5b324368d54a7416f";
-	expImport(synset, hash);
+	FString synset = "04379243";
+	FString hash = "1a00aa6b75362cc5b324368d54a7416f";
+	importOBJ(synset, hash);
 
 }
 
@@ -56,8 +56,12 @@ void FShapenetImportModule::ShutdownModule()
 	UE_LOG(ShapenetImportModule, Warning, TEXT("ShapenetImportModule: Log Ended"));
 }
 
-bool FShapenetImportModule::expImport(FString synset, FString hash)
+bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 {
+	// do not import if model already imported
+	if (modelAlreadyImported(synset, hash)) {
+		return true;
+	}
 	UE_LOG(LogTemp, Warning, TEXT("expImport: Starting Import"));
 	TArray<FString> filesToImport;
 	FString srcPath = shapenetDir + "/" + synset + "/" + hash + "/models/model_normalized.obj";
@@ -86,85 +90,12 @@ bool FShapenetImportModule::expImport(FString synset, FString hash)
 	FEditorFileUtils::SaveDirtyPackages(false, true, true, false, true, false, &bOutPackagesNeededSaving);
 	if (!bOutPackagesNeededSaving) {
 		UE_LOG(LogTemp, Warning, TEXT("expImport: Nothing to save"));
+		return false;
 	}
 	return true;
 }
 
 
-bool FShapenetImportModule::importOBJ(FString synset, FString hash)
-{
-	// do not import if model already imported
-	if (modelAlreadyImported(synset, hash)) {
-		return true;
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("importOBJ: Starting Import"));
-
-	FString path = shapenetDir + "/" + synset + "/" + hash + "/models/model_normalized.obj";
-	FString destPath = "/Game/ShapenetOBJ/" + synset + "/" + hash + "/" + "model_normalized";
-	//UnFbx::FFbxImporter* FbxImporter = UnFbx::FFbxImporter::GetInstance();
-	//UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
-
-	UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
-
-	//factory->ImportUI->StaticMeshImportData->bConvertScene = true;
-	factory->ImportUI->StaticMeshImportData->ImportUniformScale = 999999999;
-	factory->ImportUI->AnimSequenceImportData->ImportUniformScale = 999999999;
-	factory->ImportUI->SkeletalMeshImportData->ImportUniformScale = 999999999;
-	factory->ImportUI->TextureImportData->ImportUniformScale = 999999999;
-	//factory->ImportUI->StaticMeshImportData->bCombineMeshes = true;
-
-	FString test = FString::SanitizeFloat(factory->ImportUI->StaticMeshImportData->ImportUniformScale);
-	UE_LOG(LogTemp, Warning, TEXT("uniform scale: %s"), *test);
-
-	//factory->ImportUI->StaticMeshImportData->ImportRotation = FRotator(90.0f, 0.0f, 0.0f);
-
-	bool canceled = false;
-	UPackage* Package = CreatePackage(NULL, *destPath); //Create package if not exist
-	Package->FullyLoad();
-
-	//FFeedbackContextEditor warn = FFeedbackContextEditor();
-	
-	// UStaticMesh* mesh = Cast<UStaticMesh>(factory->ImportObject(factory->ResolveSupportedClass(), Package, FName("model_normalized"), RF_Public | RF_Standalone, path, nullptr, canceled));
-
-	UStaticMesh* mesh = Cast<UStaticMesh>(factory->FactoryCreateFile(factory->ResolveSupportedClass(), Package, FName("model_normalized"), RF_Public | RF_Standalone, path, nullptr, GWarn, canceled));
-
-
-	/*
-	factory->ImportUI->StaticMeshImportData->ImportUniformScale = 999999999;
-	factory->ImportUI->AnimSequenceImportData->ImportUniformScale = 999999999;
-	factory->ImportUI->SkeletalMeshImportData->ImportUniformScale = 999999999;
-	factory->ImportUI->TextureImportData->ImportUniformScale = 999999999;
-	*/
-
-
-	test = FString::SanitizeFloat(factory->ImportUI->StaticMeshImportData->ImportUniformScale);
-	UE_LOG(LogTemp, Warning, TEXT("uniform scale: %s"), *test);
-
-	if (canceled == true)
-	{
-		// import failed 
-		UE_LOG(LogTemp, Warning, TEXT("importOBJ: Import canceled."));
-		return false;
-	}
-	
-	FAssetRegistryModule::AssetCreated(mesh);
-	
-	FString RelativePath = FPaths::GameContentDir();
-	FString FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*RelativePath) + "ShapenetObj/" + synset + "/" + hash + "/" + "model_normalized.uasset";
-	
-	UE_LOG(LogTemp, Warning, TEXT("path: %s"), *FullPath);
-
-	bool bSaved = UPackage::SavePackage(Package, mesh, EObjectFlags::RF_Public | EObjectFlags::RF_Standalone, *FullPath, GError, nullptr, true, true);
-	if (bSaved == false)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("importOBJ: Could not save package"));
-		return false;
-	}
-	
-	UE_LOG(LogTemp, Warning, TEXT("importOBJ: Import complete"));
-	return true;
-}
 
 bool FShapenetImportModule::modelAlreadyImported(FString synset, FString hash)
 {
