@@ -47,7 +47,9 @@ void FShapenetImportModule::StartupModule()
 
 	FString synset = "04379243";
 	FString hash = "1a00aa6b75362cc5b324368d54a7416f";
-	importOBJ(synset, hash);
+	//importOBJ(synset, hash);
+
+	searchShapenet(synset);
 
 }
 
@@ -109,5 +111,21 @@ bool FShapenetImportModule::modelAlreadyImported(FString synset, FString hash)
 	}
 	return false;
 }
+
+FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FString query)
+{
+	SearchResult result;
+	result.synset = "213123";
+	result.numModels = 4;
+
+	FString jsonString;
+	FString path = shapenetDir + "/taxonomy.json";
+	FFileHelper::LoadFileToString(jsonString, *path);
+
+	UE_LOG(LogTemp, Warning, TEXT("SearchResult: json is %s"), *jsonString);
+
+	return result;
+}
+
 
 #undef LOCTEXT_NAMESPACE

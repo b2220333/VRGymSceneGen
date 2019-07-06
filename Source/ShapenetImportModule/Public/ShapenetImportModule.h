@@ -19,4 +19,12 @@ public:
 	FString shapenetDir = "C://Users/jamqd/data/ShapeNetCore.v2";
 	bool modelAlreadyImported(FString synset, FString hash);
 
+	struct SearchResult{
+		FString synset;
+		uint64 numModels;
+	};
+
+	SearchResult searchShapenet(FString query);
+
+
 };
