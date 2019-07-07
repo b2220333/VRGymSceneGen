@@ -8,7 +8,7 @@ public class ShapenetImportModule : ModuleRules
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UnrealEd", "FBX" });
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UnrealEd", "FBX", "Json", "JsonUtilities" });
 
         PrivateDependencyModuleNames.AddRange(new string[] { "SceneGenUnreal", "FBX" });
 

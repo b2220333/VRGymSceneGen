@@ -23,6 +23,8 @@
 
 #include "Shapenet.h"
 
+#include "Runtime/JsonUtilities/Public/JsonObjectConverter.h"
+
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
 IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
 
@@ -129,7 +131,18 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 
 	UE_LOG(LogTemp, Warning, TEXT("SearchResult: json is %s"), *jsonString);
 
-	FTaxonomy taxonomy;
+	TArray<FSynsetObj> synsets;
+
+	bool parsed = FJsonObjectConverter::JsonArrayStringToUStruct<FSynsetObj>(jsonString, &synsets, 0, 0);
+
+	if (parsed) {
+		FString test = synsets[0].name;
+		UE_LOG(LogTemp, Warning, TEXT("First synset name is %s"), *test);
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Parse failed "));
+	}
+
 
 	return result;
 }

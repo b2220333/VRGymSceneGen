@@ -33,13 +33,16 @@ struct FSynsetObj
 	UPROPERTY()
 	FString name;
 
+	/*
 	UPROPERTY()
 	FSynsetChildren children;
+	*/
 
 	UPROPERTY()
 	int32 numInstances;
 };
 
+/*
 USTRUCT()
 struct FTaxonomy
 {
@@ -51,6 +54,7 @@ struct FTaxonomy
 
 
 };
+*/
 
 
 
