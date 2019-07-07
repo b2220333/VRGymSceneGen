@@ -143,6 +143,13 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 		UE_LOG(LogTemp, Warning, TEXT("Parse failed "));
 	}
 
+	TArray<FString> matchedSynsets;
+
+	for (int32 i = 0; i < synsets.Num; i++) {
+		if (synsets[i].name.Contains(query)) {
+			matchedSynsets.Add(synsets[i].synsetId);
+		}
+	}
 
 	return result;
 }
