@@ -21,6 +21,8 @@
 #include "Editor/UnrealEd/Public/FileHelpers.h"
 
 
+#include "Shapenet.h"
+
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
 IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
 
@@ -126,6 +128,8 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 	FFileHelper::LoadFileToString(jsonString, *path);
 
 	UE_LOG(LogTemp, Warning, TEXT("SearchResult: json is %s"), *jsonString);
+
+	FTaxonomy taxonomy;
 
 	return result;
 }

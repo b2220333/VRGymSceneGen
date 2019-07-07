@@ -7,36 +7,53 @@
 #include "Shapenet.generated.h"
 
 
+
 USTRUCT()
-struct FTaxonomyStruct
+struct FSynsetChildren
 {
 	GENERATED_BODY()
 
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
+	TArray<FString> children;
+
+	
+};
+
+
+USTRUCT()
+struct FSynsetObj
+{
+	GENERATED_BODY()
+
+
+	UPROPERTY()
 	FString synsetId;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	FString name;
 
-	UPROPERTY(EditAnywhere)
-	FString children;
+	UPROPERTY()
+	FSynsetChildren children;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	int32 numInstances;
 };
 
-
-/*
 USTRUCT()
-struct FTest
+struct FTaxonomy
 {
 	GENERATED_BODY()
 
-		UPROPERTY(EditAnywhere)
-		FString test;
+
+	UPROPERTY()
+	TArray<FSynsetObj> synsets;
+
+
 };
-*/
+
+
+
 
 UCLASS()
 class SCENEGENUNREAL_API AShapenet : public AActor

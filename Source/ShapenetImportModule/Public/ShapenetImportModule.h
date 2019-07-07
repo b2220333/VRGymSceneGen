@@ -33,5 +33,4 @@ public:
 
 	SearchResult searchShapenet(FString query);
 
-	FTaxonomyStruct test;
 };
