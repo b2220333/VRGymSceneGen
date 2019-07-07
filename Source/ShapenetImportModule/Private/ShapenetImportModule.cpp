@@ -20,6 +20,7 @@
 
 #include "Editor/UnrealEd/Public/FileHelpers.h"
 
+
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
 IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
 
@@ -39,14 +40,14 @@ void FShapenetImportModule::StartupModule()
 	*/
 
 	
-	//FString synset = "02818832";
-	//FString hash = "1aa55867200ea789465e08d496c0420f";
-	//importOBJ(synset, hash);
+	FString synset = "02818832";
+	FString hash = "1aa55867200ea789465e08d496c0420f";
+	importOBJ(synset, hash);
 
 
 
-	FString synset = "04379243";
-	FString hash = "1a00aa6b75362cc5b324368d54a7416f";
+	//FString synset = "04379243";
+	//FString hash = "1a00aa6b75362cc5b324368d54a7416f";
 	//importOBJ(synset, hash);
 
 	searchShapenet(synset);
@@ -77,7 +78,7 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 
 	UE_LOG(LogTemp, Warning, TEXT("expImport: Created FBX factory"));
 
-	FString RelativePath = FPaths::GameContentDir();
+	FString RelativePath = FPaths::ProjectContentDir();
 	FString FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*RelativePath) + "ShapenetObj/" + synset + "/" + hash;
 	FString test = "/Game/ShapenetOBJ/" + synset + "/" + hash + "/";
 
@@ -111,6 +112,8 @@ bool FShapenetImportModule::modelAlreadyImported(FString synset, FString hash)
 	}
 	return false;
 }
+
+
 
 FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FString query)
 {

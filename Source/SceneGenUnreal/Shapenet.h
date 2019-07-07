@@ -7,6 +7,36 @@
 #include "Shapenet.generated.h"
 
 
+USTRUCT()
+struct FTaxonomyStruct
+{
+	GENERATED_BODY()
+
+
+	UPROPERTY(EditAnywhere)
+	FString synsetId;
+
+	UPROPERTY(EditAnywhere)
+	FString name;
+
+	UPROPERTY(EditAnywhere)
+	FString children;
+
+	UPROPERTY(EditAnywhere)
+	int32 numInstances;
+};
+
+
+/*
+USTRUCT()
+struct FTest
+{
+	GENERATED_BODY()
+
+		UPROPERTY(EditAnywhere)
+		FString test;
+};
+*/
 
 UCLASS()
 class SCENEGENUNREAL_API AShapenet : public AActor

@@ -7,6 +7,12 @@
 #include "UnrealEd.h"
 #include "Runtime/Core/Public/CoreGlobals.h"
 
+#include "Runtime/CoreUObject/Public/UObject/Class.h"
+
+
+#include "Shapenet.h"
+
+
 DECLARE_LOG_CATEGORY_EXTERN(ShapenetImportModule, All, All)
 
 class FShapenetImportModule : public IModuleInterface
@@ -23,8 +29,9 @@ public:
 		FString synset;
 		uint64 numModels;
 	};
+	
 
 	SearchResult searchShapenet(FString query);
 
-
+	FTaxonomyStruct test;
 };
