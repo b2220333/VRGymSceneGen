@@ -143,7 +143,7 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 
 	SearchResult result;
 
-	for (int32 i = 0; i < synsets.Num; i++) {
+	for (int32 i = 0; i < result.synsets.Num(); i++) {
 		if (synsets[i].name.Contains(query)) {
 			result.synsets.Add(synsets[i].synsetId);
 			result.numModels.Add(synsets[i].numInstances);
@@ -172,8 +172,8 @@ bool FShapenetImportModule::importSynset(FString synset)
 
 		// loop through hash directories
 
-		FString hash = "":
-		importOBJ(synset, hash)
+		FString hash = "";
+		importOBJ(synset, hash);
 
 	}
 

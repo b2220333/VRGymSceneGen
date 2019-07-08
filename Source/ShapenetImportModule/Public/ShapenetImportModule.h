@@ -21,6 +21,7 @@ public:
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 
+
 	bool importOBJ(FString synset, FString hash);
 	FString shapenetDir = "C://Users/jamqd/data/ShapeNetCore.v2";
 	bool modelAlreadyImported(FString synset, FString hash);
