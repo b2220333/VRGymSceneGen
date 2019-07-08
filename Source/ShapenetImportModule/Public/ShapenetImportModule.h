@@ -26,8 +26,8 @@ public:
 	bool modelAlreadyImported(FString synset, FString hash);
 
 	struct SearchResult{
-		FString synset;
-		uint64 numModels;
+		TArray<FString> synsets;
+		TArray<int64> numModels;
 	};
 	
 

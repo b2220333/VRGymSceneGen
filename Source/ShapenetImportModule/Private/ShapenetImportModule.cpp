@@ -121,9 +121,6 @@ bool FShapenetImportModule::modelAlreadyImported(FString synset, FString hash)
 
 FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FString query)
 {
-	SearchResult result;
-	result.synset = "213123";
-	result.numModels = 4;
 
 	FString jsonString;
 	FString path = shapenetDir + "/taxonomy.json";
@@ -143,13 +140,16 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 		UE_LOG(LogTemp, Warning, TEXT("Parse failed "));
 	}
 
-	TArray<FString> matchedSynsets;
+
+	SearchResult result;
 
 	for (int32 i = 0; i < synsets.Num; i++) {
 		if (synsets[i].name.Contains(query)) {
-			matchedSynsets.Add(synsets[i].synsetId);
+			result.synsets.Add(synsets[i].synsetId);
+			result.numModels.Add(synsets[i].numInstances);
 		}
 	}
+
 
 	return result;
 }
