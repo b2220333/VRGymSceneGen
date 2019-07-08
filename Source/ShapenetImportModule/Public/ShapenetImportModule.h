@@ -35,4 +35,5 @@ public:
 
 	bool importSynset(FString synset);
 
+	bool synsetExists(FString query);
 };

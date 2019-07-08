@@ -154,8 +154,14 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 	return result;
 }
 
+bool FShapenetImportModule::synsetExists(FString query)
+{
 
-FShapenetImportModule::importSynset(FString synset)
+
+	return false;
+}
+
+bool FShapenetImportModule::importSynset(FString synset)
 {
 	
 	// search for synset exists
