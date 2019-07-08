@@ -33,4 +33,6 @@ public:
 
 	SearchResult searchShapenet(FString query);
 
+	bool importSynset(FString synset);
+
 };

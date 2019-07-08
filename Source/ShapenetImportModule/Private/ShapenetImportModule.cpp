@@ -155,4 +155,24 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 }
 
 
+FShapenetImportModule::importSynset(FString synset)
+{
+	
+	// search for synset exists
+	bool synsetExists = false;
+
+
+	if (synsetExists){
+
+		// loop through hash directories
+
+		FString hash = "":
+		importOBJ(synset, hash)
+
+	}
+
+	return false;
+
+}
+
 #undef LOCTEXT_NAMESPACE
