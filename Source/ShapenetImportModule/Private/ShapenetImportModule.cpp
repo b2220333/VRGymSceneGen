@@ -24,6 +24,7 @@
 #include "Shapenet.h"
 
 #include "Runtime/JsonUtilities/Public/JsonObjectConverter.h"
+#include "Runtime/Core/Public/HAL/FileManager.h"
 
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
 IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
@@ -156,9 +157,9 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 
 bool FShapenetImportModule::synsetExists(FString query)
 {
-
-
-	return false;
+	IFileManager& FileManager = IFileManager::Get();
+	FString path = shapenetDir + "/synset";
+	return FileManager.DirectoryExists(*path);
 }
 
 bool FShapenetImportModule::importSynset(FString synset)

@@ -23,7 +23,7 @@ public:
 
 
 	bool importOBJ(FString synset, FString hash);
-	FString shapenetDir = "C://Users/jamqd/data/ShapeNetCore.v2";
+	FString shapenetDir = "D://data/ShapeNetCore.v2";
 	bool modelAlreadyImported(FString synset, FString hash);
 
 	struct SearchResult{
@@ -33,8 +33,6 @@ public:
 	
 
 	SearchResult searchShapenet(FString query);
-
-	bool importSynset(FString synset);
-
 	bool synsetExists(FString query);
+	bool importSynset(FString synset);
 };
