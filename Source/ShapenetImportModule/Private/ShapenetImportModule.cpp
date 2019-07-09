@@ -24,6 +24,7 @@
 #include "Shapenet.h"
 
 #include "Runtime/JsonUtilities/Public/JsonObjectConverter.h"
+#include "Runtime/Core/Public/GenericPlatform/GenericPlatformFile.h"
 #include "Runtime/Core/Public/HAL/FileManager.h"
 
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
@@ -72,9 +73,17 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 	if (modelAlreadyImported(synset, hash)) {
 		return true;
 	}
+	FString srcPath = shapenetDir + "/" + synset + "/" + hash + "/models/model_normalized.obj";
+	FString RelativePath = FPaths::ProjectContentDir();
+	FString FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*RelativePath) + "ShapenetObj/" + synset + "/" + hash;
+	FString dstPath = "/Game/ShapenetOBJ/" + synset + "/" + hash + "/";
+	return importOBJFromFile(srcPath, dstPath);
+}
+
+bool FShapenetImportModule::importOBJFromFile(FString srcPath, FString dstPath)
+{
 	UE_LOG(LogTemp, Warning, TEXT("expImport: Starting Import"));
 	TArray<FString> filesToImport;
-	FString srcPath = shapenetDir + "/" + synset + "/" + hash + "/models/model_normalized.obj";
 	filesToImport.Add(srcPath);
 
 	UAutomatedAssetImportData* importData = NewObject<UAutomatedAssetImportData>();
@@ -85,16 +94,12 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 
 	UE_LOG(LogTemp, Warning, TEXT("expImport: Created FBX factory"));
 
-	FString RelativePath = FPaths::ProjectContentDir();
-	FString FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*RelativePath) + "ShapenetObj/" + synset + "/" + hash;
-	FString test = "/Game/ShapenetOBJ/" + synset + "/" + hash + "/";
-
-	importData->DestinationPath = *test;
+	importData->DestinationPath = *dstPath;
 	importData->Filenames = filesToImport;
 
 	FAssetToolsModule& AssetToolsModule = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools");
 	auto importedAssets = AssetToolsModule.Get().ImportAssetsAutomated(importData);
-	
+
 	UE_LOG(LogTemp, Warning, TEXT("expImport: Finished Import"));
 	bool bOutPackagesNeededSaving;
 	FEditorFileUtils::SaveDirtyPackages(false, true, true, false, true, false, &bOutPackagesNeededSaving);
@@ -129,7 +134,7 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 	FString path = shapenetDir + "/taxonomy.json";
 	FFileHelper::LoadFileToString(jsonString, *path);
 
-	UE_LOG(LogTemp, Warning, TEXT("SearchResult: json is %s"), *jsonString);
+	//UE_LOG(LogTemp, Warning, TEXT("SearchResult: json is %s"), *jsonString);
 
 	TArray<FSynsetObj> synsets;
 
@@ -159,25 +164,27 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 
 bool FShapenetImportModule::synsetExists(FString query)
 {
-	IFileManager& FileManager = IFileManager::Get();
-	FString path = shapenetDir + "/synset/";
-	return FileManager.DirectoryExists(*path);
+	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+	FString path = shapenetDir + "/" + query;
+	
+	return PlatformFile.DirectoryExists(*path);
 }
 
 bool FShapenetImportModule::importSynset(FString synset)
 {
 	
 	if (synsetExists(synset)) {
-		UE_LOG(LogTemp, Warning, TEXT("importSynset: importing "), *synset);
+		UE_LOG(LogTemp, Warning, TEXT("importSynset: importing %s"), *synset);
 		
 		IFileManager& FileManager = IFileManager::Get();
-		FString path = shapenetDir + "/synset";
+		FString path = shapenetDir + "/" + synset + "/*.*";
 		TArray<FString> Hashes;
 		FileManager.FindFiles(Hashes, *path, false, true);
 
 		bool successfullyImported = true;
+		UE_LOG(LogTemp, Warning, TEXT("importSynset: Found %d hashes"), Hashes.Num());
 		for (int32 i = 0; i < Hashes.Num(); i++) {
-			UE_LOG(LogTemp, Warning, TEXT("importSynset: importing "), *Hashes[i]);
+			UE_LOG(LogTemp, Warning, TEXT("importSynset: importing %s"), *Hashes[i]);
 			//successfullyImported = successfullyImported && importOBJ(synset, Hashes[i]);
 		}
 		

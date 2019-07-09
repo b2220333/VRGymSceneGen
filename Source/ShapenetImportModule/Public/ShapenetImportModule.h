@@ -35,4 +35,13 @@ public:
 	SearchResult searchShapenet(FString query);
 	bool synsetExists(FString query);
 	bool importSynset(FString synset);
+	
+	/*
+	
+	srcPath is absolute path to model file
+	dstPath is relative to game and must be prefixed by /Gane/ which 
+	is unreal's way of accessing the content folder of the project
+	
+	*/
+	bool importOBJFromFile(FString srcPath, FString dstPath);
 };
