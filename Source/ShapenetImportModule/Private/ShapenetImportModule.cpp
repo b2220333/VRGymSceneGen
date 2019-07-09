@@ -57,6 +57,8 @@ void FShapenetImportModule::StartupModule()
 
 	searchShapenet(synset);
 
+	importSynset(synset);
+
 }
 
 void FShapenetImportModule::ShutdownModule()
@@ -158,7 +160,7 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 bool FShapenetImportModule::synsetExists(FString query)
 {
 	IFileManager& FileManager = IFileManager::Get();
-	FString path = shapenetDir + "/synset";
+	FString path = shapenetDir + "/synset/";
 	return FileManager.DirectoryExists(*path);
 }
 
@@ -173,13 +175,16 @@ bool FShapenetImportModule::importSynset(FString synset)
 		TArray<FString> Hashes;
 		FileManager.FindFiles(Hashes, *path, false, true);
 
+		bool successfullyImported = true;
 		for (int32 i = 0; i < Hashes.Num(); i++) {
-			importOBJ(synset, Hashes[i]);
+			UE_LOG(LogTemp, Warning, TEXT("importSynset: importing "), *Hashes[i]);
+			//successfullyImported = successfullyImported && importOBJ(synset, Hashes[i]);
 		}
-
+		
+		return successfullyImported;
 	}
 	else {
-		UE_LOG(LogTemp, Warning, TEXT("importSynset: synset does not exist in  shapenet"), *synset);
+		UE_LOG(LogTemp, Warning, TEXT("importSynset: synset does not exist in shapenet"), *synset);
 		return false;
 	}
 	return false;
