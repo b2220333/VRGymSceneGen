@@ -24,6 +24,7 @@ public:
 
 	bool importOBJ(FString synset, FString hash);
 	FString shapenetDir = "D://data/ShapeNetCore.v2";
+	
 	bool modelAlreadyImported(FString synset, FString hash);
 
 	struct SearchResult{
@@ -44,4 +45,18 @@ public:
 	
 	*/
 	bool importOBJFromFile(FString srcPath, FString dstPath);
+
+	void setShapenetDir(FString path);
+	void FString getShapenetDir();
+
+	bool importAllShapenetModels();
+
+	// menu exposed commands
+
+	TSharedPtr<FUICommandInfo> importFromPath;
+	TSharedPtr<FUICommandInfo> importFromSynsetAndHash;
+	TSharedPtr<FUICommandInfo> importSynset;
+	TSharedPtr<FUICommandInfo> importAllShapenet;
+	TSharedPtr<FUICommandInfo> changeShapenetDir;
+
 };

@@ -27,6 +27,14 @@
 #include "Runtime/Core/Public/GenericPlatform/GenericPlatformFile.h"
 #include "Runtime/Core/Public/HAL/FileManager.h"
 
+#include "SlateBasics.h"
+#include "SlateExtras.h"
+#include "Editor/LevelEditor/Public/LevelEditor.h"
+#include "Runtime/Core/Public/Templates/SharedPointer.h"
+
+static const FName PLUGIN_NAMETabName("ShapenetImportModule");
+
+
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
 IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
 
@@ -35,6 +43,41 @@ IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
 void FShapenetImportModule::StartupModule()
 {
 	UE_LOG(ShapenetImportModule, Warning, TEXT("ShapenetImportModule: Log Started"));
+
+
+	// testing menu editing extension
+
+	// register command macro
+	UI_COMMAND(importAllShapenet, "importAllShapenet", "import all shapenet models", EUserInterfaceActionType::Button, FInputGesture())
+	
+
+	PluginCommands = MakeShareable(new FUICommandList);
+
+
+	PluginCommands->MapAction(
+		importAllShapenet,
+		FExecuteAction::CreateRaw(this, &FShapenetImportModule::importAllShapenetModels),
+		FCanExecuteAction());
+
+	FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
+
+	{
+		TSharedPtr<FExtender> MenuExtender = MakeShareable(new FExtender());
+		MenuExtender->AddMenuExtension("WindowLayout", EExtensionHook::After, PluginCommands, FMenuExtensionDelegate::CreateRaw(this, &FPLUGIN_NAMEModule::AddMenuExtension));
+
+		LevelEditorModule.GetMenuExtensibilityManager()->AddExtender(MenuExtender);
+	}
+
+	{
+		TSharedPtr<FExtender> ToolbarExtender = MakeShareable(new FExtender);
+		ToolbarExtender->AddToolBarExtension("Settings", EExtensionHook::After, PluginCommands, FToolBarExtensionDelegate::CreateRaw(this, &FPLUGIN_NAMEModule::AddToolbarExtension));
+
+		LevelEditorModule.GetToolBarExtensibilityManager()->AddExtender(ToolbarExtender);
+	}
+
+
+
+
 	/*
 		original test
 
@@ -59,6 +102,8 @@ void FShapenetImportModule::StartupModule()
 	searchShapenet(synset);
 
 	importSynset(synset);
+
+
 
 }
 
@@ -197,5 +242,16 @@ bool FShapenetImportModule::importSynset(FString synset)
 	return false;
 
 }
+
+void FShapenetImportModule::setShapenetDir(FString path)
+{
+	shapenetDir = path;
+}
+
+void FShapenetImportModule::getShapenetDir()
+{
+	return shapenetDir;
+}
+
 
 #undef LOCTEXT_NAMESPACE
