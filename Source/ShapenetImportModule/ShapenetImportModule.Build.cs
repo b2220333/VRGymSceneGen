@@ -10,7 +10,7 @@ public class ShapenetImportModule : ModuleRules
 
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "UnrealEd", "FBX", "Json", "JsonUtilities" });
 
-        PrivateDependencyModuleNames.AddRange(new string[] { "SceneGenUnreal", "FBX" });
+        PrivateDependencyModuleNames.AddRange(new string[] { "SceneGenUnreal", "FBX", "Projects" });
 
         // Uncomment if you are using Slate UI
          PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

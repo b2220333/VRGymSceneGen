@@ -31,9 +31,10 @@
 #include "SlateExtras.h"
 #include "Editor/LevelEditor/Public/LevelEditor.h"
 #include "Runtime/Core/Public/Templates/SharedPointer.h"
+#include "Runtime/Slate/Public/Framework/Commands/Commands.h"
+#include "ShapenetImportModuleCommands.h"
 
-static const FName PLUGIN_NAMETabName("ShapenetImportModule");
-
+static const FName ImportShapenet("ShapenetImportModule");
 
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
 IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
@@ -42,39 +43,39 @@ IMPLEMENT_GAME_MODULE(FShapenetImportModule, ShapenetImportModule);
 
 void FShapenetImportModule::StartupModule()
 {
-	UE_LOG(ShapenetImportModule, Warning, TEXT("ShapenetImportModule: Log Started"));
+	UE_LOG(ShapenetImportModule, Warning, TEXT("ShapenetImportModule: Log Started"))
 
+	
 
 	// testing menu editing extension
 
-	// register command macro
-	UI_COMMAND(importAllShapenet, "importAllShapenet", "import all shapenet models", EUserInterfaceActionType::Button, FInputGesture())
-	
+	ShapenetImportModuleStyle::Initialize();
+	ShapenetImportModuleStyle::ReloadTextures();
 
-	PluginCommands = MakeShareable(new FUICommandList);
+	ShapenetImportModuleCommands::Register();
 
+	ModuleCommands = MakeShareable(new FUICommandList);
 
-	PluginCommands->MapAction(
-		importAllShapenet,
-		FExecuteAction::CreateRaw(this, &FShapenetImportModule::importAllShapenetModels),
+	ModuleCommands->MapAction(
+		ShapenetImportModuleCommands::Get().importShapenetAllCommand,
+		FExecuteAction::CreateRaw(this, &FShapenetImportModule::importShapenetAll),
 		FCanExecuteAction());
 
 	FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
 
 	{
 		TSharedPtr<FExtender> MenuExtender = MakeShareable(new FExtender());
-		MenuExtender->AddMenuExtension("WindowLayout", EExtensionHook::After, PluginCommands, FMenuExtensionDelegate::CreateRaw(this, &FPLUGIN_NAMEModule::AddMenuExtension));
+		MenuExtender->AddMenuExtension("WindowLayout", EExtensionHook::After, ModuleCommands, FMenuExtensionDelegate::CreateRaw(this, &FShapenetImportModule::AddMenuExtension));
 
 		LevelEditorModule.GetMenuExtensibilityManager()->AddExtender(MenuExtender);
 	}
 
 	{
 		TSharedPtr<FExtender> ToolbarExtender = MakeShareable(new FExtender);
-		ToolbarExtender->AddToolBarExtension("Settings", EExtensionHook::After, PluginCommands, FToolBarExtensionDelegate::CreateRaw(this, &FPLUGIN_NAMEModule::AddToolbarExtension));
+		ToolbarExtender->AddToolBarExtension("Settings", EExtensionHook::After, ModuleCommands, FToolBarExtensionDelegate::CreateRaw(this, &FShapenetImportModule::AddToolbarExtension));
 
 		LevelEditorModule.GetToolBarExtensibilityManager()->AddExtender(ToolbarExtender);
 	}
-
 
 
 
@@ -91,7 +92,7 @@ void FShapenetImportModule::StartupModule()
 	
 	FString synset = "02818832";
 	FString hash = "1aa55867200ea789465e08d496c0420f";
-	importOBJ(synset, hash);
+	importFromSynsetAndHash(synset, hash);
 
 
 
@@ -100,7 +101,6 @@ void FShapenetImportModule::StartupModule()
 	//importOBJ(synset, hash);
 
 	searchShapenet(synset);
-
 	importSynset(synset);
 
 
@@ -112,7 +112,7 @@ void FShapenetImportModule::ShutdownModule()
 	UE_LOG(ShapenetImportModule, Warning, TEXT("ShapenetImportModule: Log Ended"));
 }
 
-bool FShapenetImportModule::importOBJ(FString synset, FString hash)
+bool FShapenetImportModule::importFromSynsetAndHash(FString synset, FString hash)
 {
 	// do not import if model already imported
 	if (modelAlreadyImported(synset, hash)) {
@@ -122,12 +122,12 @@ bool FShapenetImportModule::importOBJ(FString synset, FString hash)
 	FString RelativePath = FPaths::ProjectContentDir();
 	FString FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*RelativePath) + "ShapenetObj/" + synset + "/" + hash;
 	FString dstPath = "/Game/ShapenetOBJ/" + synset + "/" + hash + "/";
-	return importOBJFromFile(srcPath, dstPath);
+	return importFromFile(srcPath, dstPath);
 }
 
-bool FShapenetImportModule::importOBJFromFile(FString srcPath, FString dstPath)
+bool FShapenetImportModule::importFromFile(FString srcPath, FString dstPath)
 {
-	UE_LOG(LogTemp, Warning, TEXT("expImport: Starting Import"));
+	UE_LOG(LogTemp, Warning, TEXT("importFromFile: Starting Import"));
 	TArray<FString> filesToImport;
 	filesToImport.Add(srcPath);
 
@@ -137,7 +137,7 @@ bool FShapenetImportModule::importOBJFromFile(FString srcPath, FString dstPath)
 	UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
 	importData->Factory = factory;
 
-	UE_LOG(LogTemp, Warning, TEXT("expImport: Created FBX factory"));
+	UE_LOG(LogTemp, Warning, TEXT("importFromFile: Created FBX factory"));
 
 	importData->DestinationPath = *dstPath;
 	importData->Filenames = filesToImport;
@@ -145,11 +145,11 @@ bool FShapenetImportModule::importOBJFromFile(FString srcPath, FString dstPath)
 	FAssetToolsModule& AssetToolsModule = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools");
 	auto importedAssets = AssetToolsModule.Get().ImportAssetsAutomated(importData);
 
-	UE_LOG(LogTemp, Warning, TEXT("expImport: Finished Import"));
+	UE_LOG(LogTemp, Warning, TEXT("importFromFile: Finished Import"));
 	bool bOutPackagesNeededSaving;
 	FEditorFileUtils::SaveDirtyPackages(false, true, true, false, true, false, &bOutPackagesNeededSaving);
 	if (!bOutPackagesNeededSaving) {
-		UE_LOG(LogTemp, Warning, TEXT("expImport: Nothing to save"));
+		UE_LOG(LogTemp, Warning, TEXT("importFromFile: Nothing to save"));
 		return false;
 	}
 	return true;
@@ -248,10 +248,24 @@ void FShapenetImportModule::setShapenetDir(FString path)
 	shapenetDir = path;
 }
 
-void FShapenetImportModule::getShapenetDir()
+FString FShapenetImportModule::getShapenetDir()
 {
 	return shapenetDir;
 }
 
+void FShapenetImportModule::importShapenetAll()
+{
+	UE_LOG(LogTemp, Warning, TEXT("importShapenetAll: wow this command works"));
+}
+
+void FShapenetImportModule::AddMenuExtension(FMenuBuilder& Builder)
+{
+	Builder.AddMenuEntry(ShapenetImportModuleCommands::Get().importShapenetAllCommand);
+}
+
+void FShapenetImportModule::AddToolbarExtension(FToolBarBuilder& Builder)
+{
+	Builder.AddToolBarButton(ShapenetImportModuleCommands::Get().importShapenetAllCommand);
+}
 
 #undef LOCTEXT_NAMESPACE

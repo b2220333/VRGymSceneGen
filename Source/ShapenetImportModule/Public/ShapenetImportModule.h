@@ -17,13 +17,17 @@ DECLARE_LOG_CATEGORY_EXTERN(ShapenetImportModule, All, All)
 
 class FShapenetImportModule : public IModuleInterface
 {
+private:
+	FString shapenetDir = "D://data/ShapeNetCore.v2";
+	TSharedPtr<class FUICommandList> ModuleCommands;
+	
+
 public:
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 
 
-	bool importOBJ(FString synset, FString hash);
-	FString shapenetDir = "D://data/ShapeNetCore.v2";
+	bool importFromSynsetAndHash(FString synset, FString hash);
 	
 	bool modelAlreadyImported(FString synset, FString hash);
 
@@ -44,19 +48,16 @@ public:
 	is unreal's way of accessing the content folder of the project
 	
 	*/
-	bool importOBJFromFile(FString srcPath, FString dstPath);
+	bool importFromFile(FString srcPath, FString dstPath);
 
 	void setShapenetDir(FString path);
-	void FString getShapenetDir();
+	FString getShapenetDir();
 
-	bool importAllShapenetModels();
 
-	// menu exposed commands
+	// button clicked test
+	void importShapenetAll();
 
-	TSharedPtr<FUICommandInfo> importFromPath;
-	TSharedPtr<FUICommandInfo> importFromSynsetAndHash;
-	TSharedPtr<FUICommandInfo> importSynset;
-	TSharedPtr<FUICommandInfo> importAllShapenet;
-	TSharedPtr<FUICommandInfo> changeShapenetDir;
+	void AddToolbarExtension(FToolBarBuilder& Builder);
+	void AddMenuExtension(FMenuBuilder& Builder);
 
 };
