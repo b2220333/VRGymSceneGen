@@ -1,0 +1,29 @@
+{
+	"searchTerms" : [
+		"search term 1",
+		"search term 2"
+	],
+	"synsets" : [
+		"synset1",
+		"synset2"
+	],
+	"shapenetObjects" : [
+		{
+			"synset" : "synset1",
+			"hash" : "objhash1"
+		},
+		{
+			"synset" : "synset2",
+			"hash" : "objhash2"
+		},
+		{
+			"synset" : "synset3",
+			"hash" : "objhash3"
+		}
+	],
+
+	"modelPaths" : [
+		"path/to/model/1",
+		"path/to/model/2"
+	]
+}
