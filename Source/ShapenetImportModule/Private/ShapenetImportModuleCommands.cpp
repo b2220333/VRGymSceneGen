@@ -6,7 +6,7 @@
 
 void ShapenetImportModuleCommands::RegisterCommands()
 {
-	UI_COMMAND(importShapenetAllCommand, "ShapenetImportModule", "Execute ShapenetImportModule action", EUserInterfaceActionType::Button, FInputGesture());
+	UI_COMMAND(importShapenetButton, "ShapenetImportModule", "Execute ShapenetImportModule action", EUserInterfaceActionType::Button, FInputGesture());
 }
 
 #undef LOCTEXT_NAMESPACE

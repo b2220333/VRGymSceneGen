@@ -10,7 +10,7 @@ class ShapenetImportModuleCommands : public TCommands<ShapenetImportModuleComman
 public:
 
 	ShapenetImportModuleCommands()
-		: TCommands<ShapenetImportModuleCommands>(TEXT("ShapenetImportModule"), NSLOCTEXT("Contexts", "PLUGIN_NAME", "PLUGIN_NAME Plugin"), NAME_None, FName("ShapenetImportModuleStyle"))
+		: TCommands<ShapenetImportModuleCommands>(TEXT("ShapenetImportModule"), NSLOCTEXT("Contexts", "ShapenetImportModule", "ShapenetImportModule Plugin"), NAME_None, FName("ShapenetImportModuleStyle"))
 	{
 	}
 
@@ -18,9 +18,5 @@ public:
 	virtual void RegisterCommands() override;
 
 public:
-	TSharedPtr<FUICommandInfo> importFromFileCommand;
-	TSharedPtr<FUICommandInfo> importFromSynsetAndHashCommand;
-	TSharedPtr<FUICommandInfo> importSynsetCommand;
-	TSharedPtr<FUICommandInfo> importShapenetAllCommand;
-	TSharedPtr<FUICommandInfo> setShapenetDirCommand;
+	TSharedPtr<FUICommandInfo> importShapenetButton;
 };

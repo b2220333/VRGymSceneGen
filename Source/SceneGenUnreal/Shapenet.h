@@ -23,6 +23,22 @@ struct FShapenetObject
 };
 
 USTRUCT()
+struct FModelManual
+{
+	GENERATED_BODY()
+
+
+	UPROPERTY()
+	FString srcPath;
+
+	UPROPERTY()
+	FString dstPath;
+
+
+};
+
+
+USTRUCT()
 struct FImportJson
 {
 	GENERATED_BODY()
@@ -38,7 +54,7 @@ struct FImportJson
 	TArray<FShapenetObject> shapenetObjects;
 
 	UPROPERTY()
-	TArray<FString> modelPath;
+	TArray<FModelManual> modelsManual;
 
 
 };
@@ -77,19 +93,6 @@ struct FSynsetObj
 	int32 numInstances;
 };
 
-/*
-USTRUCT()
-struct FTaxonomy
-{
-	GENERATED_BODY()
-
-
-	UPROPERTY()
-	TArray<FSynsetObj> synsets;
-
-
-};
-*/
 
 
 

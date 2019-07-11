@@ -45,7 +45,7 @@ TSharedRef< FSlateStyleSet > ShapenetImportModuleStyle::Create()
 	if (StyleInstance.IsValid()) {
 		Style->SetContentRoot(IPluginManager::Get().FindPlugin("ShapenetImportModule")->GetBaseDir() / TEXT("Resources"));
 
-		Style->Set("ShapenetImportModule.importShapenetAllCommand", new IMAGE_BRUSH(TEXT("ButtonIcon_40x"), Icon40x40));
+		Style->Set("ShapenetImportModule.importShapenetButton", new IMAGE_BRUSH(TEXT("ButtonIcon_40x"), Icon40x40));
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("ShapenetImportModuleStyle: Style is invalid"));

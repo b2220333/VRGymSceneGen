@@ -55,9 +55,11 @@ public:
 
 
 	// button clicked test
-	void importShapenetAll();
+	void onImportButtonClicked();
 
 	void AddToolbarExtension(FToolBarBuilder& Builder);
 	void AddMenuExtension(FMenuBuilder& Builder);
+
+	bool importFromJson(FString json);
 
 };

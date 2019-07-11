@@ -22,8 +22,14 @@
 		}
 	],
 
-	"modelPaths" : [
-		"path/to/model/1",
-		"path/to/model/2"
+	"modelsManual" : [
+		{
+			"srcPath" : "path/to/model1",
+			"dstPath" : "/Game/rel/path/to/model1/asset"
+		},
+		{
+			"srcPath" : "path/to/model2",
+			"dstPath" : "/Game/rel/path/to/model2/asset"
+		}
 	]
 }

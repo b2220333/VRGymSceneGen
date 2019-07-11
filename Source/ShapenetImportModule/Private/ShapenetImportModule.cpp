@@ -60,8 +60,8 @@ void FShapenetImportModule::StartupModule()
 	ModuleCommands = MakeShareable(new FUICommandList);
 
 	ModuleCommands->MapAction(
-		ShapenetImportModuleCommands::Get().importShapenetAllCommand,
-		FExecuteAction::CreateRaw(this, &FShapenetImportModule::importShapenetAll),
+		ShapenetImportModuleCommands::Get().importShapenetButton,
+		FExecuteAction::CreateRaw(this, &FShapenetImportModule::onImportButtonClicked),
 		FCanExecuteAction());
 
 	FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
@@ -259,9 +259,14 @@ FString FShapenetImportModule::getShapenetDir()
 	return shapenetDir;
 }
 
-void FShapenetImportModule::importShapenetAll()
+void FShapenetImportModule::onImportButtonClicked()
 {
-	UE_LOG(LogTemp, Warning, TEXT("importShapenetAll: testing"));
+
+	FString path = FPaths::ProjectDir() + "External/import.json";
+	UE_LOG(LogTemp, Warning, TEXT("onImportButtonClicked: Importing from %s"), *path);
+
+	// importFromJson(path);
+	
 	//importSynset("02818832");
 
 
@@ -270,23 +275,67 @@ void FShapenetImportModule::importShapenetAll()
 	//FObjectInitializer init;
 	//UEditableTextBox test = UEditableTextBox(init);
 
-
+	/*
 	FText DialogText = FText::Format(
 		LOCTEXT("PluginButtonDialogText", "Add code to {0} in {1} to override this button's actions"),
 		FText::FromString(TEXT("FPLUGIN_NAMEModule::PluginButtonClicked()")),
 		FText::FromString(TEXT("PLUGIN_NAME.cpp"))
 	);
 	FMessageDialog::Open(EAppMsgType::Ok, DialogText);
+	*/
 }
 
 void FShapenetImportModule::AddMenuExtension(FMenuBuilder& Builder)
 {
-	Builder.AddMenuEntry(ShapenetImportModuleCommands::Get().importShapenetAllCommand);
+	Builder.AddMenuEntry(ShapenetImportModuleCommands::Get().importShapenetButton);
 }
 
 void FShapenetImportModule::AddToolbarExtension(FToolBarBuilder& Builder)
 {
-	Builder.AddToolBarButton(ShapenetImportModuleCommands::Get().importShapenetAllCommand);
+	Builder.AddToolBarButton(ShapenetImportModuleCommands::Get().importShapenetButton);
+}
+
+
+bool FShapenetImportModule::importFromJson(FString json)
+{
+	FImportJson parsedImportJson;
+	bool parsed = FJsonObjectConverter::JsonObjectStringToUStruct<FImportJson>(json, &parsedImportJson, 0, 0);
+
+	// store all synsets to fully improt
+	TArray<FString>synsetsToImport;
+
+	UE_LOG(LogTemp, Warning, TEXT("importFromJson: Importing search terms"));
+	// find synsets from search terms
+	for (int32 i = 0; i < parsedImportJson.searchTerms.Num(); i++) {
+		SearchResult result = searchShapenet(parsedImportJson.searchTerms[i]);
+		synsetsToImport.Append(result.synsets);
+	}
+
+	// add synsets list from json
+	synsetsToImport.Append(parsedImportJson.synsets);
+
+	UE_LOG(LogTemp, Warning, TEXT("importFromJson: Importing from synsets"));
+	// fully import synsets
+	for (int32 i = 0; i < synsetsToImport.Num(); i++) {
+		importSynset(synsetsToImport[i]);
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("importFromJson: Importing from shapenet objects"));
+	// import shapenet objects
+	for (int32 i = 0; i < parsedImportJson.shapenetObjects.Num(); i++) {
+		FShapenetObject* shapenetOBJ = &parsedImportJson.shapenetObjects[i];
+		importFromSynsetAndHash(shapenetOBJ->synset, shapenetOBJ->hash);
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("importFromJson: Importing from models manually"));
+	// manually import from path
+	for (int32 i = 0; i < parsedImportJson.modelsManual.Num(); i++) {
+		FModelManual* modelManual = &parsedImportJson.modelsManual[i];
+		importFromFile(modelManual->srcPath, modelManual->srcPath);
+	}
+	
+
+	return false;
 }
 
 #undef LOCTEXT_NAMESPACE
