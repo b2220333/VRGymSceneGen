@@ -7,6 +7,41 @@
 #include "Shapenet.generated.h"
 
 
+USTRUCT()
+struct FShapenetObject
+{
+	GENERATED_BODY()
+
+
+	UPROPERTY()
+	FString synset;
+
+	UPROPERTY()
+	FString hash;
+
+
+};
+
+USTRUCT()
+struct FImportJson
+{
+	GENERATED_BODY()
+
+
+	UPROPERTY()
+	TArray<FString> searchTerms;
+
+	UPROPERTY()
+	TArray<FString> synsets;
+
+	UPROPERTY()
+	TArray<FShapenetObject> shapenetObjects;
+
+	UPROPERTY()
+	TArray<FString> modelPath;
+
+
+};
 
 USTRUCT()
 struct FSynsetChildren
