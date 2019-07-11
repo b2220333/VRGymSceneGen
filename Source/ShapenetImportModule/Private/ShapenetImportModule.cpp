@@ -34,6 +34,9 @@
 #include "Runtime/Slate/Public/Framework/Commands/Commands.h"
 #include "ShapenetImportModuleCommands.h"
 
+#include "Runtime/UMG/Public/Components/Widget.h"
+#include "Runtime/UMG/Public/Components/EditableTextBox.h"
+
 static const FName ImportShapenet("ShapenetImportModule");
 
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
@@ -89,10 +92,13 @@ void FShapenetImportModule::StartupModule()
 
 	*/
 
+	/*
 	
 	FString synset = "02818832";
 	FString hash = "1aa55867200ea789465e08d496c0420f";
 	importFromSynsetAndHash(synset, hash);
+
+	*/
 
 
 
@@ -100,8 +106,8 @@ void FShapenetImportModule::StartupModule()
 	//FString hash = "1a00aa6b75362cc5b324368d54a7416f";
 	//importOBJ(synset, hash);
 
-	searchShapenet(synset);
-	importSynset(synset);
+	//searchShapenet(synset);
+	//importSynset(synset);
 
 
 
@@ -230,7 +236,7 @@ bool FShapenetImportModule::importSynset(FString synset)
 		UE_LOG(LogTemp, Warning, TEXT("importSynset: Found %d hashes"), Hashes.Num());
 		for (int32 i = 0; i < Hashes.Num(); i++) {
 			UE_LOG(LogTemp, Warning, TEXT("importSynset: importing %s"), *Hashes[i]);
-			//successfullyImported = successfullyImported && importOBJ(synset, Hashes[i]);
+			successfullyImported = successfullyImported && importFromSynsetAndHash(synset, Hashes[i]);
 		}
 		
 		return successfullyImported;
@@ -255,7 +261,22 @@ FString FShapenetImportModule::getShapenetDir()
 
 void FShapenetImportModule::importShapenetAll()
 {
-	UE_LOG(LogTemp, Warning, TEXT("importShapenetAll: wow this command works"));
+	UE_LOG(LogTemp, Warning, TEXT("importShapenetAll: testing"));
+	//importSynset("02818832");
+
+
+	// testing text input
+
+	//FObjectInitializer init;
+	//UEditableTextBox test = UEditableTextBox(init);
+
+
+	FText DialogText = FText::Format(
+		LOCTEXT("PluginButtonDialogText", "Add code to {0} in {1} to override this button's actions"),
+		FText::FromString(TEXT("FPLUGIN_NAMEModule::PluginButtonClicked()")),
+		FText::FromString(TEXT("PLUGIN_NAME.cpp"))
+	);
+	FMessageDialog::Open(EAppMsgType::Ok, DialogText);
 }
 
 void FShapenetImportModule::AddMenuExtension(FMenuBuilder& Builder)

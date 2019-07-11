@@ -1,0 +1,115 @@
+{
+	"name": "modern_kitchen",
+	"room_dimensions": { // all rooms are rectangular; shape can be changed by adding walls
+		"x-width" : 10,
+		"y-width": 10,
+		"z-width": 10
+	},
+
+	"shapenetObjects" : [
+		{
+			"name" : "object1 name",
+			"shapenetSynset" : "12345678",
+			"shapenetHash" : "hash string", //optional
+			"meshFromOverride" : "/Game/ path to uasset", //optional mesh must already be imported into editor
+			"textureOverride" : "/Game/ path to texture asset", // optional texture must already be imported into editor
+			"quantity": 10,
+			"spawnProbability": 0.9,
+			"destructable" : true,
+			"physicsEnabled" : false,
+			"keepOriginalTextures" : false,
+			"useSameMeshForAllInstances": true,
+			"useSameTextureForAllInstances" : false,
+			"transforms" : [
+				{
+					"location" : {
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					},
+					"rotation" : {
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					},
+					"scale" : {
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"location" : {
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					},
+					"rotation" : {
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					},
+					"scale" : {
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				} // repeat for <quantity> number of objects
+
+			]
+		},
+
+		{
+			"name" : "object2 name",
+			"shapenetSynset" : "12345678",
+			"shapenetHash" : "hash string", //optional
+			"meshFromOverride" : "/Game/ path to uasset", //optional mesh must already be imported into editor
+			"textureOverride" : "/Game/ path to texture asset", // optional texture must already be imported into editor
+			"quantity": 10,
+			"spawnProbability": 0.9,
+			"destructable" : true,
+			"physicsEnabled" : false,
+			"keepOriginalTextures" : false,
+			"useSameMeshForAllInstances": true,
+			"useSameTextureForAllInstances" : false,
+			"transforms" : [
+				{
+					"location" : {
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					},
+					"rotation" : {
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					},
+					"scale" : {
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				},
+				{
+					"location" : {
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					},
+					"rotation" : {
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					},
+					"scale" : {
+						"x" : 0,
+						"y" : 0,
+						"z" : 0
+					}
+				} // repeat for <quantity> number of objects
+
+			]
+		}
+
+	]
+}

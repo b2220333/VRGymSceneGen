@@ -10,7 +10,7 @@ class ShapenetImportModuleCommands : public TCommands<ShapenetImportModuleComman
 public:
 
 	ShapenetImportModuleCommands()
-		: TCommands<ShapenetImportModuleCommands>(TEXT("ShapenetImportModule"), NSLOCTEXT("Contexts", "PLUGIN_NAME", "PLUGIN_NAME Plugin"), NAME_None, ShapenetImportModuleStyle::GetStyleSetName())
+		: TCommands<ShapenetImportModuleCommands>(TEXT("ShapenetImportModule"), NSLOCTEXT("Contexts", "PLUGIN_NAME", "PLUGIN_NAME Plugin"), NAME_None, FName("ShapenetImportModuleStyle"))
 	{
 	}
 

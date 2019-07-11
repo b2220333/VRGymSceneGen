@@ -10,7 +10,8 @@ void ShapenetImportModuleStyle::Initialize()
 	if (!StyleInstance.IsValid())
 	{
 		StyleInstance = Create();
-		FSlateStyleRegistry::RegisterSlateStyle(*StyleInstance);
+		if (StyleInstance.IsValid())
+			FSlateStyleRegistry::RegisterSlateStyle(*StyleInstance);
 	}
 }
 
@@ -23,7 +24,7 @@ void ShapenetImportModuleStyle::Shutdown()
 
 FName ShapenetImportModuleStyle::GetStyleSetName()
 {
-	static FName StyleSetName(TEXT("ShapenetImportModule_Style"));
+	static FName StyleSetName(TEXT("ShapenetImportModuleStyle"));
 	return StyleSetName;
 }
 
@@ -39,11 +40,16 @@ const FVector2D Icon40x40(40.0f, 40.0f);
 
 TSharedRef< FSlateStyleSet > ShapenetImportModuleStyle::Create()
 {
-	TSharedRef< FSlateStyleSet > Style = MakeShareable(new FSlateStyleSet("ShapenetImportModule_Style"));
-	Style->SetContentRoot(IPluginManager::Get().FindPlugin("ShapenetImportModule")->GetBaseDir() / TEXT("Resources"));
+	TSharedRef< FSlateStyleSet > Style = MakeShareable(new FSlateStyleSet("ShapenetImportModuleStyle"));
+	
+	if (StyleInstance.IsValid()) {
+		Style->SetContentRoot(IPluginManager::Get().FindPlugin("ShapenetImportModule")->GetBaseDir() / TEXT("Resources"));
 
-	Style->Set("ShapenetImportModule.importShapenetAllCommand", new IMAGE_BRUSH(TEXT("ButtonIcon_40x"), Icon40x40));
-
+		Style->Set("ShapenetImportModule.importShapenetAllCommand", new IMAGE_BRUSH(TEXT("ButtonIcon_40x"), Icon40x40));
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("ShapenetImportModuleStyle: Style is invalid"));
+	} 
 	return Style;
 }
 
