@@ -3,7 +3,20 @@
 #include "SceneGenUnrealGameModeBase.h"
 
 
+ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
+{
 
+}
+
+void ASceneGenUnrealGameModeBase::BeginPlay() {
+	Super::BeginPlay();
+
+}
+
+void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
+	Super::Tick(DeltaSeconds);
+
+}
 
 void ASceneGenUnrealGameModeBase::spawnShapnets()
 {
