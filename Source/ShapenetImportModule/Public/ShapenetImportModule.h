@@ -39,7 +39,7 @@ public:
 
 	SearchResult searchShapenet(FString query);
 	bool synsetExists(FString query);
-	bool importSynset(FString synset);
+	bool importSynset(FString synset, int32 numToImport);
 	
 	/*
 	

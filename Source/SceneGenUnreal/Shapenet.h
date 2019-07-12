@@ -8,6 +8,37 @@
 
 
 USTRUCT()
+struct FSearchTerms
+{
+	GENERATED_BODY()
+
+
+	UPROPERTY()
+	FString query;
+
+	UPROPERTY()
+	int32 numModelsToImport;
+
+
+};
+
+USTRUCT()
+struct FImportSynsets
+{
+	GENERATED_BODY()
+
+
+	UPROPERTY()
+	FString synset;
+
+	UPROPERTY()
+	int32 numModelsToImport;
+
+
+};
+
+
+USTRUCT()
 struct FShapenetObject
 {
 	GENERATED_BODY()
@@ -45,10 +76,10 @@ struct FImportJson
 
 
 	UPROPERTY()
-	TArray<FString> searchTerms;
+	TArray<FSearchTerms> searchTerms;
 
 	UPROPERTY()
-	TArray<FString> synsets;
+	TArray<FImportSynsets> synsets;
 
 	UPROPERTY()
 	TArray<FShapenetObject> shapenetObjects;

@@ -1,11 +1,23 @@
 {
 	"searchTerms" : [
-		"search term 1",
-		"search term 2"
+		{
+
+			"query": "search term 1",
+			"numModelsToImport": 10
+		},
+		{
+			"query" : "search term 2"// do not imclude numModels to import all
+		}
 	],
 	"synsets" : [
-		"synset1",
-		"synset2"
+		{
+			"synset" : "synset1",
+			"numModelsToImport": 10
+		},
+		{
+			"synset" : "synset2"
+		}
+		
 	],
 	"shapenetObjects" : [
 		{
