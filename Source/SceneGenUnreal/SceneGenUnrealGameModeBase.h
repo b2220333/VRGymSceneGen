@@ -13,8 +13,9 @@ UCLASS()
 class SCENEGENUNREAL_API ASceneGenUnrealGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
-	
-	
+
+
+	// spawns shapenet model actors from AShapenetClass
+	void spawnShapnets();
 	
 };

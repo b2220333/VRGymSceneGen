@@ -5,3 +5,7 @@
 
 
 
+void ASceneGenUnrealGameModeBase::spawnShapnets()
+{
+
+}

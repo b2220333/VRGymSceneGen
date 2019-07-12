@@ -335,20 +335,27 @@ bool FShapenetImportModule::importFromJson(FString json)
 		UE_LOG(LogTemp, Warning, TEXT("Searching for %s"), *parsedImportJson.searchTerms[i].query);
 		SearchResult result = searchShapenet(parsedImportJson.searchTerms[i].query);
 		UE_LOG(LogTemp, Warning, TEXT("Found %d synsets"), result.synsets.Num());
-		int32 totalMatches = 0;
-		for (int32 j = 0; j < result.numModels.Num(); j++) {
-			totalMatches += result.numModels[j];
-		}
-		int32 modelsImported = 0;
-		for (int32 j = 0; j < result.numModels.Num() - 1; j++) {
-			int32 numModelsToImport = (result.numModels[j] * parsedImportJson.searchTerms[i].numModelsToImport)/ totalMatches;
-			importSynset(result.synsets[j], numModelsToImport);
-			modelsImported += numModelsToImport;
-		}
+		if (parsedImportJson.searchTerms[i].numModelsToImport) {
+			int32 totalMatches = 0;
+			for (int32 j = 0; j < result.numModels.Num(); j++) {
+				totalMatches += result.numModels[j];
+			}
+			int32 modelsImported = 0;
+			for (int32 j = 0; j < result.numModels.Num() - 1; j++) {
+				int32 numModelsToImport = (result.numModels[j] * parsedImportJson.searchTerms[i].numModelsToImport) / totalMatches;
+				importSynset(result.synsets[j], numModelsToImport);
+				modelsImported += numModelsToImport;
+			}
 
-		while (modelsImported < parsedImportJson.searchTerms[i].numModelsToImport) {
-			importSynset(result.synsets[result.synsets.Num() - 1], 1);
-			modelsImported++;
+			while (modelsImported < parsedImportJson.searchTerms[i].numModelsToImport) {
+				importSynset(result.synsets[result.synsets.Num() - 1], 1);
+				modelsImported++;
+			}
+		}
+		else {
+			for (int32 j = 0; j < result.numModels.Num(); j++) {
+				importSynset(result.synsets[j], -1);
+			}
 		}
 	
 
@@ -358,7 +365,12 @@ bool FShapenetImportModule::importFromJson(FString json)
 	UE_LOG(LogTemp, Warning, TEXT("importFromJson: Importing from synsets"));
 	// fully import synsets
 	for (int32 i = 0; i < parsedImportJson.synsets.Num(); i++) {
-		importSynset(parsedImportJson.synsets[i].synset, -1);
+		if (parsedImportJson.synsets[i].numModelsToImport) {
+			importSynset(parsedImportJson.synsets[i].synset, parsedImportJson.synsets[i].numModelsToImport);
+		}
+		else {
+			importSynset(parsedImportJson.synsets[i].synset, -1);
+		}
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("importFromJson: Importing from shapenet objects"));
