@@ -83,5 +83,6 @@ bool AShapenet::importMesh(FString synset, FString hash)
 	//static ConstructorHelpers::FObjectFinder<UStaticMesh>BaseMeshAsset(*path);
 	UStaticMesh* Asset = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
 	BaseMesh->SetStaticMesh(Asset);
+	BaseMesh->SetMobility(EComponentMobility::Movable);
 	return false;
 }

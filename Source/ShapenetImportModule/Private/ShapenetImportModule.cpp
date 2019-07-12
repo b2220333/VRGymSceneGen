@@ -37,6 +37,8 @@
 #include "Runtime/UMG/Public/Components/Widget.h"
 #include "Runtime/UMG/Public/Components/EditableTextBox.h"
 
+#include "Runtime/Core/Public/Internationalization/Regex.h"
+
 static const FName ImportShapenet("ShapenetImportModule");
 
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
@@ -82,6 +84,9 @@ void FShapenetImportModule::StartupModule()
 
 
 
+
+	
+
 	/*
 		original test
 
@@ -92,12 +97,11 @@ void FShapenetImportModule::StartupModule()
 
 	*/
 
-	/*
 	
+	/*
 	FString synset = "02818832";
 	FString hash = "1aa55867200ea789465e08d496c0420f";
 	importFromSynsetAndHash(synset, hash);
-
 	*/
 
 
@@ -141,6 +145,11 @@ bool FShapenetImportModule::importFromFile(FString srcPath, FString dstPath)
 	importData->bReplaceExisting = true;
 
 	UFbxFactory* factory = NewObject<UFbxFactory>(UFbxFactory::StaticClass(), FName("Factory"), RF_NoFlags);
+	factory->ImportUI->StaticMeshImportData->ImportUniformScale = 100.0f;
+	factory->ImportUI->StaticMeshImportData->ImportRotation = FRotator(0.0f, 0.0f, 90.0f);
+	factory->ImportUI->StaticMeshImportData->bCombineMeshes = true;
+	factory->ImportUI->StaticMeshImportData->bGenerateLightmapUVs = true;
+	factory->ImportUI->StaticMeshImportData->bAutoGenerateCollision = true;
 	importData->Factory = factory;
 
 	UE_LOG(LogTemp, Warning, TEXT("importFromFile: Created FBX factory"));
@@ -190,20 +199,22 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 	TArray<FSynsetObj> synsets;
 
 	bool parsed = FJsonObjectConverter::JsonArrayStringToUStruct<FSynsetObj>(jsonString, &synsets, 0, 0);
+	
 
-	if (parsed) {
-		FString test = synsets[0].name;
-		UE_LOG(LogTemp, Warning, TEXT("First synset name is %s"), *test);
-	}
-	else {
+	if (!parsed) {
 		UE_LOG(LogTemp, Warning, TEXT("Parse failed "));
 	}
 
 
 	SearchResult result;
 
-	for (int32 i = 0; i < result.synsets.Num(); i++) {
-		if (synsets[i].name.Contains(query)) {
+	FString patternString = ",?" + query + ",?";
+	FRegexPattern pattern = FRegexPattern(patternString);
+
+	for (int32 i = 0; i < synsets.Num(); i++) {
+		FRegexMatcher matcher = FRegexMatcher(pattern, synsets[i].name);
+		if (matcher.FindNext()) {
+			UE_LOG(LogTemp, Warning, TEXT("Found match: %s, %s"), *synsets[i].name, *synsets[i].synsetId);
 			result.synsets.Add(synsets[i].synsetId);
 			result.numModels.Add(synsets[i].numInstances);
 		}
@@ -265,7 +276,10 @@ void FShapenetImportModule::onImportButtonClicked()
 	FString path = FPaths::ProjectDir() + "External/import.json";
 	UE_LOG(LogTemp, Warning, TEXT("onImportButtonClicked: Importing from %s"), *path);
 
-	// importFromJson(path);
+	FString jsonString;
+	FFileHelper::LoadFileToString(jsonString, *path);
+
+	importFromJson(jsonString);
 	
 	//importSynset("02818832");
 
@@ -304,11 +318,17 @@ bool FShapenetImportModule::importFromJson(FString json)
 	// store all synsets to fully improt
 	TArray<FString>synsetsToImport;
 
-	UE_LOG(LogTemp, Warning, TEXT("importFromJson: Importing search terms"));
+	UE_LOG(LogTemp, Warning, TEXT("importFromJson: finding search terms"));
 	// find synsets from search terms
 	for (int32 i = 0; i < parsedImportJson.searchTerms.Num(); i++) {
+		UE_LOG(LogTemp, Warning, TEXT("Searching for %s"), *parsedImportJson.searchTerms[i]);
 		SearchResult result = searchShapenet(parsedImportJson.searchTerms[i]);
+		UE_LOG(LogTemp, Warning, TEXT("Found for %d synsets"), result.synsets.Num());
 		synsetsToImport.Append(result.synsets);
+	}
+
+	for (int32 i = 0; i < synsetsToImport.Num(); i++) {
+		UE_LOG(LogTemp, Warning, TEXT("Found: %s"), *synsetsToImport[i]);
 	}
 
 	// add synsets list from json
@@ -331,7 +351,7 @@ bool FShapenetImportModule::importFromJson(FString json)
 	// manually import from path
 	for (int32 i = 0; i < parsedImportJson.modelsManual.Num(); i++) {
 		FModelManual* modelManual = &parsedImportJson.modelsManual[i];
-		importFromFile(modelManual->srcPath, modelManual->srcPath);
+		importFromFile(modelManual->srcPath, modelManual->dstPath);
 	}
 	
 

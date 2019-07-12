@@ -1,0 +1,31 @@
+{
+	"searchTerms" : [
+		"car",
+		"batman"
+	],
+	"synsets" : [
+		"02818832",
+		"03593526"
+	],
+	"shapenetObjects" : [
+		{
+			"synset" : "02871439",
+			"hash" : "2a9acc146f7310b1492d9da2668ec34c"
+		},
+		{
+			"synset" : "03691459",
+			"hash" : "1a14b00578f19b1f5c38e15d823f1476"
+		}
+	],
+
+	"modelsManual" : [
+		{
+			"srcPath" : "D://data/ShapeNetCore.v2/02924116/1bc9264f1c92b69752470de2774d6099/models/model_normalized.obj",
+			"dstPath" : "/Game/testManual/test1/"
+		},
+		{
+			"srcPath" : "D://data/ShapeNetCore.v2/03759954/6d9ab595a7bd890128ee3839fe659fc8/models/model_normalized.obj",
+			"dstPath" : "/Game/testManual/test2/"
+		}
+	]
+}

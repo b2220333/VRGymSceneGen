@@ -72,7 +72,7 @@
 			"keepOriginalTextures" : false,
 			"useSameMeshForAllInstances": true,
 			"useSameTextureForAllInstances" : false,
-			"transforms" : [
+			"transforms" : [ // still have to figure out ranges from random positioning
 				{
 					"location" : {
 						"x" : 0,

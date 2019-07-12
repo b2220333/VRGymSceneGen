@@ -6,7 +6,7 @@
 
 void ShapenetImportModuleCommands::RegisterCommands()
 {
-	UI_COMMAND(importShapenetButton, "ShapenetImportModule", "Execute ShapenetImportModule action", EUserInterfaceActionType::Button, FInputGesture());
+	UI_COMMAND(importShapenetButton, "Import Models", "Import models from External/import.json", EUserInterfaceActionType::Button, FInputGesture());
 }
 
 #undef LOCTEXT_NAMESPACE
