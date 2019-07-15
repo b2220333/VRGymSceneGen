@@ -1,0 +1,14 @@
+{
+	"name": "bedroom",
+	"roomDimensions": { // all rooms are rectangular; shape can be changed by adding walls
+		"xWidth" : 1000,
+		"yWidth": 1000,
+		"zWidth": 1000
+	},
+
+	"shapenetObjects" : [
+		{
+
+		}
+	]
+}

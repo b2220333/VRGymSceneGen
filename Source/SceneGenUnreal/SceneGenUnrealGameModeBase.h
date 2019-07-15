@@ -72,6 +72,11 @@ public:
 	void spawnShapnets();
 
 	TArray<AShapenet> shapenetActors;
+	
+
+	void randomizeTextures(AShapenet shapenetActor);
+
+	void randomizePosition(AShapenet shapenetActor);
 
 	
 };
