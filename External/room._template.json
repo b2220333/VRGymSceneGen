@@ -1,9 +1,9 @@
 {
 	"name": "modern_kitchen",
-	"room_dimensions": { // all rooms are rectangular; shape can be changed by adding walls
-		"x-width" : 10,
-		"y-width": 10,
-		"z-width": 10
+	"roomDimensions": { // all rooms are rectangular; shape can be changed by adding walls
+		"xWidth" : 10,
+		"yWidth": 10,
+		"zWidth": 10
 	},
 
 	"shapenetObjects" : [
@@ -17,7 +17,7 @@
 			"spawnProbability": 0.9,
 			"destructable" : true,
 			"physicsEnabled" : false,
-			"keepOriginalTextures" : false,
+			"useRandomTextures" : false,
 			"useSameMeshForAllInstances": true,
 			"useSameTextureForAllInstances" : false,
 			"transforms" : [

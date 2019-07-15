@@ -2,13 +2,60 @@
 
 #pragma once
 
+#include "Shapenet.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "SceneGenUnrealGameModeBase.generated.h"
 
-/**
- * 
- */
+USTRUCT()
+struct FShapenetActor
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString name;
+
+
+
+};
+
+USTRUCT()
+struct FRoomDims
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	float xWidth;
+
+	UPROPERTY()
+	float yWidth;
+
+	UPROPERTY()
+	float zWidth;
+
+
+};
+
+USTRUCT()
+struct FRoomJson
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString name;
+
+	UPROPERTY()
+	FRoomDims roomDimensions;
+
+	UPROPERTY()
+	TArray<FShapenetActor> shapnetObjects;
+
+	
+
+
+};
+
 UCLASS()
 class SCENEGENUNREAL_API ASceneGenUnrealGameModeBase : public AGameModeBase
 {
@@ -23,5 +70,8 @@ public:
 
 	// spawns shapenet model actors from AShapenetClass
 	void spawnShapnets();
+
+	TArray<AShapenet> shapenetActors;
+
 	
 };

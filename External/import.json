@@ -3,6 +3,14 @@
 		{
 			"query": "bed",
 			"numModelsToImport": 10
-		},		
+		},
+		{
+			"query": "table",
+			"numModelsToImport": 10
+		},	
+		{
+			"query": "chair",
+			"numModelsToImport": 10
+		}		
 	]
 }

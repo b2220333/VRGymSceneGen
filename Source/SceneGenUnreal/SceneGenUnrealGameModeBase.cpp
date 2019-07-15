@@ -2,6 +2,7 @@
 
 #include "SceneGenUnrealGameModeBase.h"
 
+#include "Shapenet.h"
 
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 {
@@ -10,6 +11,10 @@ ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 
 void ASceneGenUnrealGameModeBase::BeginPlay() {
 	Super::BeginPlay();
+
+
+	// generate scene here ?
+
 
 }
 

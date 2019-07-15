@@ -335,26 +335,28 @@ bool FShapenetImportModule::importFromJson(FString json)
 		UE_LOG(LogTemp, Warning, TEXT("Searching for %s"), *parsedImportJson.searchTerms[i].query);
 		SearchResult result = searchShapenet(parsedImportJson.searchTerms[i].query);
 		UE_LOG(LogTemp, Warning, TEXT("Found %d synsets"), result.synsets.Num());
-		if (parsedImportJson.searchTerms[i].numModelsToImport) {
-			int32 totalMatches = 0;
-			for (int32 j = 0; j < result.numModels.Num(); j++) {
-				totalMatches += result.numModels[j];
-			}
-			int32 modelsImported = 0;
-			for (int32 j = 0; j < result.numModels.Num() - 1; j++) {
-				int32 numModelsToImport = (result.numModels[j] * parsedImportJson.searchTerms[i].numModelsToImport) / totalMatches;
-				importSynset(result.synsets[j], numModelsToImport);
-				modelsImported += numModelsToImport;
-			}
+		if (result.synsets.Num() > 0) {
+			if (parsedImportJson.searchTerms[i].numModelsToImport) {
+				int32 totalMatches = 0;
+				for (int32 j = 0; j < result.numModels.Num(); j++) {
+					totalMatches += result.numModels[j];
+				}
+				int32 modelsImported = 0;
+				for (int32 j = 0; j < result.numModels.Num() - 1; j++) {
+					int32 numModelsToImport = (result.numModels[j] * parsedImportJson.searchTerms[i].numModelsToImport) / totalMatches;
+					importSynset(result.synsets[j], numModelsToImport);
+					modelsImported += numModelsToImport;
+				}
 
-			while (modelsImported < parsedImportJson.searchTerms[i].numModelsToImport) {
-				importSynset(result.synsets[result.synsets.Num() - 1], 1);
-				modelsImported++;
+				while (modelsImported < parsedImportJson.searchTerms[i].numModelsToImport) {
+					importSynset(result.synsets[result.synsets.Num() - 1], 1);
+					modelsImported++;
+				}
 			}
-		}
-		else {
-			for (int32 j = 0; j < result.numModels.Num(); j++) {
-				importSynset(result.synsets[j], -1);
+			else {
+				for (int32 j = 0; j < result.numModels.Num(); j++) {
+					importSynset(result.synsets[j], -1);
+				}
 			}
 		}
 	
