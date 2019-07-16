@@ -49,7 +49,7 @@ struct FRoomJson
 	FRoomDims roomDimensions;
 
 	UPROPERTY()
-	TArray<FShapenetActor> shapnetObjects;
+	TArray<FShapenetActor> shapnetObjectGroups;
 
 	
 
@@ -76,7 +76,7 @@ public:
 
 	void randomizeTextures(AShapenet shapenetActor);
 
-	void randomizePosition(AShapenet shapenetActor);
+	void randomizePosition(AShapenet shapenetActor, int32 constraints);
 
 	
 };

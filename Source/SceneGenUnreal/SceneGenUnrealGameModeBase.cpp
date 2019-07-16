@@ -27,3 +27,12 @@ void ASceneGenUnrealGameModeBase::spawnShapnets()
 {
 
 }
+
+void ASceneGenUnrealGameModeBase::randomizeTextures(AShapenet shapenetActor)
+{
+
+}
+void ASceneGenUnrealGameModeBase::randomizePosition(AShapenet shapenetActor, int32 constraints)
+{
+
+}
