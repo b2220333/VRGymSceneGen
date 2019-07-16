@@ -1,14 +1,16 @@
 {
 	"name": "modern_kitchen",
-	"roomDimensions": { // all rooms are rectangular; shape can be changed by adding walls
-		"xWidth" : 10,
-		"yWidth": 10,
-		"zWidth": 10
-	},
+	// all rooms are rectangular centered at (0,0,0); shape can be changed by adding walls
+	"xWidth" : 10,
+	"yWidth": 10,
+	"zWidth": 10,
 
-	"shapenetObjectGroups" : [
+	"shapenetActorGroups" : [
 		{
 			"name" : "object group 1",
+			"xCenter": 0,
+			"yCenter" : 0,
+			"zCenter" : 0,
 			"shapenetActors": [
 				{
 					"name" : "object1 name",

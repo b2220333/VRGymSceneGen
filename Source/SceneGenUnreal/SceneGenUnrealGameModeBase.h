@@ -16,25 +16,61 @@ struct FShapenetActor
 	UPROPERTY()
 	FString name;
 
+	UPROPERTY()
+	FString shapenetSynset;
+	
+	UPROPERTY()
+	FString shapenetHash;
 
+	UPROPERTY()
+	FString meshFromOverride;
+
+	UPROPERTY()
+	FString textureOverride;
+
+	UPROPERTY()
+	int32 quantity;
+
+	UPROPERTY()
+	float spawnProbability;
+
+	UPROPERTY()
+	bool destructable;
+
+	UPROPERTY()
+	bool physicsEnabled;
+
+	UPROPERTY()
+	bool useRandomTextures;
+
+	UPROPERTY()
+	bool useSameMeshForAllInstances;
+
+	UPROPERTY()
+	bool useSameTextureForAllInstances;
 
 };
 
 USTRUCT()
-struct FRoomDims
+struct FShapenetActorGroup
 {
+
 	GENERATED_BODY()
 
 	UPROPERTY()
-	float xWidth;
+	FString name;
 
 	UPROPERTY()
-	float yWidth;
+	int32 xCenter;
 
 	UPROPERTY()
-	float zWidth;
+	int32 yCenter;
 
+	UPROPERTY()
+	int32 zCenter;
 
+	UPROPERTY()
+	TArray<FShapenetActor> shapnetActors;
 };
 
 USTRUCT()
@@ -46,12 +82,16 @@ struct FRoomJson
 	FString name;
 
 	UPROPERTY()
-	FRoomDims roomDimensions;
+	float xWidth;
 
 	UPROPERTY()
-	TArray<FShapenetActor> shapnetObjectGroups;
+	float yWidth;
 
-	
+	UPROPERTY()
+	float zWidth;
+
+	UPROPERTY()
+	TArray<FShapenetActorGroup> shapnetActorGroups;
 
 
 };
