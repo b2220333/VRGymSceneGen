@@ -4,6 +4,9 @@
 
 #include "Shapenet.h"
 
+#include "Runtime/JsonUtilities/Public/JsonObjectConverter.h"
+#include "Editor/UnrealEd/Public/FileHelpers.h"
+
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 {
 
@@ -25,7 +28,14 @@ void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
 
 void ASceneGenUnrealGameModeBase::spawnShapnets()
 {
+	FString jsonPath;
 
+	FString jsonString;
+	FFileHelper::LoadFileToString(jsonString, *jsonPath);
+
+	FRoomJson roomJson;
+
+	FJsonObjectConverter::JsonObjectStringToUStruct(jsonString, &roomJson, 0, 0);
 }
 
 void ASceneGenUnrealGameModeBase::randomizeTextures(AShapenet shapenetActor)

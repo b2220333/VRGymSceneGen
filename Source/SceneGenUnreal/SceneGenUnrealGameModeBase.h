@@ -16,6 +16,9 @@ struct FShapenetActor
 	UPROPERTY()
 	FString name;
 
+
+	// override actor group properties
+
 	UPROPERTY()
 	FString shapenetSynset;
 	
@@ -68,6 +71,9 @@ struct FShapenetActorGroup
 
 	UPROPERTY()
 	int32 zCenter;
+
+
+	// same properties as actors
 
 	UPROPERTY()
 	TArray<FShapenetActor> shapnetActors;
