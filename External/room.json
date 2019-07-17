@@ -5,35 +5,28 @@
 	"zWidth": 1000,
 	"shapenetActorGroups" : [
 		{
-			"name" : "objGroup1",
+			"name" : "deskArea",
+			"shapenetActors": [
+				{
+					"name" : "desk"
+				}
+			],
 			"childShapenetActorGroups" : 
 			[
-				"objGroup2",
-				"objGroup3"
+				"itemsOnDesk"
 			]
 		},
 		{
-			"name" : "objGroup2"
-		},
-		{
-			"name" : "objGroup3",
-			"childShapenetActorGroups" : 
-			[
-				"objGroup4"
+			"name" : "itemsOnDesk",
+			"shapenetActors" : [
+				{
+					"name" : "lamp"
+				},
+				{
+					"name" : "bottle"
+				}
 			]
 		},
-		{
-			"name" : "objGroup4"
-		},
-		{
-			"name" : "objGroup5",
-			"childShapenetActorGroups" : 
-			[
-				"objGroup6"
-			]
-		},
-		{
-			"name" : "objGroup6"	
-		}
+
 	]
 }

@@ -67,12 +67,19 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 void ASceneGenUnrealGameModeBase::listDescendants(FShapenetActorGroup* actorGroup)
 {
-	FString str = actorGroup->name;
+	FString str = actorGroup->name + " (";
+	for (int32 i = 0; i < actorGroup->shapenetActors.Num();  i++) {
+		str += actorGroup->shapenetActors[i].name;
+		if (i < actorGroup->shapenetActors.Num() - 1) {
+			str += ",";
+		}
+	}
+	str += ")";
 	UE_LOG(LogTemp, Warning, TEXT("listDescendents: %s ->"), *str);
 	if (actorGroup->childGroups.Num() > 0) {
 		for (int32 i = 0; i < actorGroup->childGroups.Num(); i++) {
 			str = actorGroup->childGroups[i]->name;
-			UE_LOG(LogTemp, Warning, TEXT("listDescendents: %s"), *str);
+			UE_LOG(LogTemp, Warning, TEXT("listDescendents: \t %s"), *str);
 			
 		}
 		for (int32 i = 0; i < actorGroup->childGroups.Num(); i++) {
@@ -80,7 +87,7 @@ void ASceneGenUnrealGameModeBase::listDescendants(FShapenetActorGroup* actorGrou
 		}
 	}
 	else {
-		UE_LOG(LogTemp, Warning, TEXT("listDescendents: NONE"));
+		UE_LOG(LogTemp, Warning, TEXT("listDescendents: \t NONE"));
 	}
 }
 
