@@ -1,90 +1,53 @@
 {
 	"name": "modern_kitchen",
-	// all rooms are rectangular centered at (0,0,0); shape can be changed by adding walls
 	"xWidth" : 10,
 	"yWidth": 10,
 	"zWidth": 10,
-
 	"shapenetActorGroups" : [
 		{
 			"name" : "object group 1",
-			"xCenter": 0, // location of center of object group relative to parent object group
+			"xCenter": 0,
 			"yCenter" : 0,
 			"zCenter" : 0,
+			"actorParams" : {
+				"shapenetSynset" : "12345678",
+				"shapenetHash" : "hash string", 
+				"meshFromOverride" : "/Game/ path to uasset", 
+				"textureOverride" : "/Game/ path to texture asset", 
+				"quantity": 10,
+				"spawnProbability": 0.9,
+				"destructable" : true,
+				"physicsEnabled" : false,
+				"useRandomTextures" : false,
+				"useSameMeshForAllInstances": true,
+				"useSameTextureForAllInstances" : false,
+				"canOverlap" : false
+			},
 			"shapenetActors": [
 				{
 					"name" : "object1 name",
-					"shapenetSynset" : "12345678",
-					"shapenetHash" : "hash string", //optional
-					"meshFromOverride" : "/Game/ path to uasset", //optional mesh must already be imported into editor
-					"textureOverride" : "/Game/ path to texture asset", // optional texture must already be imported into editor
-					"quantity": 10,
-					"spawnProbability": 0.9,
-					"destructable" : true,
-					"physicsEnabled" : false,
-					"useRandomTextures" : false,
-					"useSameMeshForAllInstances": true,
-					"useSameTextureForAllInstances" : false,
-				},
-				{
-					"name" : "object2 name",
-					"shapenetSynset" : "12345678",
-					"shapenetHash" : "hash string", //optional
-					"meshFromOverride" : "/Game/ path to uasset", //optional mesh must already be imported into editor
-					"textureOverride" : "/Game/ path to texture asset", // optional texture must already be imported into editor
-					"quantity": 10,
-					"spawnProbability": 0.9,
-					"destructable" : true,
-					"physicsEnabled" : false,
-					"keepOriginalTextures" : false,
-					"useSameMeshForAllInstances": true,
-					"useSameTextureForAllInstances" : false,
+					"actorParams" : {
+						"shapenetSynset" : "12345678",
+						"shapenetHash" : "hash string",
+						"meshFromOverride" : "/Game/ path to uasset", 
+						"textureOverride" : "/Game/ path to texture asset", 
+						"quantity": 10,
+						"spawnProbability": 0.9,
+						"destructable" : true,
+						"physicsEnabled" : false,
+						"useRandomTextures" : false,
+						"useSameMeshForAllInstances": true,
+						"useSameTextureForAllInstances" : false,
+						"canOverlap" : false
+					}
 				}
 			],
-			"shapenetObjectGroups" : [ // nested object groups
-				{
-					// nested obj group 1
-				},
-
-				{
-					// nested obj group 2
-				}
+			"childShapenetActorGroups" : 
+			[
+				"childGroup1",
+				"childGroup2"
 			]
-		},
-
-		{
-			"name" : "object group 2",
-			"shapenetActors": [
-				{
-					"name" : "object1 name",
-					"shapenetSynset" : "12345678",
-					"shapenetHash" : "hash string", //optional
-					"meshFromOverride" : "/Game/ path to uasset", //optional mesh must already be imported into editor
-					"textureOverride" : "/Game/ path to texture asset", // optional texture must already be imported into editor
-					"quantity": 10,
-					"spawnProbability": 0.9,
-					"destructable" : true,
-					"physicsEnabled" : false,
-					"useRandomTextures" : false,
-					"useSameMeshForAllInstances": true,
-					"useSameTextureForAllInstances" : false,
-				},
-				{
-					"name" : "object2 name",
-					"shapenetSynset" : "12345678",
-					"shapenetHash" : "hash string", //optional
-					"meshFromOverride" : "/Game/ path to uasset", //optional mesh must already be imported into editor
-					"textureOverride" : "/Game/ path to texture asset", // optional texture must already be imported into editor
-					"quantity": 10,
-					"spawnProbability": 0.9,
-					"destructable" : true,
-					"physicsEnabled" : false,
-					"keepOriginalTextures" : false,
-					"useSameMeshForAllInstances": true,
-					"useSameTextureForAllInstances" : false,
-				}
-			]
-		}// no nested shapenet obj group because it is optional
+		}
 
 	]
 }

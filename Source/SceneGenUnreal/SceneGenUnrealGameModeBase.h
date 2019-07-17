@@ -8,20 +8,16 @@
 #include "GameFramework/GameModeBase.h"
 #include "SceneGenUnrealGameModeBase.generated.h"
 
+
 USTRUCT()
-struct FShapenetActor
+struct FActorParams
 {
 	GENERATED_BODY()
 
-	UPROPERTY()
-	FString name;
-
-
-	// override actor group properties
 
 	UPROPERTY()
 	FString shapenetSynset;
-	
+
 	UPROPERTY()
 	FString shapenetHash;
 
@@ -52,6 +48,25 @@ struct FShapenetActor
 	UPROPERTY()
 	bool useSameTextureForAllInstances;
 
+	UPROPERTY()
+	bool canOverlap;
+
+};
+
+USTRUCT()
+struct FShapenetActor
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString name;
+
+
+	// override actor group properties
+
+	UPROPERTY()
+	FActorParams actorParams;
+
 };
 
 USTRUCT()
@@ -73,10 +88,18 @@ struct FShapenetActorGroup
 	int32 zCenter;
 
 
-	// same properties as actors
+	UPROPERTY()
+	FActorParams actorParams;
 
 	UPROPERTY()
-	TArray<FShapenetActor> shapnetActors;
+	TArray<FShapenetActor> shapenetActors;
+
+	UPROPERTY()
+	TArray<FString> childShapenetActorGroups;
+
+	// internal use (not in json)
+	FShapenetActorGroup* parentGroup;
+	TArray<FShapenetActorGroup*> childGroups;
 };
 
 USTRUCT()
@@ -97,7 +120,7 @@ struct FRoomJson
 	float zWidth;
 
 	UPROPERTY()
-	TArray<FShapenetActorGroup> shapnetActorGroups;
+	TArray<FShapenetActorGroup> shapenetActorGroups;
 
 
 };
@@ -115,7 +138,7 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	// spawns shapenet model actors from AShapenetClass
-	void spawnShapnets();
+	void spawnShapenetActors();
 
 	TArray<AShapenet> shapenetActors;
 	
@@ -123,6 +146,12 @@ public:
 	void randomizeTextures(AShapenet shapenetActor);
 
 	void randomizePosition(AShapenet shapenetActor, int32 constraints);
+
+	void importShapenetActorGroup(FShapenetActorGroup* actorGroup, FActorParams* params);
+
+	void importShapenetActor(FShapenetActor* actor, FActorParams* params);
+
+	TArray<FShapenetActorGroup*> linkShapenetActorGroups(TArray<FShapenetActorGroup> actorGroups);
 
 	
 };
