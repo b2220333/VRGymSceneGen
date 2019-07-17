@@ -8,6 +8,9 @@
 #include "Runtime/Core/Public/Misc/FileHelper.h"
 #include "Runtime/Core/Public/Misc/Paths.h"
 
+
+#include "Runtime/Engine/Classes/Engine/World.h"
+
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 {
 
@@ -47,6 +50,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	TArray<FShapenetActorGroup*> baseActorGroups = linkShapenetActorGroups(roomJson.shapenetActorGroups);
 
 	for (int32 i = 0; i < baseActorGroups.Num(); i++) {
+		baseActorGroups[i]->groupOrigin = FVector(baseActorGroups[i]->xCenter, baseActorGroups[i]->yCenter, baseActorGroups[i]->zCenter);
 		importShapenetActorGroup(baseActorGroups[i], nullptr);
 	}
 
@@ -62,18 +66,21 @@ void ASceneGenUnrealGameModeBase::importShapenetActorGroup(FShapenetActorGroup* 
 		importParams = params;
 	}
 	for (int32 i = 0; i < actorGroup->shapenetActors.Num(); i++) {
-		importShapenetActor(&actorGroup->shapenetActors[i], importParams);
+		importShapenetActor(&actorGroup->shapenetActors[i], importParams, &actorGroup->groupOrigin);
 	}
 
 
 	for (int32 i = 0; i < actorGroup->childGroups.Num(); i++) {
+		actorGroup->childGroups[i]->groupOrigin += FVector(actorGroup->childGroups[i]->xCenter, actorGroup->childGroups[i]->yCenter, actorGroup->childGroups[i]->zCenter);
 		importShapenetActorGroup(actorGroup->childGroups[i], importParams);
 	}
 }
 
-void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor, FActorParams* params)
+void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor, FActorParams* params, FVector* origin)
 {
-
+	FVector spawnLocation = FVector(actor->x, actor->y, actor->z) + *origin;
+	FActorSpawnParameters SpawnInfo;
+	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, SpawnInfo);
 }
 
 

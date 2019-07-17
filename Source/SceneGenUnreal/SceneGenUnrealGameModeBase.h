@@ -60,7 +60,15 @@ struct FShapenetActor
 
 	UPROPERTY()
 	FString name;
+	
+	UPROPERTY()
+	float x;
 
+	UPROPERTY()
+	float y;
+
+	UPROPERTY()
+	float z;
 
 	// override actor group properties
 
@@ -79,13 +87,13 @@ struct FShapenetActorGroup
 	FString name;
 
 	UPROPERTY()
-	int32 xCenter;
+	float xCenter;
 
 	UPROPERTY()
-	int32 yCenter;
+	float yCenter;
 
 	UPROPERTY()
-	int32 zCenter;
+	float zCenter;
 
 
 	UPROPERTY()
@@ -100,6 +108,8 @@ struct FShapenetActorGroup
 	// internal use (not in json)
 	FShapenetActorGroup* parentGroup;
 	TArray<FShapenetActorGroup*> childGroups;
+
+	FVector groupOrigin = FVector(0.0f, 0.0f, 0.0f);
 };
 
 USTRUCT()
@@ -149,7 +159,7 @@ public:
 
 	void importShapenetActorGroup(FShapenetActorGroup* actorGroup, FActorParams* params);
 
-	void importShapenetActor(FShapenetActor* actor, FActorParams* params);
+	void importShapenetActor(FShapenetActor* actor, FActorParams* params, FVector* origin);
 
 	TArray<FShapenetActorGroup*> linkShapenetActorGroups(TArray<FShapenetActorGroup> actorGroups);
 

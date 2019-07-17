@@ -26,6 +26,9 @@
 			"shapenetActors": [
 				{
 					"name" : "object1 name",
+					"x" : 0,
+					"y" : 0,
+					"z" : 0,
 					"actorParams" : {
 						"shapenetSynset" : "12345678",
 						"shapenetHash" : "hash string",
