@@ -45,8 +45,6 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: Parse failed"));
 		return;
 	}
-	FString test = roomJson.shapenetActorGroups[0].name;
-	UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: testing %s"), *test);
 
 	UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: Num actor groups is %d"), roomJson.shapenetActorGroups.Num());
 
@@ -69,12 +67,16 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 void ASceneGenUnrealGameModeBase::listDescendants(FShapenetActorGroup* actorGroup)
 {
-	FString test = actorGroup->name;
-	UE_LOG(LogTemp, Warning, TEXT("listDescendents: %s ->"), *test);
-	if (&actorGroup->childGroups) {
+	FString str = actorGroup->name;
+	UE_LOG(LogTemp, Warning, TEXT("listDescendents: %s ->"), *str);
+	if (actorGroup->childGroups.Num() > 0) {
 		for (int32 i = 0; i < actorGroup->childGroups.Num(); i++) {
-			test = actorGroup->childGroups[i]->name;
-			UE_LOG(LogTemp, Warning, TEXT("listDescendents: %s"), *test);
+			str = actorGroup->childGroups[i]->name;
+			UE_LOG(LogTemp, Warning, TEXT("listDescendents: %s"), *str);
+			
+		}
+		for (int32 i = 0; i < actorGroup->childGroups.Num(); i++) {
+			listDescendants(actorGroup->childGroups[i]);
 		}
 	}
 	else {
