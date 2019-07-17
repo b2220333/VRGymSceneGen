@@ -86,6 +86,7 @@ struct FShapenetActorGroup
 	UPROPERTY()
 	FString name;
 
+	
 	UPROPERTY()
 	float xCenter;
 
@@ -102,14 +103,17 @@ struct FShapenetActorGroup
 	UPROPERTY()
 	TArray<FShapenetActor> shapenetActors;
 
+	
+
 	UPROPERTY()
 	TArray<FString> childShapenetActorGroups;
 
+	
 	// internal use (not in json)
 	FShapenetActorGroup* parentGroup;
 	TArray<FShapenetActorGroup*> childGroups;
-
 	FVector groupOrigin = FVector(0.0f, 0.0f, 0.0f);
+	
 };
 
 USTRUCT()
@@ -161,7 +165,8 @@ public:
 
 	void importShapenetActor(FShapenetActor* actor, FActorParams* params, FVector* origin);
 
-	TArray<FShapenetActorGroup*> linkShapenetActorGroups(TArray<FShapenetActorGroup> actorGroups);
+	TArray<FShapenetActorGroup*> linkShapenetActorGroups(TArray<FShapenetActorGroup>* actorGroups);
 
-	
+	void listDescendants(FShapenetActorGroup* actorGroup);
+
 };

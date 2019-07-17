@@ -32,7 +32,7 @@ void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
 
 void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 {
-	FString jsonPath = FPaths::ProjectDir() + "External/room_template.json";;
+	FString jsonPath = FPaths::ProjectDir() + "External/room.json";;
 
 	FString jsonString;
 	FFileHelper::LoadFileToString(jsonString, *jsonPath);
@@ -40,20 +40,46 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	FRoomJson roomJson;
 
 	bool parsed = FJsonObjectConverter::JsonObjectStringToUStruct(jsonString, &roomJson, 0, 0);
-	if (parsed) {
-		UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: testing %s"));
+
+	if (!parsed) {
+		UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: Parse failed"));
+		return;
 	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: Failed to parsed desired output"));
+	FString test = roomJson.shapenetActorGroups[0].name;
+	UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: testing %s"), *test);
+
+	UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: Num actor groups is %d"), roomJson.shapenetActorGroups.Num());
+
+	TArray<FShapenetActorGroup*> baseActorGroups = linkShapenetActorGroups(&roomJson.shapenetActorGroups);
+	
+	UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: Num base actor groups is %d"), baseActorGroups.Num());
+	
+	for (int32 i = 0; i < baseActorGroups.Num(); i++) {
+		listDescendants(baseActorGroups[i]);
 	}
 
-	TArray<FShapenetActorGroup*> baseActorGroups = linkShapenetActorGroups(roomJson.shapenetActorGroups);
-
+	/*
 	for (int32 i = 0; i < baseActorGroups.Num(); i++) {
 		baseActorGroups[i]->groupOrigin = FVector(baseActorGroups[i]->xCenter, baseActorGroups[i]->yCenter, baseActorGroups[i]->zCenter);
 		importShapenetActorGroup(baseActorGroups[i], nullptr);
 	}
+	*/
 
+}
+
+void ASceneGenUnrealGameModeBase::listDescendants(FShapenetActorGroup* actorGroup)
+{
+	FString test = actorGroup->name;
+	UE_LOG(LogTemp, Warning, TEXT("listDescendents: %s ->"), *test);
+	if (&actorGroup->childGroups) {
+		for (int32 i = 0; i < actorGroup->childGroups.Num(); i++) {
+			test = actorGroup->childGroups[i]->name;
+			UE_LOG(LogTemp, Warning, TEXT("listDescendents: %s"), *test);
+		}
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("listDescendents: NONE"));
+	}
 }
 
 void ASceneGenUnrealGameModeBase::importShapenetActorGroup(FShapenetActorGroup* actorGroup, FActorParams* params)
@@ -93,15 +119,20 @@ void ASceneGenUnrealGameModeBase::randomizePosition(AShapenet shapenetActor, int
 
 }
 
-TArray<FShapenetActorGroup*> ASceneGenUnrealGameModeBase::linkShapenetActorGroups(TArray<FShapenetActorGroup> actorGroups)
+TArray<FShapenetActorGroup*> ASceneGenUnrealGameModeBase::linkShapenetActorGroups(TArray<FShapenetActorGroup>* actorGroups)
 {
+
+	UE_LOG(LogTemp, Warning, TEXT("linkShapenetActorGroups: Starting linking process"));
+
 	// linking group pointers
-	for (int32 i = 0; i < actorGroups.Num(); i++) {
-		for (int32 j = 0; j < actorGroups[i].childShapenetActorGroups.Num(); j++) {
-			for (int32 k = 0; k < actorGroups.Num(); k++) {
-				if (actorGroups[i].childShapenetActorGroups[j] == actorGroups[k].name) {
-					actorGroups[k].parentGroup = &actorGroups[i];
-					actorGroups[i].childGroups.Add(&actorGroups[k]);
+	for (int32 i = 0; i < actorGroups->Num(); i++) {
+		FString name = (*actorGroups)[i].name;
+		UE_LOG(LogTemp, Warning, TEXT("linkShapenetActorGroups: linking %s"), *name);
+		for (int32 j = 0; j < (*actorGroups)[i].childShapenetActorGroups.Num(); j++) {
+			for (int32 k = 0; k < actorGroups->Num(); k++) {
+				if ((*actorGroups)[i].childShapenetActorGroups[j] == (*actorGroups)[k].name) {
+					(*actorGroups)[k].parentGroup = &(*actorGroups)[i];
+					(*actorGroups)[i].childGroups.Add(&(*actorGroups)[k]);
 				}
 			}
 		}
@@ -111,9 +142,9 @@ TArray<FShapenetActorGroup*> ASceneGenUnrealGameModeBase::linkShapenetActorGroup
 
 	TArray<FShapenetActorGroup*> baseActorGroups;
 
-	for (int32 i = 0; i < actorGroups.Num(); i++) {
-		if (!actorGroups[i].parentGroup) {
-			baseActorGroups.Add(&actorGroups[i]);
+	for (int32 i = 0; i < actorGroups->Num(); i++) {
+		if (!(*actorGroups)[i].parentGroup) {
+			baseActorGroups.Add(&(*actorGroups)[i]);
 		}
 	}
 

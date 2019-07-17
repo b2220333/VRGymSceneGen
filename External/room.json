@@ -1,14 +1,39 @@
 {
 	"name": "bedroom",
-	"roomDimensions": { // all rooms are rectangular; shape can be changed by adding walls
-		"xWidth" : 1000,
-		"yWidth": 1000,
-		"zWidth": 1000
-	},
-
-	"shapenetObjects" : [
+	"xWidth" : 1000,
+	"yWidth": 1000,
+	"zWidth": 1000,
+	"shapenetActorGroups" : [
 		{
-
+			"name" : "objGroup1",
+			"childShapenetActorGroups" : 
+			[
+				"objGroup2",
+				"objGroup3"
+			]
+		},
+		{
+			"name" : "objGroup2"
+		},
+		{
+			"name" : "objGroup3",
+			"childShapenetActorGroups" : 
+			[
+				"objGroup4"
+			]
+		},
+		{
+			"name" : "objGroup4"
+		},
+		{
+			"name" : "objGroup5",
+			"childShapenetActorGroups" : 
+			[
+				"objGroup6"
+			]
+		},
+		{
+			"name" : "objGroup6"	
 		}
 	]
 }
