@@ -15,6 +15,10 @@
 		{
 			"query": "bottle",
 			"numModelsToImport": 10
-		}		
+		},
+		{
+			"query": "lamp",
+			"numModelsToImport": 10
+		}
 	]
 }
