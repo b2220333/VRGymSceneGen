@@ -124,10 +124,10 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor, FAc
 	FTransform spawnTransfrom = FTransform(FVector(actor->x + origin->X, actor->y + origin->Y, actor->z + origin->Z));
 	UE_LOG(LogTemp, Warning, TEXT("Spawning %s at (%f %f, %f)"), *actor->name, spawnTransfrom.GetTranslation().X, spawnTransfrom.GetTranslation().Y, spawnTransfrom.GetTranslation().Z)
 	FActorSpawnParameters SpawnInfo;
-	AShapenet* spawnedActor = GetWorld()->SpawnActorDeferred<AShapenet>(AShapenet::StaticClass(), spawnTransfrom, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::DontSpawnIfColliding);
+	AShapenet* spawnedActor = GetWorld()->SpawnActorDeferred<AShapenet>(AShapenet::StaticClass(), spawnTransfrom, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 	// set up mesh and textures here 
-
+	spawnedActor->importMesh("02818832", "2f44a88e17474295e66f707221b74f43");
 	spawnedActor->FinishSpawning(spawnTransfrom);
 }
 
