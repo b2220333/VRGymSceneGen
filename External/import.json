@@ -11,6 +11,10 @@
 		{
 			"query": "chair",
 			"numModelsToImport": 10
+		},
+		{
+			"query": "bottle",
+			"numModelsToImport": 10
 		}		
 	]
 }

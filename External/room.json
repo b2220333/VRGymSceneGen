@@ -6,27 +6,75 @@
 	"shapenetActorGroups" : [
 		{
 			"name" : "deskArea",
+			"xCenter": -300,
+			"yCenter" : 300,
+			"zCenter" : 0,
 			"shapenetActors": [
 				{
-					"name" : "desk"
+					"name" : "chairForDesk",
+					"x" : 100,
+					"y" : 0,
+					"z" : 0,
+					"actorParams": {
+						"shapenetSynset" : "12345678"
+					}
 				}
 			],
 			"childShapenetActorGroups" : 
 			[
+				"desk"
+			]
+		},
+		{
+			"name" : "desk",
+			"xCenter": -100,
+			"yCenter" : 0,
+			"zCenter" : 0,
+			"shapenetActors": [
+				{
+					"name" : "bedroomDesk",
+					"x" : 0,
+					"y" : 0,
+					"z" : 0
+				}
+			],
+			"childShapenetActorGroups" : [
 				"itemsOnDesk"
 			]
 		},
 		{
 			"name" : "itemsOnDesk",
+			"xCenter": 0,
+			"yCenter" : 0,
+			"zCenter" : 0,
 			"shapenetActors" : [
 				{
-					"name" : "lamp"
+					"name" : "lamp",
+					"x" : -50,
+					"y" : 50,
+					"z" : 0
 				},
 				{
-					"name" : "bottle"
+					"name" : "bottle",
+					"x" : -50,
+					"y" : -50,
+					"z" : 0
 				}
 			]
 		},
-
+		{
+			"name" : "bedArea",
+			"xCenter": 250,
+			"yCenter" : -150,
+			"zCenter" : 0,
+			"shapenetActors": [
+				{
+					"name" : "bed",
+					"x" : 0,
+					"y" : 0,
+					"z" : 0
+				}
+			]
+		}
 	]
 }

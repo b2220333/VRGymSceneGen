@@ -48,20 +48,22 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 	UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: Num actor groups is %d"), roomJson.shapenetActorGroups.Num());
 
+	//UE_LOG(LogTemp, Warning, TEXT(" TESTING BEFORE %f"), roomJson.shapenetActorGroups[0].xCenter);
+
 	TArray<FShapenetActorGroup*> baseActorGroups = linkShapenetActorGroups(&roomJson.shapenetActorGroups);
 	
 	UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: Num base actor groups is %d"), baseActorGroups.Num());
 	
 	for (int32 i = 0; i < baseActorGroups.Num(); i++) {
+		//UE_LOG(LogTemp, Warning, TEXT(" TESTING AFTER LINK %f"), baseActorGroups[i]->xCenter);
 		listDescendants(baseActorGroups[i]);
 	}
 
-	/*
+	
 	for (int32 i = 0; i < baseActorGroups.Num(); i++) {
-		baseActorGroups[i]->groupOrigin = FVector(baseActorGroups[i]->xCenter, baseActorGroups[i]->yCenter, baseActorGroups[i]->zCenter);
 		importShapenetActorGroup(baseActorGroups[i], nullptr);
 	}
-	*/
+	
 
 }
 
@@ -100,22 +102,29 @@ void ASceneGenUnrealGameModeBase::importShapenetActorGroup(FShapenetActorGroup* 
 	else {
 		importParams = params;
 	}
+
+	actorGroup->groupOrigin += FVector(actorGroup->xCenter, actorGroup->yCenter, actorGroup->zCenter);
 	for (int32 i = 0; i < actorGroup->shapenetActors.Num(); i++) {
+		//UE_LOG(LogTemp, Warning, TEXT("TEST %s origin is at (%d, %d, %d)"), *actorGroup->name, actorGroup->groupOrigin.X, actorGroup->groupOrigin.Y, actorGroup->groupOrigin.Z);
 		importShapenetActor(&actorGroup->shapenetActors[i], importParams, &actorGroup->groupOrigin);
 	}
 
 
 	for (int32 i = 0; i < actorGroup->childGroups.Num(); i++) {
-		actorGroup->childGroups[i]->groupOrigin += FVector(actorGroup->childGroups[i]->xCenter, actorGroup->childGroups[i]->yCenter, actorGroup->childGroups[i]->zCenter);
+		actorGroup->childGroups[i]->groupOrigin += FVector(actorGroup->groupOrigin.X, actorGroup->groupOrigin.Y, actorGroup->groupOrigin.Z);
 		importShapenetActorGroup(actorGroup->childGroups[i], importParams);
 	}
 }
 
 void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor, FActorParams* params, FVector* origin)
 {
-	FVector spawnLocation = FVector(actor->x, actor->y, actor->z) + *origin;
-	FActorSpawnParameters SpawnInfo;
-	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, SpawnInfo);
+	//UE_LOG(LogTemp, Warning, TEXT("Actor is at (%d, %d, %d)"), actor->x, actor->y, actor->z)
+	//UE_LOG(LogTemp, Warning, TEXT("Origin is at (%d, %d, %d)"), origin->X, origin->Y, origin->Z)
+
+	FVector spawnLocation = FVector(actor->x + origin->X, actor->y + origin->Y, actor->z + origin->Z);
+	UE_LOG(LogTemp, Warning, TEXT("Spawning %s at (%f %f, %f)"), *actor->name, spawnLocation.X, spawnLocation.Y, spawnLocation.Z)
+	//FActorSpawnParameters SpawnInfo;
+	//AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, SpawnInfo);
 }
 
 
