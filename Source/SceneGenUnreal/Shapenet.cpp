@@ -12,6 +12,9 @@
 #include "Components/StaticMeshComponent.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 
+#include "Runtime/Core/Public/GenericPlatform/GenericPlatformFile.h"
+#include "Runtime/Core/Public/HAL/FileManager.h"
+#include "Editor/UnrealEd/Public/FileHelpers.h"
 
 
 // Sets default values
@@ -20,7 +23,7 @@ AShapenet::AShapenet()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	importMesh("02818832", "2f44a88e17474295e66f707221b74f43");
+	//importMesh("02818832", "2f44a88e17474295e66f707221b74f43");
 
 	/*
 	FString synset = "04554684";
@@ -76,27 +79,36 @@ void AShapenet::Tick(float DeltaTime)
 }
 
 
-bool AShapenet::importMesh(FString synset, FString hash)
+void AShapenet::importMesh(FString synset, FString hash)
+{
+	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
+	importMeshFromFile(path);
+}
+
+void AShapenet::importMeshFromFile(FString path)
 {
 	
 	
-	//RootComponent = BaseMesh;
-
-	
-	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
-
-	static ConstructorHelpers::FObjectFinder<UStaticMesh>BaseMeshAsset(*path);
-	
 	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
-	UStaticMeshComponent* newComponent = NewObject<UStaticMeshComponent>(this, "BaseMesh");
-	//newComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetIncludingScale, "BaseSocket");
-	RootComponent = newComponent;
-	newComponent->SetStaticMesh(staticMeshReference);
-	newComponent->RegisterComponent();
 	
-
-
-	//BaseMesh->SetMobility(EComponentMobility::Movable);
+	BaseMesh = NewObject<UStaticMeshComponent>(this, "BaseMesh");
+	RootComponent = BaseMesh;
+	BaseMesh->SetStaticMesh(staticMeshReference);
+	BaseMesh->SetMobility(EComponentMobility::Movable);
+	BaseMesh->RegisterComponent();
 	
-	return false;
+}
+
+void AShapenet::importRandomFromSynset(FString synset)
+{
+	IFileManager& FileManager = IFileManager::Get();
+	FString path = FPaths::ProjectContentDir() + synset + "/*.*";
+	UE_LOG(LogTemp, Warning, TEXT("Importing random mesh from %s"), *path);
+	TArray<FString> Hashes;
+	FileManager.FindFiles(Hashes, *path, false, true);
+	UE_LOG(LogTemp, Warning, TEXT("Found %d models"), Hashes.Num());
+	int32 i = FMath::RandRange(0, Hashes.Num() - 1);
+	if (Hashes.Num() > 0) {
+		importMesh(synset, Hashes[i]);
+	}
 }

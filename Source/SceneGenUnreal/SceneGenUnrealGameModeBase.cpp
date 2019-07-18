@@ -128,6 +128,7 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor, FAc
 
 	// set up mesh and textures here 
 	spawnedActor->importMesh("02818832", "2f44a88e17474295e66f707221b74f43");
+	//spawnedActor->importRandomFromSynset("02818832");
 	spawnedActor->FinishSpawning(spawnTransfrom);
 }
 
