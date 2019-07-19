@@ -154,7 +154,7 @@ public:
 	// spawns shapenet model actors from AShapenetClass
 	void spawnShapenetActors();
 
-	TArray<AShapenet> shapenetActors;
+	TArray<AShapenet*> shapenetActors;
 	
 
 	void randomizeTextures(AShapenet shapenetActor);

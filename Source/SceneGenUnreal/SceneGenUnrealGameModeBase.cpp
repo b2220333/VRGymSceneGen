@@ -11,6 +11,8 @@
 
 #include "Runtime/Engine/Classes/Engine/World.h"
 
+#include "Runtime/Engine/Classes/Components/InputComponent.h"
+
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 {
 
@@ -23,6 +25,11 @@ void ASceneGenUnrealGameModeBase::BeginPlay() {
 	// generate scene here ?
 	spawnShapenetActors();
 
+	//InputComponent->BindAction("resampleScene", IE_Pressed, this, &ASceneGenUnrealGameModeBase::spawnShapenetActors);
+	UWorld* World = GetWorld();
+	if (World) {
+		World->GetFirstPlayerController()->InputComponent->BindAction("resampleScene", IE_Pressed, this, &ASceneGenUnrealGameModeBase::spawnShapenetActors);
+	}
 }
 
 void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
@@ -32,6 +39,9 @@ void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
 
 void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 {
+	for (int32 i = 0; i < shapenetActors.Num(); i++) {
+		shapenetActors[i]->Destroy();
+	}
 	FString jsonPath = FPaths::ProjectDir() + "External/room.json";;
 
 	FString jsonString;
@@ -118,6 +128,7 @@ void ASceneGenUnrealGameModeBase::importShapenetActorGroup(FShapenetActorGroup* 
 
 void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor, FActorParams* params, FVector* origin)
 {
+
 	//UE_LOG(LogTemp, Warning, TEXT("Actor is at (%d, %d, %d)"), actor->x, actor->y, actor->z)
 	//UE_LOG(LogTemp, Warning, TEXT("Origin is at (%d, %d, %d)"), origin->X, origin->Y, origin->Z)
 
@@ -133,6 +144,8 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor, FAc
 	//spawnedActor->importMesh("02818832", "2f44a88e17474295e66f707221b74f43", location);
 
 	spawnedActor->importRandomFromSynset(actor->actorParams.shapenetSynset, location);
+
+	shapenetActors.Add(spawnedActor);
 	
 }
 
