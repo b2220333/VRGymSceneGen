@@ -57,7 +57,7 @@
 					"y" : 50,
 					"z" : 0,
 					"actorParams": {
-						"shapenetSynset" : "04379243"
+						"shapenetSynset" : "03636649"
 					}
 				},
 				{
@@ -81,7 +81,10 @@
 					"name" : "bed",
 					"x" : 0,
 					"y" : 0,
-					"z" : 0
+					"z" : 0,
+					"actorParams": {
+						"shapenetSynset" : "02818832"
+					}
 				}
 			]
 		}

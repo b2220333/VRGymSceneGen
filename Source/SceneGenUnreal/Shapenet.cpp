@@ -107,7 +107,7 @@ void AShapenet::importMeshFromFile(FString path, FVector location)
 void AShapenet::importRandomFromSynset(FString synset, FVector location)
 {
 	IFileManager& FileManager = IFileManager::Get();
-	FString path = FPaths::ProjectContentDir() + synset + "/*.*";
+	FString path = FPaths::ProjectContentDir() + "shapenetOBJ/" +  synset + "/*.*";
 	UE_LOG(LogTemp, Warning, TEXT("Importing random mesh from %s"), *path);
 	TArray<FString> Hashes;
 	FileManager.FindFiles(Hashes, *path, false, true);

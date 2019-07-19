@@ -124,19 +124,16 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor, FAc
 	FTransform spawnTransfrom = FTransform(FVector(actor->x + origin->X, actor->y + origin->Y, actor->z + origin->Z));
 	UE_LOG(LogTemp, Warning, TEXT("Spawning %s at (%f %f, %f)"), *actor->name, spawnTransfrom.GetTranslation().X, spawnTransfrom.GetTranslation().Y, spawnTransfrom.GetTranslation().Z);
 	FActorSpawnParameters spawnParams;
-	spawnParams.Name = FName(*actor->name);
 	//spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnTransfrom.GetTranslation(), FRotator::ZeroRotator, spawnParams);
-	
+	FString displayName = "Shapenet-" + actor->name;
+	spawnedActor->SetActorLabel(displayName);
 	FVector location = FVector(actor->x + origin->X, actor->y + origin->Y, actor->z + origin->Z);
 	// set up mesh and textures here 
-	spawnedActor->importMesh("02818832", "2f44a88e17474295e66f707221b74f43", location);
+	//spawnedActor->importMesh("02818832", "2f44a88e17474295e66f707221b74f43", location);
+
+	spawnedActor->importRandomFromSynset(actor->actorParams.shapenetSynset, location);
 	
-	//spawnedActor->synset = "02818832";
-	//spawnedActor->hash = "2f44a88e17474295e66f707221b74f43";
-	
-	//spawnedActor->importRandomFromSynset("02818832");
-	//spawnedActor->FinishSpawning(spawnTransfrom);
 }
 
 
