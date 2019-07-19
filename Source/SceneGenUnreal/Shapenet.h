@@ -145,12 +145,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void importMesh(FString synset, FString hash);
+	void importMesh(FString synset, FString hash, FVector location);
 
-	void importRandomFromSynset(FString synset);
+	void importRandomFromSynset(FString synset, FVector location);
 
-	void importMeshFromFile(FString path);
+	void importMeshFromFile(FString path, FVector location);
 	
 	UStaticMeshComponent* BaseMesh;
 	
+	FString synset;
+	FString hash;
 };

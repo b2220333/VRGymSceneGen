@@ -23,6 +23,8 @@ AShapenet::AShapenet()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//importMesh(synset, hash);
+
 	//importMesh("02818832", "2f44a88e17474295e66f707221b74f43");
 
 	/*
@@ -79,27 +81,30 @@ void AShapenet::Tick(float DeltaTime)
 }
 
 
-void AShapenet::importMesh(FString synset, FString hash)
+void AShapenet::importMesh(FString synset, FString hash, FVector location)
 {
 	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
-	importMeshFromFile(path);
+	importMeshFromFile(path, location);
 }
 
-void AShapenet::importMeshFromFile(FString path)
+void AShapenet::importMeshFromFile(FString path, FVector location)
 {
 	
 	
 	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
 	
 	BaseMesh = NewObject<UStaticMeshComponent>(this, "BaseMesh");
-	RootComponent = BaseMesh;
-	BaseMesh->SetStaticMesh(staticMeshReference);
 	BaseMesh->SetMobility(EComponentMobility::Movable);
+	RootComponent = BaseMesh;
+	RootComponent->SetWorldLocation(location);
+
+	RootComponent->SetMobility(EComponentMobility::Movable);
+	//BaseMesh->SetupAttachment(RootComponent);
+	BaseMesh->SetStaticMesh(staticMeshReference);
 	BaseMesh->RegisterComponent();
-	
 }
 
-void AShapenet::importRandomFromSynset(FString synset)
+void AShapenet::importRandomFromSynset(FString synset, FVector location)
 {
 	IFileManager& FileManager = IFileManager::Get();
 	FString path = FPaths::ProjectContentDir() + synset + "/*.*";
@@ -109,6 +114,6 @@ void AShapenet::importRandomFromSynset(FString synset)
 	UE_LOG(LogTemp, Warning, TEXT("Found %d models"), Hashes.Num());
 	int32 i = FMath::RandRange(0, Hashes.Num() - 1);
 	if (Hashes.Num() > 0) {
-		importMesh(synset, Hashes[i]);
+		importMesh(synset, Hashes[i], location);
 	}
 }
