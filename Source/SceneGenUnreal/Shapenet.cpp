@@ -101,6 +101,8 @@ void AShapenet::importMeshFromFile(FString path, FVector location)
 	RootComponent->SetMobility(EComponentMobility::Movable);
 	//BaseMesh->SetupAttachment(RootComponent);
 	BaseMesh->SetStaticMesh(staticMeshReference);
+	BaseMesh->SetSimulatePhysics(true);
+	BaseMesh->SetEnableGravity(true);
 	BaseMesh->RegisterComponent();
 }
 
