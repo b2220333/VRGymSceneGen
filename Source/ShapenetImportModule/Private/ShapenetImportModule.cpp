@@ -386,9 +386,46 @@ bool FShapenetImportModule::importFromJson(FString json)
 	// manually import from path
 	for (int32 i = 0; i < parsedImportJson.modelsManual.Num(); i++) {
 		FModelManual* modelManual = &parsedImportJson.modelsManual[i];
-		importFromFile(modelManual->srcPath, modelManual->dstPath);
+		if (FPaths::FileExists(modelManual->srcPath)) {
+			importFromFile(modelManual->srcPath, modelManual->dstPath);
+		} else if (FPaths::DirectoryExists(modelManual->srcPath)) {
+			importFromDir(modelManual->srcPath, modelManual->dstPath);
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("importFromJson: Could not find %s"), *modelManual->srcPath);
+		}
+		
 	}
 	
+
+	return false;
+}
+
+bool FShapenetImportModule::importFromDir(FString srcPath, FString dstPath)
+{
+	IFileManager& FileManager = IFileManager::Get();
+	UE_LOG(LogTemp, Warning, TEXT("Importing random mesh from %s"), *srcPath);
+	TArray<FString> modelFiles;
+	FString searchPath = srcPath + "/*.obj";
+	FileManager.FindFiles(modelFiles, *searchPath, false, true);
+
+
+	for (int32 i = 0; i < modelFiles.Num(); i++) {
+		importFromFile(srcPath + "/" + modelFiles[i], dstPath);
+	}
+
+	modelFiles.Empty();
+
+	FString searchPath = srcPath + "/*.fbx";
+	FileManager.FindFiles(modelFiles, *searchPath, false, true);
+
+
+	for (int32 i = 0; i < modelFiles.Num(); i++) {
+		importFromFile(srcPath + "/" + modelFiles[i], dstPath);
+	}
+
+
+
 
 	return false;
 }

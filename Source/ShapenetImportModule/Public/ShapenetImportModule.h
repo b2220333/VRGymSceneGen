@@ -49,6 +49,7 @@ public:
 	
 	*/
 	bool importFromFile(FString srcPath, FString dstPath);
+	bool importFromDir(FString srcPath, FString dstPath);
 
 	void setShapenetDir(FString path);
 	FString getShapenetDir();
