@@ -285,7 +285,7 @@ FString FShapenetImportModule::getShapenetDir()
 
 void FShapenetImportModule::onImportButtonClicked()
 {
-
+	/*
 	FString path = FPaths::ProjectDir() + "External/import.json";
 	UE_LOG(LogTemp, Warning, TEXT("onImportButtonClicked: Importing from %s"), *path);
 
@@ -293,7 +293,9 @@ void FShapenetImportModule::onImportButtonClicked()
 	FFileHelper::LoadFileToString(jsonString, *path);
 
 	importFromJson(jsonString);
-	
+	*/
+	importFromDir("D:/data/ShapeNetCore.v2/02843684/7a2642b37028b462d39f9e7f9f528702", "/Game/Test");
+
 	//importSynset("02818832");
 
 
@@ -404,24 +406,25 @@ bool FShapenetImportModule::importFromJson(FString json)
 bool FShapenetImportModule::importFromDir(FString srcPath, FString dstPath)
 {
 	IFileManager& FileManager = IFileManager::Get();
-	UE_LOG(LogTemp, Warning, TEXT("Importing random mesh from %s"), *srcPath);
 	TArray<FString> modelFiles;
-	FString searchPath = srcPath + "/*.obj";
-	FileManager.FindFiles(modelFiles, *searchPath, false, true);
+	FString fileName = "*.obj";
+	FileManager.FindFilesRecursive(modelFiles, *srcPath, *fileName, true, false, false);
 
 
 	for (int32 i = 0; i < modelFiles.Num(); i++) {
-		importFromFile(srcPath + "/" + modelFiles[i], dstPath);
+		UE_LOG(LogTemp, Warning, TEXT("importFromDir:Importing %s"), *modelFiles[i]);
+		importFromFile(srcPath + "/" + modelFiles[i], dstPath + modelFiles[i]);
 	}
 
 	modelFiles.Empty();
 
-	FString searchPath = srcPath + "/*.fbx";
-	FileManager.FindFiles(modelFiles, *searchPath, false, true);
+	fileName = "*.fbx";
+	FileManager.FindFilesRecursive(modelFiles, *srcPath, *fileName, true, false, false);
 
 
 	for (int32 i = 0; i < modelFiles.Num(); i++) {
-		importFromFile(srcPath + "/" + modelFiles[i], dstPath);
+		UE_LOG(LogTemp, Warning, TEXT("importFromDir:Importing %s"), *modelFiles[i]);
+		importFromFile(srcPath + "/" + modelFiles[i], dstPath + modelFiles[i]);
 	}
 
 
