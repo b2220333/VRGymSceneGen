@@ -339,7 +339,7 @@ bool FShapenetImportModule::importFromJson(FString json)
 		SearchResult result = searchShapenet(parsedImportJson.searchTerms[i].query);
 		UE_LOG(LogTemp, Warning, TEXT("Found %d synsets"), result.synsets.Num());
 		if (result.synsets.Num() > 0) {
-			if (parsedImportJson.searchTerms[i].numModelsToImport) {
+			if (parsedImportJson.searchTerms[i].numModelsToImport != -1) {
 				int32 totalMatches = 0;
 				for (int32 j = 0; j < result.numModels.Num(); j++) {
 					totalMatches += result.numModels[j];

@@ -17,7 +17,7 @@ struct FSearchTerms
 	FString query;
 
 	UPROPERTY()
-	int32 numModelsToImport;
+	int32 numModelsToImport = -1;
 
 
 };
@@ -32,7 +32,7 @@ struct FImportSynsets
 	FString synset;
 
 	UPROPERTY()
-	int32 numModelsToImport;
+	int32 numModelsToImport = -1;
 
 
 };

@@ -16,40 +16,40 @@ struct FActorParams
 
 
 	UPROPERTY()
-	FString shapenetSynset;
+	FString shapenetSynset = "";
 
 	UPROPERTY()
-	FString shapenetHash;
+	FString shapenetHash = "";
 
 	UPROPERTY()
-	FString meshFromOverride;
+	FString meshFromOverride = "";
 
 	UPROPERTY()
-	FString textureOverride;
+	FString textureOverride = "";
 
 	UPROPERTY()
-	int32 quantity;
+	int32 quantity = -1;
 
 	UPROPERTY()
-	float spawnProbability;
+	float spawnProbability = -1;
 
 	UPROPERTY()
-	bool destructable;
+	int32 destructable = -1;
 
 	UPROPERTY()
-	bool physicsEnabled;
+	int32 physicsEnabled = -1;
 
 	UPROPERTY()
-	bool useRandomTextures;
+	int32 useRandomTextures = -1;
 
 	UPROPERTY()
-	bool useSameMeshForAllInstances;
+	int32 useSameMeshForAllInstances = -1;
 
 	UPROPERTY()
-	bool useSameTextureForAllInstances;
+	int32 useSameTextureForAllInstances = -1;
 
 	UPROPERTY()
-	bool canOverlap;
+	int32 canOverlap = -1;
 
 };
 
