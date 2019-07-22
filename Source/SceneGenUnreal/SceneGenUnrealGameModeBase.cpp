@@ -42,6 +42,8 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	for (int32 i = 0; i < shapenetActors.Num(); i++) {
 		shapenetActors[i]->Destroy();
 	}
+	shapenetActors.Empty();
+
 	FString jsonPath = FPaths::ProjectDir() + "External/room.json";;
 
 	FString jsonString;

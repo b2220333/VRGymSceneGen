@@ -165,6 +165,8 @@ public:
 
 	void importShapenetActor(FShapenetActor* actor, FActorParams* params, FVector* origin);
 
+	void transferParams(FActorParams* parentParams, FActorParams* childParams);
+
 	TArray<FShapenetActorGroup*> linkShapenetActorGroups(TArray<FShapenetActorGroup>* actorGroups);
 
 	void listDescendants(FShapenetActorGroup* actorGroup);
