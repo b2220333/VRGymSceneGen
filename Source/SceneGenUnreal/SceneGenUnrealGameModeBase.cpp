@@ -72,8 +72,18 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	}
 
 	
+	FActorParams defaultParams;
+	defaultParams.quantity = 1;
+	defaultParams.spawnProbability = 1.0f;
+	defaultParams.destructable = 1;
+	defaultParams.physicsEnabled = 1;
+	defaultParams.useRandomTextures = 0;
+	defaultParams.useSameMeshForAllInstances = 1;
+	defaultParams.useSameTextureForAllInstances = 1;
+	defaultParams.canOverlap = 0;
+
 	for (int32 i = 0; i < baseActorGroups.Num(); i++) {
-		importShapenetActorGroup(baseActorGroups[i], nullptr);
+		importShapenetActorGroup(baseActorGroups[i], &defaultParams);
 	}
 	
 
@@ -154,10 +164,41 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor, FAc
 void ASceneGenUnrealGameModeBase::transferParams(FActorParams* parentParams, FActorParams* childParams)
 {
 
-	if (!childParams->canOverlap) {
-		childParams->canOverlap = parentParams->canOverlap;
+	if (childParams->shapenetSynset == "") {
+		childParams->shapenetSynset = parentParams->shapenetSynset;
+	}
+	if (childParams->shapenetHash == "") {
+		childParams->shapenetHash = parentParams->shapenetHash;
+	}
+	if (childParams->meshFromOverride == "") {
+		childParams->meshFromOverride = parentParams->meshFromOverride;
+	}
+	if (childParams->textureOverride == "") {
+		childParams->textureOverride = parentParams->textureOverride;
 	}
 
+	if (childParams->spawnProbability == -1.0f) {
+		childParams->spawnProbability = parentParams->spawnProbability;
+	}
+
+	if (childParams->destructable == -1) {
+		childParams->destructable = parentParams->destructable;
+	}
+	if (childParams->physicsEnabled == -1) {
+		childParams->physicsEnabled = parentParams->physicsEnabled;
+	}
+	if (childParams->useRandomTextures == -1) {
+		childParams->useRandomTextures = parentParams->useRandomTextures;
+	}
+	if (childParams->useSameMeshForAllInstances == -1) {
+		childParams->useSameMeshForAllInstances = parentParams->useSameMeshForAllInstances;
+	}
+	if (childParams->useSameTextureForAllInstances == -1) {
+		childParams->useSameTextureForAllInstances = parentParams->useSameTextureForAllInstances;
+	}
+	if (childParams->canOverlap == -1) {
+		childParams->canOverlap = parentParams->canOverlap;
+	}
 	
 
 

@@ -370,7 +370,7 @@ bool FShapenetImportModule::importFromJson(FString json)
 	UE_LOG(LogTemp, Warning, TEXT("importFromJson: Importing from synsets"));
 	// fully import synsets
 	for (int32 i = 0; i < parsedImportJson.synsets.Num(); i++) {
-		if (parsedImportJson.synsets[i].numModelsToImport) {
+		if (parsedImportJson.synsets[i].numModelsToImport != -1) {
 			importSynset(parsedImportJson.synsets[i].synset, parsedImportJson.synsets[i].numModelsToImport);
 		}
 		else {

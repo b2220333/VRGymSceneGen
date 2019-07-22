@@ -31,7 +31,7 @@ struct FActorParams
 	int32 quantity = -1;
 
 	UPROPERTY()
-	float spawnProbability = -1;
+	float spawnProbability = -1.0f;
 
 	UPROPERTY()
 	int32 destructable = -1;
