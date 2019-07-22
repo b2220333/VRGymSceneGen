@@ -154,6 +154,8 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor,  FV
 	spawnedActor->importRandomFromSynset(actor->actorParams.shapenetSynset, location);
 
 	shapenetActors.Add(spawnedActor);
+
+	//UE_LOG(LogTemp, Warning, TEXT("SpawnProb: %f"), actor->actorParams.spawnProbability);
 	
 }
 
