@@ -151,6 +151,28 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor, FAc
 	
 }
 
+void ASceneGenUnrealGameModeBase::transferParams(FActorParams* parentParams, FActorParams* childParams)
+{
+	try {
+		bool pCanOverlap = parentParams->canOverlap;
+		try {
+			bool cCanOverlap = childParams->canOverlap;
+		}
+		
+	}
+	catch (int e) {
+
+	}
+
+	if (!childParams->canOverlap) {
+		childParams->canOverlap = parentParams->canOverlap;
+	}
+
+	
+
+
+}
+
 
 void ASceneGenUnrealGameModeBase::randomizeTextures(AShapenet shapenetActor)
 {
