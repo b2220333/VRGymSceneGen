@@ -73,7 +73,7 @@ struct FShapenetActor
 	// override actor group properties
 
 	UPROPERTY()
-	FActorParams actorParams;
+	FActorParams actorParams = {};
 
 };
 
@@ -98,7 +98,7 @@ struct FShapenetActorGroup
 
 
 	UPROPERTY()
-	FActorParams actorParams;
+	FActorParams actorParams = {};
 
 	UPROPERTY()
 	TArray<FShapenetActor> shapenetActors;
@@ -161,9 +161,9 @@ public:
 
 	void randomizePosition(AShapenet shapenetActor, int32 constraints);
 
-	void importShapenetActorGroup(FShapenetActorGroup* actorGroup, FActorParams* params);
+	void importShapenetActorGroup(FShapenetActorGroup* actorGroup);
 
-	void importShapenetActor(FShapenetActor* actor, FActorParams* params, FVector* origin);
+	void importShapenetActor(FShapenetActor* actor, FVector* origin);
 
 	void transferParams(FActorParams* parentParams, FActorParams* childParams);
 

@@ -83,7 +83,8 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	defaultParams.canOverlap = 0;
 
 	for (int32 i = 0; i < baseActorGroups.Num(); i++) {
-		importShapenetActorGroup(baseActorGroups[i], &defaultParams);
+		transferParams(&defaultParams, &baseActorGroups[i]->actorParams);
+		importShapenetActorGroup(baseActorGroups[i]);
 	}
 	
 
@@ -115,30 +116,25 @@ void ASceneGenUnrealGameModeBase::listDescendants(FShapenetActorGroup* actorGrou
 	}
 }
 
-void ASceneGenUnrealGameModeBase::importShapenetActorGroup(FShapenetActorGroup* actorGroup, FActorParams* params)
+void ASceneGenUnrealGameModeBase::importShapenetActorGroup(FShapenetActorGroup* actorGroup)
 {
-	FActorParams* importParams;
-	if (!params) {
-		importParams = &actorGroup->actorParams;
-	}
-	else {
-		importParams = params;
-	}
 
 	actorGroup->groupOrigin += FVector(actorGroup->xCenter, actorGroup->yCenter, actorGroup->zCenter);
 	for (int32 i = 0; i < actorGroup->shapenetActors.Num(); i++) {
 		//UE_LOG(LogTemp, Warning, TEXT("TEST %s origin is at (%d, %d, %d)"), *actorGroup->name, actorGroup->groupOrigin.X, actorGroup->groupOrigin.Y, actorGroup->groupOrigin.Z);
-		importShapenetActor(&actorGroup->shapenetActors[i], importParams, &actorGroup->groupOrigin);
+		transferParams(&actorGroup->actorParams, &actorGroup->shapenetActors[i].actorParams);
+		importShapenetActor(&actorGroup->shapenetActors[i], &actorGroup->groupOrigin);
 	}
 
 
 	for (int32 i = 0; i < actorGroup->childGroups.Num(); i++) {
 		actorGroup->childGroups[i]->groupOrigin += FVector(actorGroup->groupOrigin.X, actorGroup->groupOrigin.Y, actorGroup->groupOrigin.Z);
-		importShapenetActorGroup(actorGroup->childGroups[i], importParams);
+		transferParams(&actorGroup->actorParams, &actorGroup->childGroups[i]->actorParams);
+		importShapenetActorGroup(actorGroup->childGroups[i]);
 	}
 }
 
-void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor, FActorParams* params, FVector* origin)
+void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor,  FVector* origin)
 {
 
 	//UE_LOG(LogTemp, Warning, TEXT("Actor is at (%d, %d, %d)"), actor->x, actor->y, actor->z)
@@ -163,7 +159,9 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor, FAc
 
 void ASceneGenUnrealGameModeBase::transferParams(FActorParams* parentParams, FActorParams* childParams)
 {
-
+	if (!parentParams || !childParams) {
+		return;
+	}
 	if (childParams->shapenetSynset == "") {
 		childParams->shapenetSynset = parentParams->shapenetSynset;
 	}
