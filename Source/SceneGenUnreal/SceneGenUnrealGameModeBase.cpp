@@ -147,7 +147,7 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor,  FV
 	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnTransfrom.GetTranslation(), FRotator::ZeroRotator, spawnParams);
 	FString displayName = "Shapenet-" + actor->name;
 	spawnedActor->SetActorLabel(displayName);
-	FVector location = FVector(actor->x + origin->X, actor->y + origin->Y, actor->z + origin->Z);
+	FVector location = FVector(actor->x + origin->X, actor->y + origin->Y, actor->z + origin->Z) * FVector(-1.0,1.0,1.0);
 	// set up mesh and textures here 
 	//spawnedActor->importMesh("02818832", "2f44a88e17474295e66f707221b74f43", location);
 
