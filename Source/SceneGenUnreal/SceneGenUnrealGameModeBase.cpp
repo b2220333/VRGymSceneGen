@@ -12,6 +12,8 @@
 #include "Runtime/Engine/Classes/Engine/World.h"
 
 #include "Runtime/Engine/Classes/Components/InputComponent.h"
+#include "Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
+#include "Components/StaticMeshComponent.h"
 
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 {
@@ -72,6 +74,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	}
 
 	
+	/*
 	FActorParams defaultParams;
 	defaultParams.quantity = 1;
 	defaultParams.spawnProbability = 1.0f;
@@ -81,13 +84,38 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	defaultParams.useSameMeshForAllInstances = 1;
 	defaultParams.useSameTextureForAllInstances = 1;
 	defaultParams.canOverlap = 0;
+	*/
 
 	for (int32 i = 0; i < baseActorGroups.Num(); i++) {
-		transferParams(&defaultParams, &baseActorGroups[i]->actorParams);
+		//transferParams(&defaultParams, &baseActorGroups[i]->actorParams);
 		importShapenetActorGroup(baseActorGroups[i]);
 	}
 	
+	//FPlatformProcess::Sleep(3);
 
+	for (int32 i = 0; i < shapenetActors.Num(); i++) {
+		/*
+		FVector origin;
+		FVector boxExtent;
+		float sphereRadius;
+
+		UKismetSystemLibrary::GetComponentBounds(Cast<USceneComponent>(shapenetActors[i]->BaseMesh), origin, boxExtent, sphereRadius);
+
+		UE_LOG(LogTemp, Warning, TEXT("Origin: (%f, %f, %f)"), origin.X, origin.Y, origin.Z);
+		UE_LOG(LogTemp, Warning, TEXT("BoxExtent: (%f, %f, %f)"), boxExtent.X, boxExtent.Y, boxExtent.Z);
+		UE_LOG(LogTemp, Warning, TEXT("Sphere radius: %f"), sphereRadius);
+
+		*/
+
+
+		UStaticMeshComponent* test = shapenetActors[i]->BaseMesh;
+		FBox box = test->Bounds.GetBox();
+		FVector extents = box.GetExtent();
+		UE_LOG(LogTemp, Warning, TEXT("BoxExtent: (%f, %f, %f)"), extents.X, extents.Y, extents.Z);
+
+	}
+
+	
 }
 
 void ASceneGenUnrealGameModeBase::listDescendants(FShapenetActorGroup* actorGroup)

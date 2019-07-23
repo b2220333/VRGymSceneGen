@@ -18,6 +18,8 @@
 
 #include "SceneGenUnrealGameModeBase.h"
 
+#include "Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
+
 
 // Sets default values
 AShapenet::AShapenet()
@@ -92,7 +94,12 @@ void AShapenet::importMesh(FString synset, FString hash, FVector location, FActo
 void AShapenet::importMeshFromFile(FString path, FVector location, FActorParams* actorParams)
 {
 	
-	
+	float rng = FMath::RandRange(0.0f, 1.0f);
+
+	if (rng > actorParams->spawnProbability && actorParams->spawnProbability >= 0.0f) {
+		return;
+	}
+
 	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
 	
 	BaseMesh = NewObject<UStaticMeshComponent>(this, "BaseMesh");
@@ -103,15 +110,31 @@ void AShapenet::importMeshFromFile(FString path, FVector location, FActorParams*
 	RootComponent->SetMobility(EComponentMobility::Movable);
 	//BaseMesh->SetupAttachment(RootComponent);
 	BaseMesh->SetStaticMesh(staticMeshReference);
-	BaseMesh->SetSimulatePhysics(true);
-	BaseMesh->SetEnableGravity(true);
 
-	int32 numMats = BaseMesh->GetNumMaterials();
-
-	for (int32 i = 0; i < numMats; i++) {
-		UMaterialInterface* material = getRandomMaterial();
-		BaseMesh->SetMaterial(i, material);
+	/*
+	if (actorParams->physicsEnabled == 1 || actorParams->physicsEnabled == -1) {
+		BaseMesh->SetSimulatePhysics(true);
+		BaseMesh->SetEnableGravity(true);
 	}
+	else {
+		BaseMesh->SetSimulatePhysics(false);
+		BaseMesh->SetEnableGravity(false);
+	}
+	*/
+	
+	UE_LOG(LogTemp, Warning, TEXT("useRandtextures: %d"), actorParams->useRandomTextures);
+	if (actorParams->useRandomTextures == 1 || actorParams->useRandomTextures == -1) {
+		int32 numMats = BaseMesh->GetNumMaterials();
+		for (int32 i = 0; i < numMats; i++) {
+			UMaterialInterface* material = getRandomMaterial();
+			BaseMesh->SetMaterial(i, material);
+		}
+	}
+
+
+	
+
+	
 	
 	BaseMesh->RegisterComponent();
 }

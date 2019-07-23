@@ -155,6 +155,8 @@ public:
 
 	UMaterialInterface* getRandomMaterial();
 
+	UMaterialInterface* getRandomMaterialFromDir(FString path);
+
 	UStaticMeshComponent* BaseMesh;
 	
 	FString synset;
