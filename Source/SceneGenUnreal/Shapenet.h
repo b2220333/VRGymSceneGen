@@ -127,6 +127,7 @@ struct FSynsetObj
 
 
 
+struct FActorParams;
 
 UCLASS()
 class SCENEGENUNREAL_API AShapenet : public AActor
@@ -145,11 +146,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void importMesh(FString synset, FString hash, FVector location);
+	void importMesh(FString synset, FString hash, FVector location, FActorParams* actorParams);
 
-	void importRandomFromSynset(FString synset, FVector location);
+	void importRandomFromSynset(FString synset, FVector location, FActorParams* actorParams);
 
-	void importMeshFromFile(FString path, FVector location);
+	void importMeshFromFile(FString path, FVector location, FActorParams* actorParams);
 	
 
 	UMaterialInterface* getRandomMaterial();

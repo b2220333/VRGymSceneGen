@@ -16,6 +16,8 @@
 #include "Runtime/Core/Public/HAL/FileManager.h"
 #include "Editor/UnrealEd/Public/FileHelpers.h"
 
+#include "SceneGenUnrealGameModeBase.h"
+
 
 // Sets default values
 AShapenet::AShapenet()
@@ -81,13 +83,13 @@ void AShapenet::Tick(float DeltaTime)
 }
 
 
-void AShapenet::importMesh(FString synset, FString hash, FVector location)
+void AShapenet::importMesh(FString synset, FString hash, FVector location, FActorParams* actorParams)
 {
 	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
-	importMeshFromFile(path, location);
+	importMeshFromFile(path, location, actorParams);
 }
 
-void AShapenet::importMeshFromFile(FString path, FVector location)
+void AShapenet::importMeshFromFile(FString path, FVector location, FActorParams* actorParams)
 {
 	
 	
@@ -140,7 +142,7 @@ UMaterialInterface* AShapenet::getRandomMaterial()
 }
 
 
-void AShapenet::importRandomFromSynset(FString synset, FVector location)
+void AShapenet::importRandomFromSynset(FString synset, FVector location, FActorParams* actorParams)
 {
 	IFileManager& FileManager = IFileManager::Get();
 	FString path = FPaths::ProjectContentDir() + "shapenetOBJ/" +  synset + "/*.*";
@@ -150,6 +152,6 @@ void AShapenet::importRandomFromSynset(FString synset, FVector location)
 	UE_LOG(LogTemp, Warning, TEXT("Found %d models"), Hashes.Num());
 	int32 i = FMath::RandRange(0, Hashes.Num() - 1);
 	if (Hashes.Num() > 0) {
-		importMesh(synset, Hashes[i], location);
+		importMesh(synset, Hashes[i], location, actorParams);
 	}
 }
