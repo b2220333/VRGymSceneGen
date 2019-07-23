@@ -15,6 +15,9 @@
 #include "Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
 #include "Components/StaticMeshComponent.h"
 
+#include "json.hpp"
+using json = nlohmann::json;
+
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 {
 
