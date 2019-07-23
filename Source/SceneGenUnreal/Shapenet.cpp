@@ -104,12 +104,41 @@ void AShapenet::importMeshFromFile(FString path, FVector location)
 	BaseMesh->SetSimulatePhysics(true);
 	BaseMesh->SetEnableGravity(true);
 
-	FString matPath = "/Game/ShapenetOBJ/02818832/6193a59df632dc4fd9b53420a5458c53/material_5_24.material_5_24";
-	UMaterialInterface* material = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *matPath));
-	BaseMesh->SetMaterial(0, material);
+	int32 numMats = BaseMesh->GetNumMaterials();
 
+	for (int32 i = 0; i < numMats; i++) {
+		UMaterialInterface* material = getRandomMaterial();
+		BaseMesh->SetMaterial(i, material);
+	}
+	
 	BaseMesh->RegisterComponent();
 }
+
+UMaterialInterface* AShapenet::getRandomMaterial()
+{
+	IFileManager& FileManager = IFileManager::Get();
+	TArray<FString> assetFiles;
+	FString fileName = "*.uasset";
+	FString path = FPaths::ProjectContentDir() + "shapenetOBJ/";
+	FileManager.FindFilesRecursive(assetFiles, *path, *fileName, true, false, false);
+
+	bool found = false;
+
+	int32 i;
+	while (!found) {
+		i = FMath::RandRange(0, assetFiles.Num() - 1);
+		if (assetFiles[i].Contains("material")) {
+			found = true;
+		}
+	}
+
+	int32 index = assetFiles[i].Find(TEXT("VRGymSceneGen/Content/"));
+	FString subPath = assetFiles[i].Mid(index + 21, assetFiles[i].Len() - (index+21));
+
+	FString matPath = "/Game" + FPaths::GetBaseFilename(subPath, false) + "." + FPaths::GetBaseFilename(subPath, true);
+	return Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *matPath));
+}
+
 
 void AShapenet::importRandomFromSynset(FString synset, FVector location)
 {

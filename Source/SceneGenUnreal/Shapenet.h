@@ -151,6 +151,9 @@ public:
 
 	void importMeshFromFile(FString path, FVector location);
 	
+
+	UMaterialInterface* getRandomMaterial();
+
 	UStaticMeshComponent* BaseMesh;
 	
 	FString synset;
