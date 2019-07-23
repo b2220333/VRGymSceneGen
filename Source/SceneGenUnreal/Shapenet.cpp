@@ -103,6 +103,11 @@ void AShapenet::importMeshFromFile(FString path, FVector location)
 	BaseMesh->SetStaticMesh(staticMeshReference);
 	BaseMesh->SetSimulatePhysics(true);
 	BaseMesh->SetEnableGravity(true);
+
+	FString matPath = "/Game/ShapenetOBJ/02818832/6193a59df632dc4fd9b53420a5458c53/material_5_24.material_5_24";
+	UMaterialInterface* material = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *matPath));
+	BaseMesh->SetMaterial(0, material);
+
 	BaseMesh->RegisterComponent();
 }
 
