@@ -112,14 +112,7 @@ void AShapenet::importMeshFromFile(FString path, FVector location, FActorParams*
 	BaseMesh->SetStaticMesh(staticMeshReference);
 
 	
-	if (actorParams->physicsEnabled == 1 || actorParams->physicsEnabled == -1) {
-		BaseMesh->SetSimulatePhysics(true);
-		BaseMesh->SetEnableGravity(true);
-	}
-	else {
-		BaseMesh->SetSimulatePhysics(false);
-		BaseMesh->SetEnableGravity(false);
-	}
+	
 	
 	
 	UE_LOG(LogTemp, Warning, TEXT("useRandtextures: %d"), actorParams->useRandomTextures);
@@ -133,9 +126,15 @@ void AShapenet::importMeshFromFile(FString path, FVector location, FActorParams*
 
 
 	
-
-	
-	
+	// physics comes last to allow for other setup first
+	if (actorParams->physicsEnabled == 1 || actorParams->physicsEnabled == -1) {
+		BaseMesh->SetSimulatePhysics(true);
+		BaseMesh->SetEnableGravity(true);
+	}
+	else {
+		BaseMesh->SetSimulatePhysics(false);
+		BaseMesh->SetEnableGravity(false);
+	}
 	BaseMesh->RegisterComponent();
 }
 

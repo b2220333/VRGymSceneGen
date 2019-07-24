@@ -15,6 +15,7 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(ShapenetImportModule, All, All)
 
+
 class FShapenetImportModule : public IModuleInterface
 {
 private:

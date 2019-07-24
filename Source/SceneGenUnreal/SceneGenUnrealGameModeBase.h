@@ -4,9 +4,14 @@
 
 #include "Shapenet.h"
 
+#include "json.hpp"
+using json = nlohmann::json;
+
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "SceneGenUnrealGameModeBase.generated.h"
+
+
 
 
 USTRUCT()
@@ -139,6 +144,7 @@ struct FRoomJson
 
 };
 
+
 UCLASS()
 class SCENEGENUNREAL_API ASceneGenUnrealGameModeBase : public AGameModeBase
 {
@@ -163,7 +169,14 @@ public:
 
 	void importShapenetActorGroup(FShapenetActorGroup* actorGroup);
 
+	
+
 	void importShapenetActor(FShapenetActor* actor, FVector* origin);
+
+
+	void importShapenetActorGroupNew(json::object_t actorGroup, FVector origin);
+	void importShapenetActorNew(json::object_t, FVector origin);
+
 
 	void transferParams(FActorParams* parentParams, FActorParams* childParams);
 

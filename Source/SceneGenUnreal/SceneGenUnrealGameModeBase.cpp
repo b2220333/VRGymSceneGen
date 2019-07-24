@@ -14,6 +14,9 @@
 #include "Runtime/Engine/Classes/Components/InputComponent.h"
 #include "Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
 #include "Components/StaticMeshComponent.h"
+#include "Runtime/Engine/Classes/Engine/ObjectLibrary.h"
+#include "Runtime/AssetRegistry/Public/AssetRegistryModule.h"
+#include "Runtime/AssetRegistry/Public/IAssetRegistry.h"
 
 #include "json.hpp"
 using json = nlohmann::json;
@@ -170,6 +173,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 	std::string lulstr = std::string(TCHAR_TO_UTF8(*lul));
 
+	//15959
 	testParse[lulstr] = "skynet";
 
 	std::string output2 = testParse["whoami"];
@@ -177,6 +181,52 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	FString testOutput2 = FString(output2.c_str());
 
 	UE_LOG(LogTemp, Warning, TEXT("testParse[\"hello\"] = %s"), *testOutput2);
+
+	json::value_type testV = testParse[lulstr];
+
+	json::object_t testabc;
+
+	json::array_t tarr;
+
+	tarr.size();
+
+	if (testV.is_string()) {
+		UE_LOG(LogTemp, Warning, TEXT("Is a string "));
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Is not a string "));
+	}
+
+	testParse["arrayHere"] = {1,2,3};
+
+	json::array_t testArr = testParse["arrayHere"];
+
+	for (auto it = testArr.begin(); it != testArr.end(); it++) {
+		int32 z = *it;
+		UE_LOG(LogTemp, Warning, TEXT("Testing iterator: %d"), z);
+	}
+
+
+	FString testDir = "/Game/Content/ShapenetOBJ/03636649/89ad10075443cc8ece868a9ece283694";
+
+	FAssetRegistryModule& assetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
+	IAssetRegistry& assetRegistry = assetRegistryModule.Get();
+	
+	assetRegistry.AddPath(testDir); 
+	assetRegistry.ScanPathsSynchronous({ testDir });
+
+	UObjectLibrary* lib = UObjectLibrary::CreateLibrary(UObject::StaticClass(), false, false);
+	//lib->bRecursivePaths = true;
+	lib->LoadAssetDataFromPath(*testDir);
+	TArray<FAssetData> assetData;
+	lib->GetAssetDataList(assetData);
+
+	for (int32 i = 0; i < assetData.Num(); i++) {
+		UE_LOG(LogTemp, Warning, TEXT("Name: %s, Type: %s"), *assetData[i].GetFullName(), *assetData[i].GetClass()->GetName());
+	}
+
+	
+
 	
 }
 
@@ -223,6 +273,55 @@ void ASceneGenUnrealGameModeBase::importShapenetActorGroup(FShapenetActorGroup* 
 		importShapenetActorGroup(actorGroup->childGroups[i]);
 	}
 }
+
+void ASceneGenUnrealGameModeBase::importShapenetActorGroupNew(json::object_t actorGroup, FVector origin)
+{
+	int32 relX, relY, relZ;
+
+
+	json::value_type x = actorGroup["xCenter"];
+	if (x.is_number_float()) {
+		relX = x;
+	}
+	json::value_type y = actorGroup["yCenter"];
+	if (y.is_number_float()) {
+		relY = y;
+	}
+	json::value_type z = actorGroup["zCenter"];
+	if (z.is_number_float()) {
+		relZ = z;
+	}
+
+	FVector absoluteOrigin = origin + FVector(relX, relY, relZ);
+
+	json::value_type actors = actorGroup["shapenetActors"];
+	if (actors.is_array()) {
+		for (auto it = actors.begin(); it != actors.end(); it++) {
+			if (it->is_object()) {
+				importShapenetActorNew(*it, absoluteOrigin);
+			}
+		}
+	}
+
+	json::value_type childGroups = actorGroup["childShapenetActorGroups"];
+
+	if (childGroups.is_array()) {
+		for (auto it = childGroups.begin(); it != childGroups.end(); it++) {
+			if (it->is_object()) {
+				importShapenetActorGroupNew(*it, absoluteOrigin);
+			}
+		}
+
+	}
+
+}
+
+void ASceneGenUnrealGameModeBase::importShapenetActorNew(json::object_t, FVector origin)
+{
+
+}
+
+
 
 void ASceneGenUnrealGameModeBase::importShapenetActor(FShapenetActor* actor,  FVector* origin)
 {
