@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "json.hpp"
+using json = nlohmann::json;
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -148,9 +150,17 @@ public:
 
 	void importMesh(FString synset, FString hash, FVector location, FActorParams* actorParams);
 
+	void importMeshNew(FString synset, FString hash, FVector location, json::object_t param);
+
 	void importRandomFromSynset(FString synset, FVector location, FActorParams* actorParams);
 
+	void importRandomFromSynsetNew(FString synset, FVector location, json::object_t param);
+
 	void importMeshFromFile(FString path, FVector location, FActorParams* actorParams);
+
+	void importMeshFromFileNew(FString path, FVector location, json::object_t param);
+
+
 	
 
 	UMaterialInterface* getRandomMaterial();

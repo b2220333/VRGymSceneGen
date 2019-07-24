@@ -177,3 +177,27 @@ void AShapenet::importRandomFromSynset(FString synset, FVector location, FActorP
 		importMesh(synset, Hashes[i], location, actorParams);
 	}
 }
+
+void AShapenet::importRandomFromSynsetNew(FString synset, FVector location, json::object_t param)
+{
+	IFileManager& FileManager = IFileManager::Get();
+	FString path = FPaths::ProjectContentDir() + "shapenetOBJ/" + synset + "/*.*";
+	UE_LOG(LogTemp, Warning, TEXT("Importing random mesh from %s"), *path);
+	TArray<FString> Hashes;
+	FileManager.FindFiles(Hashes, *path, false, true);
+	UE_LOG(LogTemp, Warning, TEXT("Found %d models"), Hashes.Num());
+	int32 i = FMath::RandRange(0, Hashes.Num() - 1);
+	if (Hashes.Num() > 0) {
+		importMeshNew(synset, Hashes[i], location, param);
+	}
+}
+
+void AShapenet::importMeshFromFileNew(FString path, FVector location, json::object_t param)
+{
+
+}
+
+void importMeshNew(FString synset, FString hash, FVector location, json::object_t param)
+{
+
+}

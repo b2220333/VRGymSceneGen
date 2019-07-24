@@ -52,7 +52,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	}
 	shapenetActors.Empty();
 
-	FString jsonPath = FPaths::ProjectDir() + "External/room.json";;
+	FString jsonPath = FPaths::ProjectDir() + "External/roomNew.json";
 
 	FString jsonString;
 	FFileHelper::LoadFileToString(jsonString, *jsonPath);
@@ -67,8 +67,16 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 	UE_LOG(LogTemp, Warning, TEXT("Testing new parse %s"), *dumpF);
 
+	json::array_t baseGroups = newParsed["shapenetActorGroups"];
+
+	for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
+		importShapenetActorGroupNew(*it, FVector(0, 0, 0));
+	}
+	
 
 
+	jsonPath = FPaths::ProjectDir() + "External/room.json";
+	FFileHelper::LoadFileToString(jsonString, *jsonPath);
 	FRoomJson roomJson;
 
 	bool parsed = FJsonObjectConverter::JsonObjectStringToUStruct(jsonString, &roomJson, 0, 0);
@@ -110,20 +118,10 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	}
 	
 	//FPlatformProcess::Sleep(3);
-
+	/*
 	for (int32 i = 0; i < shapenetActors.Num(); i++) {
-		/*
-		FVector origin;
-		FVector boxExtent;
-		float sphereRadius;
-
-		UKismetSystemLibrary::GetComponentBounds(Cast<USceneComponent>(shapenetActors[i]->BaseMesh), origin, boxExtent, sphereRadius);
-
-		UE_LOG(LogTemp, Warning, TEXT("Origin: (%f, %f, %f)"), origin.X, origin.Y, origin.Z);
-		UE_LOG(LogTemp, Warning, TEXT("BoxExtent: (%f, %f, %f)"), boxExtent.X, boxExtent.Y, boxExtent.Z);
-		UE_LOG(LogTemp, Warning, TEXT("Sphere radius: %f"), sphereRadius);
-
-		*/
+		
+	
 
 
 		UStaticMeshComponent* test = shapenetActors[i]->BaseMesh;
@@ -132,6 +130,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		UE_LOG(LogTemp, Warning, TEXT("BoxExtent: (%f, %f, %f)"), extents.X, extents.Y, extents.Z);
 
 	}
+	*/
 
 
 	json test;
@@ -207,23 +206,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	}
 
 
-	FString testDir = "/Game/Content/ShapenetOBJ/03636649/89ad10075443cc8ece868a9ece283694";
-
-	FAssetRegistryModule& assetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
-	IAssetRegistry& assetRegistry = assetRegistryModule.Get();
 	
-	assetRegistry.AddPath(testDir); 
-	assetRegistry.ScanPathsSynchronous({ testDir });
-
-	UObjectLibrary* lib = UObjectLibrary::CreateLibrary(UObject::StaticClass(), false, false);
-	//lib->bRecursivePaths = true;
-	lib->LoadAssetDataFromPath(*testDir);
-	TArray<FAssetData> assetData;
-	lib->GetAssetDataList(assetData);
-
-	for (int32 i = 0; i < assetData.Num(); i++) {
-		UE_LOG(LogTemp, Warning, TEXT("Name: %s, Type: %s"), *assetData[i].GetFullName(), *assetData[i].GetClass()->GetName());
-	}
 
 	
 
@@ -316,9 +299,47 @@ void ASceneGenUnrealGameModeBase::importShapenetActorGroupNew(json::object_t act
 
 }
 
-void ASceneGenUnrealGameModeBase::importShapenetActorNew(json::object_t, FVector origin)
+void ASceneGenUnrealGameModeBase::importShapenetActorNew(json::object_t actor, FVector origin)
 {
+	int32 relX, relY, relZ;
 
+	json::value_type x = actor["x"];
+	if (x.is_number_float()) {
+		relX = x;
+	}
+	json::value_type y = actor["y"];
+	if (y.is_number_float()) {
+		relY = y;
+	}
+	json::value_type z = actor["z"];
+	if (z.is_number_float()) {
+		relZ = z;
+	}
+
+	FVector spawnLocation = FVector(origin.X + relX, origin.Y + relY, origin.Z + relZ) * FVector(-1.0, 1.0, 1.0);;
+	FActorSpawnParameters spawnParams;
+	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+	
+	json::value_type name = actor["name"];
+	if (name.is_string()) {
+		std::string nameStr = actor["name"];
+		FString displayName = "TestShapenet-" + FString(nameStr.c_str());
+		spawnedActor->SetActorLabel(displayName);
+	}
+
+	json::value_type syn = actor["synset"];
+	if (syn.is_string()) {
+		std::string synStr = actor["synset"];
+		FString synset = FString(synStr.c_str());
+		if (actor["actorParams"].is_object()) {
+			spawnedActor->importRandomFromSynsetNew(synset, spawnLocation, actor["actoParams"]);
+		}
+	}
+
+	
+	
+
+	shapenetActors.Add(spawnedActor);
 }
 
 

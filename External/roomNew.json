@@ -1,0 +1,90 @@
+{
+	"name": "bedroom",
+	"xWidth" : 1000,
+	"yWidth": 1000,
+	"zWidth": 1000,
+	"shapenetActorGroups" : [
+		{
+			"name" : "deskArea",
+			"xCenter": -300,
+			"yCenter" : 300,
+			"zCenter" : 0,
+			"shapenetActors": [
+				{
+					"name" : "chairForDesk",
+					"x" : 100,
+					"y" : 0,
+					"z" : -1,
+					"actorParams": {
+						"shapenetSynset" : "03001627"
+					}
+				}
+			],
+			"childShapenetActorGroups" : 
+			[
+				{
+					"name" : "desk",
+					"xCenter": -100,
+					"yCenter" : 0,
+					"zCenter" : 0,
+					"shapenetActors": [
+						{
+							"name" : "bedroomDesk",
+							"x" : 0,
+							"y" : 0,
+							"z" : -1,
+							"actorParams": {
+								"shapenetSynset" : "04379243"
+							}
+						}
+					],
+					"childShapenetActorGroups" : [
+						{
+							"name" : "itemsOnDesk",
+							"xCenter": 0,
+							"yCenter" : 0,
+							"zCenter" : 0,
+							"shapenetActors" : [
+								{
+									"name" : "lamp",
+									"x" : -50,
+									"y" : 50,
+									"z" : -1,
+									"actorParams": {
+										"shapenetSynset" : "03636649"
+									}
+								},
+								{
+									"name" : "bottle",
+									"x" : -50,
+									"y" : -50,
+									"z" : -1,
+									"actorParams": {
+										"shapenetSynset" : "02876657"
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name" : "bedArea",
+			"xCenter": 250,
+			"yCenter" : -150,
+			"zCenter" : 0,
+			"shapenetActors": [
+				{
+					"name" : "bed",
+					"x" : 0,
+					"y" : 0,
+					"z" : -1,
+					"actorParams": {
+						"shapenetSynset" : "02818832"
+					}
+				}
+			]
+		}
+	]
+}

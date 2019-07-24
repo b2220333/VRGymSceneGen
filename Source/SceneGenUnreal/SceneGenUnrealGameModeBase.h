@@ -175,7 +175,7 @@ public:
 
 
 	void importShapenetActorGroupNew(json::object_t actorGroup, FVector origin);
-	void importShapenetActorNew(json::object_t, FVector origin);
+	void importShapenetActorNew(json::object_t actor, FVector origin);
 
 
 	void transferParams(FActorParams* parentParams, FActorParams* childParams);
