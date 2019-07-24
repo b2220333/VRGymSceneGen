@@ -54,6 +54,18 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	FString jsonString;
 	FFileHelper::LoadFileToString(jsonString, *jsonPath);
 
+	std::string jsonStr = std::string(TCHAR_TO_UTF8(*jsonString));
+
+	auto newParsed = json::parse(jsonStr);
+
+	std::string dump = newParsed.dump(4);
+
+	FString dumpF = FString(dump.c_str());
+
+	UE_LOG(LogTemp, Warning, TEXT("Testing new parse %s"), *dumpF);
+
+
+
 	FRoomJson roomJson;
 
 	bool parsed = FJsonObjectConverter::JsonObjectStringToUStruct(jsonString, &roomJson, 0, 0);
@@ -118,6 +130,53 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 	}
 
+
+	json test;
+
+	test["bob"] = 420;
+	test["outerbob"]["innerbob"] = 69;
+	int32 a = test["bob"];
+
+	auto wtf = test.find("bob");
+
+	if (wtf == test.end()) {
+		UE_LOG(LogTemp, Warning, TEXT("did not find bob"))
+	} else {
+		UE_LOG(LogTemp, Warning, TEXT("found bob"))
+	}
+
+	auto wtf2 = test.find("elmo");
+
+	if (wtf2 == test.end()) {
+		UE_LOG(LogTemp, Warning, TEXT("did not find elmo"))
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("found elmo"))
+	}
+
+	
+
+	UE_LOG(LogTemp, Warning, TEXT("test[\"bob\"] = %d"), a);
+
+	auto testParse = json::parse("{ \"hello\" : \"world\"}");
+
+	std::string output = testParse["hello"];
+
+	FString testOutput = FString(output.c_str());
+
+	UE_LOG(LogTemp, Warning, TEXT("testParse[\"hello\"] = %s"), *testOutput);
+
+	FString lul = "whoami";
+
+	std::string lulstr = std::string(TCHAR_TO_UTF8(*lul));
+
+	testParse[lulstr] = "skynet";
+
+	std::string output2 = testParse["whoami"];
+
+	FString testOutput2 = FString(output2.c_str());
+
+	UE_LOG(LogTemp, Warning, TEXT("testParse[\"hello\"] = %s"), *testOutput2);
 	
 }
 
