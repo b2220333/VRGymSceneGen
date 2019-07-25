@@ -75,7 +75,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		importShapenetActorGroupNew(*it, FVector(0, 0, 0));
 	}
 	
-
+	newParsed.get_ref<json::object_t&>();
 
 	jsonPath = FPaths::ProjectDir() + "External/room.json";
 	FFileHelper::LoadFileToString(jsonString, *jsonPath);
@@ -355,11 +355,69 @@ TArray<FShapenetActorGroup*> ASceneGenUnrealGameModeBase::linkShapenetActorGroup
 	TArray<FShapenetActorGroup*> baseActorGroups;
 
 	for (int32 i = 0; i < actorGroups->Num(); i++) {
-		if (!(*actorGroups)[i].parentGroup) {
+		if (!(*actorGroups)[i].parentGroup) {			
 			baseActorGroups.Add(&(*actorGroups)[i]);
 		}
 	}
 
 	return baseActorGroups;
+
+}
+
+
+void ASceneGenUnrealGameModeBase::transferParamsBetween(json::object_t &srcObj, json::object_t &dstObj)
+{
+	if (dstObj.find("shapenetSynset") == dstObj.end() && srcObj.find("shapenetSynset") != srcObj.end()) {
+		dstObj["shapenetSynset"] = srcObj["shapenetSynset"];
+	}
+
+	if (dstObj.find("shapenetHash") == dstObj.end() && srcObj.find("shapenetHash") != srcObj.end()) {
+		dstObj["shapenetHash"] = srcObj["shapenetHash"];
+	}
+
+	if (dstObj.find("meshOverride") == dstObj.end() && srcObj.find("meshOverride") != srcObj.end()) {
+		dstObj["meshOverride"] = srcObj["meshOverride"];
+	}
+
+	if (dstObj.find("textureOverride") == dstObj.end() && srcObj.find("textureOverride") != srcObj.end()) {
+		dstObj["textureOverride"] = srcObj["textureOverride"];
+	}
+
+	if (dstObj.find("spawnProbability") == dstObj.end() && srcObj.find("spawnProbability") != srcObj.end()) {
+		dstObj["spawnProbability"] = srcObj["spawnProbability"];
+	}
+
+	if (dstObj.find("destructable") == dstObj.end() && srcObj.find("destructable") != srcObj.end()) {
+		dstObj["destructable"] = srcObj["destructable"];
+	}
+
+	if (dstObj.find("physicsEnabled") == dstObj.end() && srcObj.find("physicsEnabled") != srcObj.end()) {
+		dstObj["physicsEnabled"] = srcObj["physicsEnabled"];
+	}
+
+	if (dstObj.find("useRandomTextures") == dstObj.end() && srcObj.find("useRandomTextures") != srcObj.end()) {
+		dstObj["useRandomTextures"] = srcObj["useRandomTextures"];
+	}
+
+	if (dstObj.find("canOverlap") == dstObj.end() && srcObj.find("canOverlap") != srcObj.end()) {
+		dstObj["canOverlap"] = srcObj["canOverlap"];
+	}
+
+}
+
+void ASceneGenUnrealGameModeBase::passDownParams(json::object_t &srcObj)
+{
+	if (srcObj["childShapenetActorGroups"].is_array()) {
+		json::array_t children = srcObj["childShapenetActorGroups"].get_ref<json::array_t&>();
+		for (auto it = children.begin(); it != children.end(); it++) {
+			if (it->is_object()) {
+				json::object_t child = it->get_ref<json::object_t&>();
+				transferParamsBetween(srcObj, child);
+
+				
+			}
+			
+		}
+	}
 
 }

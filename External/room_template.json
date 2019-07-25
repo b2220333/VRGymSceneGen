@@ -12,15 +12,12 @@
 			"actorParams" : {
 				"shapenetSynset" : "12345678",//default: ""
 				"shapenetHash" : "hash string", //default: ""
-				"meshFromOverride" : "/Game/ path to uasset", //default: ""
+				"meshOverride" : "/Game/ path to uasset", //default: ""
 				"textureOverride" : "/Game/ path to texture asset",   //default: ""
-				"quantity": 10, //default: 1
 				"spawnProbability": 0.9, //default: 0
 				"destructable" : 1, //default: 1
 				"physicsEnabled" : 0,
 				"useRandomTextures" : 1,
-				"useSameMeshForAllInstances": 0,
-				"useSameTextureForAllInstances" : 1,
 				"canOverlap" : 1
 			},
 			"shapenetActors": [

@@ -64,4 +64,6 @@ public:
 
 	bool importFromJson(FString json);
 
+	FDateTime importJsonLastChanged;
+
 };

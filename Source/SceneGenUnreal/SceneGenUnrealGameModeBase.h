@@ -184,4 +184,11 @@ public:
 
 	void listDescendants(FShapenetActorGroup* actorGroup);
 
+
+	void passDownParams(json::object_t &srcObj);
+	void transferParamsBetween(json::object_t &srcObj, json::object_t &dstObj);
+
+	FDateTime roomJsonLastChanged;
+	
+
 };
