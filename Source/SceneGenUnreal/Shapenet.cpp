@@ -188,16 +188,50 @@ void AShapenet::importRandomFromSynsetNew(FString synset, FVector location, json
 	UE_LOG(LogTemp, Warning, TEXT("Found %d models"), Hashes.Num());
 	int32 i = FMath::RandRange(0, Hashes.Num() - 1);
 	if (Hashes.Num() > 0) {
-		importMeshNew(synset, Hashes[i], location, param);
+		importMeshFromSynsetAndHashNew(synset, Hashes[i], location, param);
 	}
 }
 
 void AShapenet::importMeshFromFileNew(FString path, FVector location, json::object_t param)
 {
+	if (param["spawnProbability"].is_number()) {
+		float rng = FMath::RandRange(0.0f, 1.0f);
+		if (rng > param["spawnProbability"] && param["spawnProbability"] >= 0.0f) {
+			return;
+		}
+	}
 
+	
+
+	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
+	BaseMesh = NewObject<UStaticMeshComponent>(this, "BaseMesh");
+	BaseMesh->SetMobility(EComponentMobility::Movable);
+	RootComponent = BaseMesh;
+	RootComponent->SetWorldLocation(location);
+	RootComponent->SetMobility(EComponentMobility::Movable);
+	BaseMesh->SetStaticMesh(staticMeshReference);
+
+	//if (param["useRandomTextures"].is_boolean() && param["useRandomTextures"]) {
+		int32 numMats = BaseMesh->GetNumMaterials();
+		for (int32 i = 0; i < numMats; i++) {
+			UMaterialInterface* material = getRandomMaterial();
+			BaseMesh->SetMaterial(i, material);
+		}
+	//}
+
+	// physics comes last to allow for other setup first
+	if ( (param["physicsEnabled"].is_boolean() && !param["physicsEnabled"].get<bool>()) ) {
+		BaseMesh->SetSimulatePhysics(false);
+		BaseMesh->SetEnableGravity(false);
+	} else {
+		BaseMesh->SetSimulatePhysics(true);
+		BaseMesh->SetEnableGravity(true);
+	}
+	BaseMesh->RegisterComponent();
 }
 
-void importMeshNew(FString synset, FString hash, FVector location, json::object_t param)
+void AShapenet::importMeshFromSynsetAndHashNew(FString synset, FString hash, FVector location, json::object_t param)
 {
-
+	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
+	importMeshFromFileNew(path, location, param);
 }

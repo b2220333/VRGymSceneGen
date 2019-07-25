@@ -48,7 +48,9 @@ void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
 void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 {
 	for (int32 i = 0; i < shapenetActors.Num(); i++) {
-		shapenetActors[i]->Destroy();
+		if (shapenetActors[i]) {
+			shapenetActors[i]->Destroy();
+		}
 	}
 	shapenetActors.Empty();
 
@@ -100,21 +102,10 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	}
 
 	
-	/*
-	FActorParams defaultParams;
-	defaultParams.quantity = 1;
-	defaultParams.spawnProbability = 1.0f;
-	defaultParams.destructable = 1;
-	defaultParams.physicsEnabled = 1;
-	defaultParams.useRandomTextures = 0;
-	defaultParams.useSameMeshForAllInstances = 1;
-	defaultParams.useSameTextureForAllInstances = 1;
-	defaultParams.canOverlap = 0;
-	*/
-
+	
 	for (int32 i = 0; i < baseActorGroups.Num(); i++) {
 		//transferParams(&defaultParams, &baseActorGroups[i]->actorParams);
-		importShapenetActorGroup(baseActorGroups[i]);
+		//importShapenetActorGroup(baseActorGroups[i]);
 	}
 	
 	//FPlatformProcess::Sleep(3);
@@ -131,85 +122,6 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 	}
 	*/
-
-
-	json test;
-
-	test["bob"] = 420;
-	test["outerbob"]["innerbob"] = 69;
-	int32 a = test["bob"];
-
-	auto wtf = test.find("bob");
-
-	if (wtf == test.end()) {
-		UE_LOG(LogTemp, Warning, TEXT("did not find bob"))
-	} else {
-		UE_LOG(LogTemp, Warning, TEXT("found bob"))
-	}
-
-	auto wtf2 = test.find("elmo");
-
-	if (wtf2 == test.end()) {
-		UE_LOG(LogTemp, Warning, TEXT("did not find elmo"))
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("found elmo"))
-	}
-
-	
-
-	UE_LOG(LogTemp, Warning, TEXT("test[\"bob\"] = %d"), a);
-
-	auto testParse = json::parse("{ \"hello\" : \"world\"}");
-
-	std::string output = testParse["hello"];
-
-	FString testOutput = FString(output.c_str());
-
-	UE_LOG(LogTemp, Warning, TEXT("testParse[\"hello\"] = %s"), *testOutput);
-
-	FString lul = "whoami";
-
-	std::string lulstr = std::string(TCHAR_TO_UTF8(*lul));
-
-	//15959
-	testParse[lulstr] = "skynet";
-
-	std::string output2 = testParse["whoami"];
-
-	FString testOutput2 = FString(output2.c_str());
-
-	UE_LOG(LogTemp, Warning, TEXT("testParse[\"hello\"] = %s"), *testOutput2);
-
-	json::value_type testV = testParse[lulstr];
-
-	json::object_t testabc;
-
-	json::array_t tarr;
-
-	tarr.size();
-
-	if (testV.is_string()) {
-		UE_LOG(LogTemp, Warning, TEXT("Is a string "));
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("Is not a string "));
-	}
-
-	testParse["arrayHere"] = {1,2,3};
-
-	json::array_t testArr = testParse["arrayHere"];
-
-	for (auto it = testArr.begin(); it != testArr.end(); it++) {
-		int32 z = *it;
-		UE_LOG(LogTemp, Warning, TEXT("Testing iterator: %d"), z);
-	}
-
-
-	
-
-	
-
 	
 }
 
@@ -263,15 +175,15 @@ void ASceneGenUnrealGameModeBase::importShapenetActorGroupNew(json::object_t act
 
 
 	json::value_type x = actorGroup["xCenter"];
-	if (x.is_number_float()) {
+	if (x.is_number()) {
 		relX = x;
 	}
 	json::value_type y = actorGroup["yCenter"];
-	if (y.is_number_float()) {
+	if (y.is_number()) {
 		relY = y;
 	}
 	json::value_type z = actorGroup["zCenter"];
-	if (z.is_number_float()) {
+	if (z.is_number()) {
 		relZ = z;
 	}
 
@@ -304,20 +216,21 @@ void ASceneGenUnrealGameModeBase::importShapenetActorNew(json::object_t actor, F
 	int32 relX, relY, relZ;
 
 	json::value_type x = actor["x"];
-	if (x.is_number_float()) {
+	if (x.is_number()) {
 		relX = x;
 	}
 	json::value_type y = actor["y"];
-	if (y.is_number_float()) {
+	if (y.is_number()) {
 		relY = y;
 	}
 	json::value_type z = actor["z"];
-	if (z.is_number_float()) {
+	if (z.is_number()) {
 		relZ = z;
 	}
 
-	FVector spawnLocation = FVector(origin.X + relX, origin.Y + relY, origin.Z + relZ) * FVector(-1.0, 1.0, 1.0);;
+	FVector spawnLocation = FVector(origin.X + relX, origin.Y + relY, origin.Z + relZ) * FVector(-1.0, 1.0, 1.0);
 	FActorSpawnParameters spawnParams;
+	
 	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 	
 	json::value_type name = actor["name"];
@@ -327,19 +240,13 @@ void ASceneGenUnrealGameModeBase::importShapenetActorNew(json::object_t actor, F
 		spawnedActor->SetActorLabel(displayName);
 	}
 
-	json::value_type syn = actor["synset"];
-	if (syn.is_string()) {
-		std::string synStr = actor["synset"];
-		FString synset = FString(synStr.c_str());
-		if (actor["actorParams"].is_object()) {
-			spawnedActor->importRandomFromSynsetNew(synset, spawnLocation, actor["actoParams"]);
-		}
+	if (actor["actorParams"].is_object() && actor["actorParams"]["shapenetSynset"].is_string()) {
+		std::string syn = actor["actorParams"]["shapenetSynset"];
+		FString synset = FString(syn.c_str());
+		spawnedActor->importRandomFromSynsetNew(synset, spawnLocation, actor["actorParams"]);
+		UE_LOG(LogTemp, Warning, TEXT("Spawning at (%f %f, %f)"), spawnLocation.X, spawnLocation.Y, spawnLocation.Z);
+		shapenetActors.Add(spawnedActor);
 	}
-
-	
-	
-
-	shapenetActors.Add(spawnedActor);
 }
 
 

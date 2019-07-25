@@ -14,7 +14,7 @@
 					"name" : "chairForDesk",
 					"x" : 100,
 					"y" : 0,
-					"z" : -1,
+					"z" : 0,
 					"actorParams": {
 						"shapenetSynset" : "03001627"
 					}
@@ -32,7 +32,7 @@
 							"name" : "bedroomDesk",
 							"x" : 0,
 							"y" : 0,
-							"z" : -1,
+							"z" : 0,
 							"actorParams": {
 								"shapenetSynset" : "04379243"
 							}
@@ -49,7 +49,7 @@
 									"name" : "lamp",
 									"x" : -50,
 									"y" : 50,
-									"z" : -1,
+									"z" : 0,
 									"actorParams": {
 										"shapenetSynset" : "03636649"
 									}
@@ -58,7 +58,7 @@
 									"name" : "bottle",
 									"x" : -50,
 									"y" : -50,
-									"z" : -1,
+									"z" : 0,
 									"actorParams": {
 										"shapenetSynset" : "02876657"
 									}
@@ -79,7 +79,7 @@
 					"name" : "bed",
 					"x" : 0,
 					"y" : 0,
-					"z" : -1,
+					"z" : 0,
 					"actorParams": {
 						"shapenetSynset" : "02818832"
 					}

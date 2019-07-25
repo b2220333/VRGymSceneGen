@@ -150,7 +150,7 @@ public:
 
 	void importMesh(FString synset, FString hash, FVector location, FActorParams* actorParams);
 
-	void importMeshNew(FString synset, FString hash, FVector location, json::object_t param);
+	void importMeshFromSynsetAndHashNew(FString synset, FString hash, FVector location, json::object_t param);
 
 	void importRandomFromSynset(FString synset, FVector location, FActorParams* actorParams);
 
