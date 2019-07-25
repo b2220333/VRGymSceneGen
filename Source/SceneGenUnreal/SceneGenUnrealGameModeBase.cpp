@@ -61,21 +61,24 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 	std::string jsonStr = std::string(TCHAR_TO_UTF8(*jsonString));
 
-	auto newParsed = json::parse(jsonStr);
+	json newParsed = json::parse(jsonStr);
 
 	std::string dump = newParsed.dump(4);
-
 	FString dumpF = FString(dump.c_str());
-
 	UE_LOG(LogTemp, Warning, TEXT("Testing new parse %s"), *dumpF);
 
-	json::array_t baseGroups = newParsed["shapenetActorGroups"];
+
+	json::array_t baseGroups = newParsed["shapenetActorGroups"].get_ref<json::array_t&>();
 
 	for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
+		json::object_t baseGroup = it->get_ref<json::object_t&>();
+		passDownParams(baseGroup);
 		importShapenetActorGroupNew(*it, FVector(0, 0, 0));
 	}
 	
-	newParsed.get_ref<json::object_t&>();
+	dump = newParsed.dump(4);
+	dumpF = FString(dump.c_str());
+	UE_LOG(LogTemp, Warning, TEXT("Testing new parse passed down %s"), *dumpF);
 
 	jsonPath = FPaths::ProjectDir() + "External/room.json";
 	FFileHelper::LoadFileToString(jsonString, *jsonPath);
@@ -83,30 +86,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 	bool parsed = FJsonObjectConverter::JsonObjectStringToUStruct(jsonString, &roomJson, 0, 0);
 
-	if (!parsed) {
-		UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: Parse failed"));
-		return;
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: Num actor groups is %d"), roomJson.shapenetActorGroups.Num());
-
-	//UE_LOG(LogTemp, Warning, TEXT(" TESTING BEFORE %f"), roomJson.shapenetActorGroups[0].xCenter);
-
-	TArray<FShapenetActorGroup*> baseActorGroups = linkShapenetActorGroups(&roomJson.shapenetActorGroups);
 	
-	UE_LOG(LogTemp, Warning, TEXT("spawnShapenetActors: Num base actor groups is %d"), baseActorGroups.Num());
-	
-	for (int32 i = 0; i < baseActorGroups.Num(); i++) {
-		//UE_LOG(LogTemp, Warning, TEXT(" TESTING AFTER LINK %f"), baseActorGroups[i]->xCenter);
-		listDescendants(baseActorGroups[i]);
-	}
-
-	
-	
-	for (int32 i = 0; i < baseActorGroups.Num(); i++) {
-		//transferParams(&defaultParams, &baseActorGroups[i]->actorParams);
-		//importShapenetActorGroup(baseActorGroups[i]);
-	}
 	
 	//FPlatformProcess::Sleep(3);
 	/*
@@ -367,54 +347,85 @@ TArray<FShapenetActorGroup*> ASceneGenUnrealGameModeBase::linkShapenetActorGroup
 
 void ASceneGenUnrealGameModeBase::transferParamsBetween(json::object_t &srcObj, json::object_t &dstObj)
 {
-	if (dstObj.find("shapenetSynset") == dstObj.end() && srcObj.find("shapenetSynset") != srcObj.end()) {
-		dstObj["shapenetSynset"] = srcObj["shapenetSynset"];
+	json::object_t srcParams;
+	json::object_t dstParams;
+	if (srcObj["actorParams"].is_object()) {
+		srcParams = srcObj["actorParams"].get_ref<json::object_t&>();
+		if (dstObj["actorParams"].is_object()) {
+			dstParams = dstObj["actorParams"].get_ref<json::object_t&>();
+		}
+		else {
+			dstParams["actorParams"] = json::object();
+		}
+	} else {
+		return;
 	}
 
-	if (dstObj.find("shapenetHash") == dstObj.end() && srcObj.find("shapenetHash") != srcObj.end()) {
-		dstObj["shapenetHash"] = srcObj["shapenetHash"];
+	if (dstParams.find("shapenetSynset") == dstParams.end() && srcParams.find("shapenetSynset") != srcParams.end()) {
+		dstParams["shapenetSynset"] = srcParams["shapenetSynset"];
 	}
 
-	if (dstObj.find("meshOverride") == dstObj.end() && srcObj.find("meshOverride") != srcObj.end()) {
-		dstObj["meshOverride"] = srcObj["meshOverride"];
+	if (dstParams.find("shapenetHash") == dstParams.end() && srcParams.find("shapenetHash") != srcParams.end()) {
+		dstParams["shapenetHash"] = srcParams["shapenetHash"];
 	}
 
-	if (dstObj.find("textureOverride") == dstObj.end() && srcObj.find("textureOverride") != srcObj.end()) {
-		dstObj["textureOverride"] = srcObj["textureOverride"];
+	if (dstParams.find("meshOverride") == dstParams.end() && srcParams.find("meshOverride") != srcParams.end()) {
+		dstParams["meshOverride"] = srcParams["meshOverride"];
 	}
 
-	if (dstObj.find("spawnProbability") == dstObj.end() && srcObj.find("spawnProbability") != srcObj.end()) {
-		dstObj["spawnProbability"] = srcObj["spawnProbability"];
+	if (dstParams.find("textureOverride") == dstParams.end() && srcParams.find("textureOverride") != srcParams.end()) {
+		dstParams["textureOverride"] = srcParams["textureOverride"];
 	}
 
-	if (dstObj.find("destructable") == dstObj.end() && srcObj.find("destructable") != srcObj.end()) {
-		dstObj["destructable"] = srcObj["destructable"];
+	if (dstParams.find("spawnProbability") == dstParams.end() && srcParams.find("spawnProbability") != srcParams.end()) {
+		UE_LOG(LogTemp, Warning, TEXT("here"))
+		
+		dstParams["spawnProbability"] = srcParams["spawnProbability"];
 	}
 
-	if (dstObj.find("physicsEnabled") == dstObj.end() && srcObj.find("physicsEnabled") != srcObj.end()) {
-		dstObj["physicsEnabled"] = srcObj["physicsEnabled"];
+	if (dstParams.find("destructable") == dstParams.end() && srcParams.find("destructable") != srcParams.end()) {
+		dstParams["destructable"] = srcParams["destructable"];
 	}
 
-	if (dstObj.find("useRandomTextures") == dstObj.end() && srcObj.find("useRandomTextures") != srcObj.end()) {
-		dstObj["useRandomTextures"] = srcObj["useRandomTextures"];
+	if (dstParams.find("physicsEnabled") == dstParams.end() && srcParams.find("physicsEnabled") != srcParams.end()) {
+		dstParams["physicsEnabled"] = srcParams["physicsEnabled"];
 	}
 
-	if (dstObj.find("canOverlap") == dstObj.end() && srcObj.find("canOverlap") != srcObj.end()) {
-		dstObj["canOverlap"] = srcObj["canOverlap"];
+	if (dstParams.find("useRandomTextures") == dstParams.end() && srcParams.find("useRandomTextures") != srcParams.end()) {
+		dstParams["useRandomTextures"] = srcParams["useRandomTextures"];
+	}
+
+	if (dstParams.find("canOverlap") == dstParams.end() && srcParams.find("canOverlap") != srcParams.end()) {
+		dstParams["canOverlap"] = srcParams["canOverlap"];
 	}
 
 }
 
 void ASceneGenUnrealGameModeBase::passDownParams(json::object_t &srcObj)
 {
+	std::string test = srcObj["name"].get<std::string>();
+	FString testF = FString(test.c_str());
+	UE_LOG(LogTemp, Warning, TEXT("Testing %s"), *testF);
+
+
+	if (srcObj["shapenetActors"].is_array()) {
+		json::array_t actors = srcObj["shapenetActors"].get_ref<json::array_t&>();
+		for (auto it = actors.begin(); it != actors.end(); it++) {
+			if (it->is_object()) {
+				json::object_t actor = it->get_ref<json::object_t&>();
+				transferParamsBetween(srcObj, actor);
+			}
+
+		}
+	}
+
 	if (srcObj["childShapenetActorGroups"].is_array()) {
 		json::array_t children = srcObj["childShapenetActorGroups"].get_ref<json::array_t&>();
 		for (auto it = children.begin(); it != children.end(); it++) {
 			if (it->is_object()) {
 				json::object_t child = it->get_ref<json::object_t&>();
 				transferParamsBetween(srcObj, child);
-
-				
+				passDownParams(child);
 			}
 			
 		}
