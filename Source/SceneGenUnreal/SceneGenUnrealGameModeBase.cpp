@@ -68,12 +68,12 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	UE_LOG(LogTemp, Warning, TEXT("Testing new parse %s"), *dumpF);
 
 
-	json::array_t baseGroups = newParsed["shapenetActorGroups"].get_ref<json::array_t&>();
+	json::array_t& baseGroups = newParsed["shapenetActorGroups"].get_ref<json::array_t&>();
 
 	for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
-		json::object_t baseGroup = it->get_ref<json::object_t&>();
+		json::object_t& baseGroup = it->get_ref<json::object_t&>();
 		passDownParams(baseGroup);
-		importShapenetActorGroupNew(*it, FVector(0, 0, 0));
+		//importShapenetActorGroupNew(*it, FVector(0, 0, 0));
 	}
 	
 	dump = newParsed.dump(4);
@@ -347,58 +347,49 @@ TArray<FShapenetActorGroup*> ASceneGenUnrealGameModeBase::linkShapenetActorGroup
 
 void ASceneGenUnrealGameModeBase::transferParamsBetween(json::object_t &srcObj, json::object_t &dstObj)
 {
-	json::object_t srcParams;
-	json::object_t dstParams;
 	if (srcObj["actorParams"].is_object()) {
-		srcParams = srcObj["actorParams"].get_ref<json::object_t&>();
-		if (dstObj["actorParams"].is_object()) {
-			dstParams = dstObj["actorParams"].get_ref<json::object_t&>();
+		json::object_t& srcParams = srcObj["actorParams"].get_ref<json::object_t&>();
+		if (!dstObj["actorParams"].is_object()) {
+			dstObj["actorParams"] = json::object();
 		}
-		else {
-			dstParams["actorParams"] = json::object();
+		json::object_t& dstParams = dstObj["actorParams"].get_ref<json::object_t&>();
+		if (dstParams.find("shapenetSynset") == dstParams.end() && srcParams.find("shapenetSynset") != srcParams.end()) {
+			dstParams["shapenetSynset"] = srcParams["shapenetSynset"];
 		}
-	} else {
-		return;
-	}
 
-	if (dstParams.find("shapenetSynset") == dstParams.end() && srcParams.find("shapenetSynset") != srcParams.end()) {
-		dstParams["shapenetSynset"] = srcParams["shapenetSynset"];
-	}
+		if (dstParams.find("shapenetHash") == dstParams.end() && srcParams.find("shapenetHash") != srcParams.end()) {
+			dstParams["shapenetHash"] = srcParams["shapenetHash"];
+		}
 
-	if (dstParams.find("shapenetHash") == dstParams.end() && srcParams.find("shapenetHash") != srcParams.end()) {
-		dstParams["shapenetHash"] = srcParams["shapenetHash"];
-	}
+		if (dstParams.find("meshOverride") == dstParams.end() && srcParams.find("meshOverride") != srcParams.end()) {
+			dstParams["meshOverride"] = srcParams["meshOverride"];
+		}
 
-	if (dstParams.find("meshOverride") == dstParams.end() && srcParams.find("meshOverride") != srcParams.end()) {
-		dstParams["meshOverride"] = srcParams["meshOverride"];
-	}
+		if (dstParams.find("textureOverride") == dstParams.end() && srcParams.find("textureOverride") != srcParams.end()) {
+			dstParams["textureOverride"] = srcParams["textureOverride"];
+		}
 
-	if (dstParams.find("textureOverride") == dstParams.end() && srcParams.find("textureOverride") != srcParams.end()) {
-		dstParams["textureOverride"] = srcParams["textureOverride"];
-	}
+		if (dstParams.find("spawnProbability") == dstParams.end() && srcParams.find("spawnProbability") != srcParams.end()) {
+			UE_LOG(LogTemp, Warning, TEXT("Probability"));
+			dstParams["spawnProbability"] = srcParams["spawnProbability"];
+		}
 
-	if (dstParams.find("spawnProbability") == dstParams.end() && srcParams.find("spawnProbability") != srcParams.end()) {
-		UE_LOG(LogTemp, Warning, TEXT("here"))
-		
-		dstParams["spawnProbability"] = srcParams["spawnProbability"];
-	}
+		if (dstParams.find("destructable") == dstParams.end() && srcParams.find("destructable") != srcParams.end()) {
+			dstParams["destructable"] = srcParams["destructable"];
+		}
 
-	if (dstParams.find("destructable") == dstParams.end() && srcParams.find("destructable") != srcParams.end()) {
-		dstParams["destructable"] = srcParams["destructable"];
-	}
+		if (dstParams.find("physicsEnabled") == dstParams.end() && srcParams.find("physicsEnabled") != srcParams.end()) {
+			dstParams["physicsEnabled"] = srcParams["physicsEnabled"];
+		}
 
-	if (dstParams.find("physicsEnabled") == dstParams.end() && srcParams.find("physicsEnabled") != srcParams.end()) {
-		dstParams["physicsEnabled"] = srcParams["physicsEnabled"];
-	}
+		if (dstParams.find("useRandomTextures") == dstParams.end() && srcParams.find("useRandomTextures") != srcParams.end()) {
+			dstParams["useRandomTextures"] = srcParams["useRandomTextures"];
+		}
 
-	if (dstParams.find("useRandomTextures") == dstParams.end() && srcParams.find("useRandomTextures") != srcParams.end()) {
-		dstParams["useRandomTextures"] = srcParams["useRandomTextures"];
+		if (dstParams.find("canOverlap") == dstParams.end() && srcParams.find("canOverlap") != srcParams.end()) {
+			dstParams["canOverlap"] = srcParams["canOverlap"];
+		}
 	}
-
-	if (dstParams.find("canOverlap") == dstParams.end() && srcParams.find("canOverlap") != srcParams.end()) {
-		dstParams["canOverlap"] = srcParams["canOverlap"];
-	}
-
 }
 
 void ASceneGenUnrealGameModeBase::passDownParams(json::object_t &srcObj)
@@ -409,21 +400,23 @@ void ASceneGenUnrealGameModeBase::passDownParams(json::object_t &srcObj)
 
 
 	if (srcObj["shapenetActors"].is_array()) {
-		json::array_t actors = srcObj["shapenetActors"].get_ref<json::array_t&>();
-		for (auto it = actors.begin(); it != actors.end(); it++) {
+		for (auto it = srcObj["shapenetActors"].begin(); it != srcObj["shapenetActors"].end(); it++) {
 			if (it->is_object()) {
-				json::object_t actor = it->get_ref<json::object_t&>();
-				transferParamsBetween(srcObj, actor);
+				json::object_t& ptr = it->get_ref<json::object_t&>();
+				transferParamsBetween(srcObj, ptr);
+				if (ptr["actorParams"]["spawnProbability"].is_number()) {
+					float a = ptr["actorParams"]["spawnProbability"].get<json::number_float_t>();
+					UE_LOG(LogTemp, Warning, TEXT("Spawn prob ref: %f"), a);
+				}
 			}
 
 		}
 	}
 
 	if (srcObj["childShapenetActorGroups"].is_array()) {
-		json::array_t children = srcObj["childShapenetActorGroups"].get_ref<json::array_t&>();
-		for (auto it = children.begin(); it != children.end(); it++) {
+		for (auto it = srcObj["childShapenetActorGroups"].begin(); it != srcObj["childShapenetActorGroups"].end(); it++) {
 			if (it->is_object()) {
-				json::object_t child = it->get_ref<json::object_t&>();
+				json::object_t& child = it->get_ref<json::object_t&>();
 				transferParamsBetween(srcObj, child);
 				passDownParams(child);
 			}
