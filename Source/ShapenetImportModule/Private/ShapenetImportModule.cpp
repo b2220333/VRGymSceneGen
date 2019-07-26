@@ -39,6 +39,10 @@
 
 #include "Runtime/Core/Public/Internationalization/Regex.h"
 
+
+#include "json.hpp"
+using json = nlohmann::json;
+
 static const FName ImportShapenet("ShapenetImportModule");
 
 DEFINE_LOG_CATEGORY(ShapenetImportModule);
@@ -326,78 +330,103 @@ void FShapenetImportModule::AddToolbarExtension(FToolBarBuilder& Builder)
 }
 
 
-bool FShapenetImportModule::importFromJson(FString json)
-{
-	FImportJson parsedImportJson;
-	bool parsed = FJsonObjectConverter::JsonObjectStringToUStruct<FImportJson>(json, &parsedImportJson, 0, 0);
-
+bool FShapenetImportModule::importFromJson(FString jsonString)
+{	
+	std::string jsonStr = std::string(TCHAR_TO_UTF8(*jsonString));
+	json parsed = json::parse(jsonStr);
 
 	UE_LOG(LogTemp, Warning, TEXT("importFromJson: finding search terms"));
 	// find synsets from search terms
-	for (int32 i = 0; i < parsedImportJson.searchTerms.Num(); i++) {
-		UE_LOG(LogTemp, Warning, TEXT("Searching for %s"), *parsedImportJson.searchTerms[i].query);
-		SearchResult result = searchShapenet(parsedImportJson.searchTerms[i].query);
-		UE_LOG(LogTemp, Warning, TEXT("Found %d synsets"), result.synsets.Num());
-		if (result.synsets.Num() > 0) {
-			if (parsedImportJson.searchTerms[i].numModelsToImport != -1) {
-				int32 totalMatches = 0;
-				for (int32 j = 0; j < result.numModels.Num(); j++) {
-					totalMatches += result.numModels[j];
-				}
-				int32 modelsImported = 0;
-				for (int32 j = 0; j < result.numModels.Num() - 1; j++) {
-					int32 numModelsToImport = (result.numModels[j] * parsedImportJson.searchTerms[i].numModelsToImport) / totalMatches;
-					importSynset(result.synsets[j], numModelsToImport);
-					modelsImported += numModelsToImport;
-				}
 
-				while (modelsImported < parsedImportJson.searchTerms[i].numModelsToImport) {
-					importSynset(result.synsets[result.synsets.Num() - 1], 1);
-					modelsImported++;
-				}
-			}
-			else {
-				for (int32 j = 0; j < result.numModels.Num(); j++) {
-					importSynset(result.synsets[j], -1);
+	if (parsed["searchTerms"].is_array()) {
+		json::array_t& searchTerms = parsed["searchTerms"].get_ref<json::array_t&>();
+		for (auto it = searchTerms.begin(); it != searchTerms.end(); it++) {
+			if ((*it)["query"].is_string()) {
+				FString query = FString((*it)["query"].get<json::string_t>().c_str());
+				UE_LOG(LogTemp, Warning, TEXT("Searching for %s"), *query);
+				SearchResult result = searchShapenet(query);
+				UE_LOG(LogTemp, Warning, TEXT("Found %d synsets"), result.synsets.Num());
+				if (result.synsets.Num() > 0) {
+					if ((*it)["numModelsToImport"].is_number_integer()) {
+						int32 numImport = (*it)["numModelsToImport"].get<json::number_integer_t>();
+						int32 totalMatches = 0;
+						for (int32 j = 0; j < result.numModels.Num(); j++) {
+							totalMatches += result.numModels[j];
+						}
+						int32 modelsImported = 0;
+						for (int32 j = 0; j < result.numModels.Num() - 1; j++) {
+							int32 numModelsToImport = (result.numModels[j] * numImport) / totalMatches;
+							importSynset(result.synsets[j], numModelsToImport);
+							modelsImported += numModelsToImport;
+						}
+
+						while (modelsImported < numImport) {
+							importSynset(result.synsets[result.synsets.Num() - 1], 1);
+							modelsImported++;
+						}
+					}
+					else {
+						for (int32 j = 0; j < result.numModels.Num(); j++) {
+							importSynset(result.synsets[j], -1);
+						}
+					}
 				}
 			}
 		}
-	
-
 	}
 
 
 	UE_LOG(LogTemp, Warning, TEXT("importFromJson: Importing from synsets"));
 	// fully import synsets
-	for (int32 i = 0; i < parsedImportJson.synsets.Num(); i++) {
-		if (parsedImportJson.synsets[i].numModelsToImport != -1) {
-			importSynset(parsedImportJson.synsets[i].synset, parsedImportJson.synsets[i].numModelsToImport);
-		}
-		else {
-			importSynset(parsedImportJson.synsets[i].synset, -1);
+	if (parsed["synsets"].is_array()) {
+		json::array_t& synsets = parsed["synsets"].get_ref<json::array_t&>();
+		for (auto it = synsets.begin(); it != synsets.end(); it++) {
+			if (it->is_string() && it->find("numModelsToImport") != it->end()) {
+				std::string synsetStr = it->get<json::string_t>();
+				FString synset = FString(synsetStr.c_str());
+				if ((*it)["numModelsToImport"].is_number()) {
+					int32 numImport = (*it)["numModelsToImport"].get<json::number_integer_t>();
+					importSynset(synset, numImport);
+				} else {
+					importSynset(synset, -1);
+				}
+			}
+			
 		}
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("importFromJson: Importing from shapenet objects"));
 	// import shapenet objects
-	for (int32 i = 0; i < parsedImportJson.shapenetObjects.Num(); i++) {
-		FShapenetObject* shapenetOBJ = &parsedImportJson.shapenetObjects[i];
-		importFromSynsetAndHash(shapenetOBJ->synset, shapenetOBJ->hash);
+	if (parsed["shapenetObjects"].is_array()) {
+		json::array_t& shapenetObjects = parsed["shapenetObjects"].get_ref<json::array_t&>();
+		for (auto it = shapenetObjects.begin(); it != shapenetObjects.end(); it++) {
+			if ((*it)["synset"].is_string() && (*it)["hash"].is_string()) {
+				FString synset = FString((*it)["synset"].get<json::string_t>().c_str());
+				FString hash = FString((*it)["hash"].get<json::string_t>().c_str());
+				importFromSynsetAndHash(synset, hash);
+			}
+		}
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("importFromJson: Importing from models manually"));
 	// manually import from path
-	for (int32 i = 0; i < parsedImportJson.modelsManual.Num(); i++) {
-		FModelManual* modelManual = &parsedImportJson.modelsManual[i];
-		if (FPaths::FileExists(modelManual->srcPath)) {
-			importFromFile(modelManual->srcPath, modelManual->dstPath);
-		} else if (FPaths::DirectoryExists(modelManual->srcPath)) {
-			importFromDir(modelManual->srcPath, modelManual->dstPath);
+	if (parsed["modelsManual"].is_array()) {
+		json::array_t& manualModels = parsed["modelsManual"].get_ref<json::array_t&>();
+		for (auto it = manualModels.begin(); it != manualModels.end(); it++) {
+			if ((*it)["srcPath"].is_string() && (*it)["dstPath"].is_string()) {
+				FString srcPath = FString((*it)["srcPath"].get<json::string_t>().c_str());
+				FString dstPath = FString((*it)["dstPath"].get<json::string_t>().c_str());
+				if (FPaths::FileExists(srcPath)) {
+					importFromFile(srcPath, dstPath);
+				}
+				else if (FPaths::DirectoryExists(srcPath)) {
+					importFromDir(srcPath, dstPath);
+				}
+				else {
+					UE_LOG(LogTemp, Warning, TEXT("importFromJson: Could not find %s"), *srcPath);
+				}
+			}
 		}
-		else {
-			UE_LOG(LogTemp, Warning, TEXT("importFromJson: Could not find %s"), *modelManual->srcPath);
-		}
-		
 	}
 	
 

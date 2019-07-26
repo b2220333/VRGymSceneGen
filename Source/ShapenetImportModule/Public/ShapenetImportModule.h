@@ -1,5 +1,10 @@
 #pragma once
 
+
+#include "json.hpp"
+using json = nlohmann::json;
+
+
 #include "CoreMinimal.h"
 
 #include "Modules/ModuleInterface.h"
@@ -62,7 +67,7 @@ public:
 	void AddToolbarExtension(FToolBarBuilder& Builder);
 	void AddMenuExtension(FMenuBuilder& Builder);
 
-	bool importFromJson(FString json);
+	bool importFromJson(FString jsonString);
 
 	FDateTime importJsonLastChanged;
 
