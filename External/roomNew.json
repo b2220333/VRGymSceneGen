@@ -9,9 +9,6 @@
 			"xCenter": -300,
 			"yCenter" : 300,
 			"zCenter" : 0,
-			"actorParams" : {
-				"spawnProbability" : 0.5
-			},
 			"shapenetActors": [
 				{
 					"name" : "chairForDesk",

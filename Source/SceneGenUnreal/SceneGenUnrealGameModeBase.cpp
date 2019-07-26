@@ -21,6 +21,8 @@
 #include "json.hpp"
 using json = nlohmann::json;
 
+
+
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 {
 
@@ -64,6 +66,15 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	FString dumpF = FString(dump.c_str());
 	UE_LOG(LogTemp, Warning, TEXT("Testing new parse %s"), *dumpF);
 
+	// spawn floor (default on xy plane i.e. z = 0)
+
+
+	FVector spawnLocation =  FVector(0, 0, 0);
+	FActorSpawnParameters spawnParams;
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+	spawnedActor->spawnFloor(0, 0);
+	
 
 	json::array_t& baseGroups = newParsed["shapenetActorGroups"].get_ref<json::array_t&>();
 
@@ -85,7 +96,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	UE_LOG(LogTemp, Warning, TEXT("Testing new parse passed down %s"), *dumpF);
 
 
-
+	
 	
 	
 	
@@ -218,7 +229,7 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 
 	FVector spawnLocation = FVector(origin.X + relX, origin.Y + relY, origin.Z + relZ) * FVector(-1.0, 1.0, 1.0);
 	FActorSpawnParameters spawnParams;
-	
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 	
 	json::value_type name = actor["name"];

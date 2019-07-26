@@ -19,6 +19,7 @@
 #include "SceneGenUnrealGameModeBase.h"
 
 #include "Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
+#include "Runtime/Engine/Classes/Components/BoxComponent.h"
 
 
 // Sets default values
@@ -171,4 +172,37 @@ void AShapenet::importMeshFromSynsetAndHash(FString synset, FString hash, FVecto
 {
 	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
 	importMeshFromFile(path, location, param);
+}
+
+void AShapenet::spawnFloor(float x, float y)
+{
+	// spawn floor with x width, y length centered at (0,0,0)
+
+	/*
+	UBoxComponent* boxComponent = NewObject<UBoxComponent>(this, UBoxComponent::StaticClass(), TEXT("FloorBoxComponent"));
+	RootComponent = boxComponent;
+	FVector extent = FVector(x / 2, y / 2, 0.01);
+	boxComponent->SetBoxExtent(extent);
+
+	UStaticMeshComponent* floorVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FloorVisual"));
+	floorVisual->SetupAttachment(RootComponent);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeVisualAsset(TEXT("/Engine/EngineMeshes/Cube.Cube"));
+	if (CubeVisualAsset.Succeeded())
+	{
+		floorVisual->SetStaticMesh(CubeVisualAsset.Object);
+		floorVisual->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+		floorVisual->SetWorldScale3D(FVector(1.0f));
+	}
+	*/
+
+	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Engine/EngineMeshes/Cube.Cube")));
+	BaseMesh = NewObject<UStaticMeshComponent>(this, "BaseMesh");
+	BaseMesh->SetMobility(EComponentMobility::Movable);
+	RootComponent = BaseMesh;
+	RootComponent->SetWorldLocation(FVector(0,0,0));
+	RootComponent->SetMobility(EComponentMobility::Movable);
+	BaseMesh->SetStaticMesh(staticMeshReference);
+	BaseMesh->RegisterComponent();
+
+	
 }

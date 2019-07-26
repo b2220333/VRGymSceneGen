@@ -11,7 +11,6 @@ using json = nlohmann::json;
 
 
 
-struct FActorParams;
 
 UCLASS()
 class SCENEGENUNREAL_API AShapenet : public AActor
@@ -35,12 +34,14 @@ public:
 	void importMeshFromFile(FString path, FVector location, json::object_t param);
 
 
-	
+
+	void spawnFloor(float x, float y);
 
 	UMaterialInterface* getRandomMaterial();
 
 	UMaterialInterface* getRandomMaterialFromDir(FString path);
 
+	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* BaseMesh;
 	
 	FString synset;
