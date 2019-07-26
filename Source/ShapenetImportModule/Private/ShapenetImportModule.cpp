@@ -198,33 +198,32 @@ FShapenetImportModule::SearchResult FShapenetImportModule::searchShapenet(FStrin
 	FString path = shapenetDir + "/taxonomy.json";
 	FFileHelper::LoadFileToString(jsonString, *path);
 
-	//UE_LOG(LogTemp, Warning, TEXT("SearchResult: json is %s"), *jsonString);
-
-	TArray<FSynsetObj> synsets;
-
-	bool parsed = FJsonObjectConverter::JsonArrayStringToUStruct<FSynsetObj>(jsonString, &synsets, 0, 0);
-	
-
-	if (!parsed) {
-		UE_LOG(LogTemp, Warning, TEXT("Parse failed "));
-	}
-
+	std::string jsonStr = std::string(TCHAR_TO_UTF8(*jsonString));
+	json parsed = json::parse(jsonStr);
 
 	SearchResult result;
+	if (parsed.is_array()) {
+		FString patternString = "(^|,)" + query + "(,|$)";
+		FRegexPattern pattern = FRegexPattern(patternString);
 
-	FString patternString = "(^|,)" + query + "(,|$)";
-	FRegexPattern pattern = FRegexPattern(patternString);
+		json::array_t& synsets = parsed.get_ref<json::array_t&>();
 
-	for (int32 i = 0; i < synsets.Num(); i++) {
-		FRegexMatcher matcher = FRegexMatcher(pattern, synsets[i].name);
-		if (matcher.FindNext()) {
-			UE_LOG(LogTemp, Warning, TEXT("Found match: %s, %s"), *synsets[i].name, *synsets[i].synsetId);
-			result.synsets.Add(synsets[i].synsetId);
-			result.numModels.Add(synsets[i].numInstances);
+		for (auto it = synsets.begin(); it != synsets.end(); it++) {
+			if ((*it)["name"].is_string()) {
+				FString name = FString((*it)["name"].get<json::string_t>().c_str());
+				FRegexMatcher matcher = FRegexMatcher(pattern, name);
+				if (matcher.FindNext()) {
+					if ((*it)["synsetId"].is_string() && (*it)["numInstances"].is_number_integer()) {
+						FString synsetId = FString((*it)["synsetId"].get<json::string_t>().c_str());
+						int32 numInstances = (*it)["numInstances"].get<json::number_integer_t>();
+						UE_LOG(LogTemp, Warning, TEXT("Found match: %s, %s"), *name, *synsetId);
+						result.synsets.Add(synsetId);
+						result.numModels.Add(numInstances);
+					}
+				}
+			}
 		}
 	}
-
-
 	return result;
 }
 
