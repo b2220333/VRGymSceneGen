@@ -20,6 +20,8 @@
 
 #include "Runtime/Engine/Classes/Kismet/KismetSystemLibrary.h"
 #include "Runtime/Engine/Classes/Components/BoxComponent.h"
+#include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "PhysicsEngine/BodySetup.h"
 
 
 // Sets default values
@@ -195,13 +197,17 @@ void AShapenet::spawnFloor(float x, float y)
 	}
 	*/
 
-	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Engine/EngineMeshes/Cube.Cube")));
+	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/DefaultFloor.DefaultFloor")));
 	BaseMesh = NewObject<UStaticMeshComponent>(this, "BaseMesh");
 	BaseMesh->SetMobility(EComponentMobility::Movable);
 	RootComponent = BaseMesh;
 	RootComponent->SetWorldLocation(FVector(0,0,0));
+	RootComponent->SetWorldRotation(FRotator(-90, 0, 0));
+	RootComponent->SetWorldScale3D(FVector(1, x / 256, y / 256));
 	RootComponent->SetMobility(EComponentMobility::Movable);
+	
 	BaseMesh->SetStaticMesh(staticMeshReference);
+
 	BaseMesh->RegisterComponent();
 
 	

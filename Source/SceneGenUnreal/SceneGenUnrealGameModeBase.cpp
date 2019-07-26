@@ -68,12 +68,27 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 	// spawn floor (default on xy plane i.e. z = 0)
 
+	float xWidth = 1000;
+	float yWidth = 1000;
+	float zWidth = 1000;
+	if (newParsed["xWidth"].is_number()) {
+		xWidth = newParsed["xWidth"].get<json::number_float_t>();
+	}
+
+	if (newParsed["yWidth"].is_number()) {
+		yWidth = newParsed["yWidth"].get<json::number_float_t>();
+	}
+
+	if (newParsed["zWidth"].is_number()) {
+		yWidth = newParsed["zWidth"].get<json::number_float_t>();
+	}
+
 
 	FVector spawnLocation =  FVector(0, 0, 0);
 	FActorSpawnParameters spawnParams;
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
-	spawnedActor->spawnFloor(0, 0);
+	spawnedActor->spawnFloor(xWidth, yWidth);
 	
 
 	json::array_t& baseGroups = newParsed["shapenetActorGroups"].get_ref<json::array_t&>();
@@ -88,7 +103,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
 		json::object_t& baseGroup = it->get_ref<json::object_t&>();
 		passDownParams(baseGroup);
-		importShapenetActorGroup(*it, FVector(0, 0, 0));
+		importShapenetActorGroup(*it, FVector(0, 0, 100));
 	}
 	
 	dump = newParsed.dump(4);

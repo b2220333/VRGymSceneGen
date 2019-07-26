@@ -3,6 +3,7 @@
 	"xWidth" : 10,
 	"yWidth": 10,
 	"zWidth": 10,
+	"autoGenerateBorderWalls": false,
 	"shapenetActorGroups" : [
 		{
 			"name" : "object group 1",
