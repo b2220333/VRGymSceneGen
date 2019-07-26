@@ -85,58 +85,9 @@ void AShapenet::Tick(float DeltaTime)
 }
 
 
-void AShapenet::importMesh(FString synset, FString hash, FVector location, FActorParams* actorParams)
-{
-	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
-	importMeshFromFile(path, location, actorParams);
-}
-
-void AShapenet::importMeshFromFile(FString path, FVector location, FActorParams* actorParams)
-{
-	
-	float rng = FMath::RandRange(0.0f, 1.0f);
-
-	if (rng > actorParams->spawnProbability && actorParams->spawnProbability >= 0.0f) {
-		return;
-	}
-
-	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
-	
-	BaseMesh = NewObject<UStaticMeshComponent>(this, "BaseMesh");
-	BaseMesh->SetMobility(EComponentMobility::Movable);
-	RootComponent = BaseMesh;
-	RootComponent->SetWorldLocation(location);
-
-	RootComponent->SetMobility(EComponentMobility::Movable);
-	//BaseMesh->SetupAttachment(RootComponent);
-	BaseMesh->SetStaticMesh(staticMeshReference);
-
-	
-	
-	
-	
-	UE_LOG(LogTemp, Warning, TEXT("useRandtextures: %d"), actorParams->useRandomTextures);
-	if (actorParams->useRandomTextures == 1 || actorParams->useRandomTextures == -1) {
-		int32 numMats = BaseMesh->GetNumMaterials();
-		for (int32 i = 0; i < numMats; i++) {
-			UMaterialInterface* material = getRandomMaterial();
-			BaseMesh->SetMaterial(i, material);
-		}
-	}
 
 
-	
-	// physics comes last to allow for other setup first
-	if (actorParams->physicsEnabled == 1 || actorParams->physicsEnabled == -1) {
-		BaseMesh->SetSimulatePhysics(true);
-		BaseMesh->SetEnableGravity(true);
-	}
-	else {
-		BaseMesh->SetSimulatePhysics(false);
-		BaseMesh->SetEnableGravity(false);
-	}
-	BaseMesh->RegisterComponent();
-}
+
 
 UMaterialInterface* AShapenet::getRandomMaterial()
 {
@@ -163,20 +114,6 @@ UMaterialInterface* AShapenet::getRandomMaterial()
 	return Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *matPath));
 }
 
-
-void AShapenet::importRandomFromSynset(FString synset, FVector location, FActorParams* actorParams)
-{
-	IFileManager& FileManager = IFileManager::Get();
-	FString path = FPaths::ProjectContentDir() + "shapenetOBJ/" +  synset + "/*.*";
-	UE_LOG(LogTemp, Warning, TEXT("Importing random mesh from %s"), *path);
-	TArray<FString> Hashes;
-	FileManager.FindFiles(Hashes, *path, false, true);
-	UE_LOG(LogTemp, Warning, TEXT("Found %d models"), Hashes.Num());
-	int32 i = FMath::RandRange(0, Hashes.Num() - 1);
-	if (Hashes.Num() > 0) {
-		importMesh(synset, Hashes[i], location, actorParams);
-	}
-}
 
 void AShapenet::importRandomFromSynsetNew(FString synset, FVector location, json::object_t param)
 {
