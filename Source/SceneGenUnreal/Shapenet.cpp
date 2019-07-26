@@ -115,7 +115,7 @@ UMaterialInterface* AShapenet::getRandomMaterial()
 }
 
 
-void AShapenet::importRandomFromSynsetNew(FString synset, FVector location, json::object_t param)
+void AShapenet::importRandomFromSynset(FString synset, FVector location, json::object_t param)
 {
 	IFileManager& FileManager = IFileManager::Get();
 	FString path = FPaths::ProjectContentDir() + "shapenetOBJ/" + synset + "/*.*";
@@ -125,11 +125,11 @@ void AShapenet::importRandomFromSynsetNew(FString synset, FVector location, json
 	UE_LOG(LogTemp, Warning, TEXT("Found %d models"), Hashes.Num());
 	int32 i = FMath::RandRange(0, Hashes.Num() - 1);
 	if (Hashes.Num() > 0) {
-		importMeshFromSynsetAndHashNew(synset, Hashes[i], location, param);
+		importMeshFromSynsetAndHash(synset, Hashes[i], location, param);
 	}
 }
 
-void AShapenet::importMeshFromFileNew(FString path, FVector location, json::object_t param)
+void AShapenet::importMeshFromFile(FString path, FVector location, json::object_t param)
 {
 	if (param["spawnProbability"].is_number()) {
 		float rng = FMath::RandRange(0.0f, 1.0f);
@@ -167,8 +167,8 @@ void AShapenet::importMeshFromFileNew(FString path, FVector location, json::obje
 	BaseMesh->RegisterComponent();
 }
 
-void AShapenet::importMeshFromSynsetAndHashNew(FString synset, FString hash, FVector location, json::object_t param)
+void AShapenet::importMeshFromSynsetAndHash(FString synset, FString hash, FVector location, json::object_t param)
 {
 	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
-	importMeshFromFileNew(path, location, param);
+	importMeshFromFile(path, location, param);
 }

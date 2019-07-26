@@ -231,7 +231,7 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 	if (actor["actorParams"].is_object() && actor["actorParams"]["shapenetSynset"].is_string()) {
 		std::string syn = actor["actorParams"]["shapenetSynset"];
 		FString synset = FString(syn.c_str());
-		spawnedActor->importRandomFromSynsetNew(synset, spawnLocation, actor["actorParams"]);
+		spawnedActor->importRandomFromSynset(synset, spawnLocation, actor["actorParams"]);
 		UE_LOG(LogTemp, Warning, TEXT("Spawning at (%f %f, %f)"), spawnLocation.X, spawnLocation.Y, spawnLocation.Z);
 		shapenetActors.Add(spawnedActor);
 	}
