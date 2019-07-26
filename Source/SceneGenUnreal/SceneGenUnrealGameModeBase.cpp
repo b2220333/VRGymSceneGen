@@ -103,7 +103,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
 		json::object_t& baseGroup = it->get_ref<json::object_t&>();
 		passDownParams(baseGroup);
-		importShapenetActorGroup(*it, FVector(0, 0, 100));
+		importShapenetActorGroup(*it, FVector(0, 0, 0));
 	}
 	
 	dump = newParsed.dump(4);
@@ -257,6 +257,9 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 	if (actor["actorParams"].is_object() && actor["actorParams"]["shapenetSynset"].is_string()) {
 		std::string syn = actor["actorParams"]["shapenetSynset"];
 		FString synset = FString(syn.c_str());
+
+
+
 		spawnedActor->importRandomFromSynset(synset, spawnLocation, actor["actorParams"]);
 		UE_LOG(LogTemp, Warning, TEXT("Spawning at (%f %f, %f)"), spawnLocation.X, spawnLocation.Y, spawnLocation.Z);
 		shapenetActors.Add(spawnedActor);

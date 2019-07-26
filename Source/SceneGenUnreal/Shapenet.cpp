@@ -167,6 +167,12 @@ void AShapenet::importMeshFromFile(FString path, FVector location, json::object_
 		BaseMesh->SetSimulatePhysics(true);
 		BaseMesh->SetEnableGravity(true);
 	}
+
+
+	FBox box = BaseMesh->Bounds.GetBox();
+	FVector extents = box.GetExtent();
+	location.Z = extents.Z;
+	RootComponent->SetWorldLocation(location);
 	BaseMesh->RegisterComponent();
 }
 
@@ -207,6 +213,7 @@ void AShapenet::spawnFloor(float x, float y)
 	RootComponent->SetMobility(EComponentMobility::Movable);
 	
 	BaseMesh->SetStaticMesh(staticMeshReference);
+
 
 	BaseMesh->RegisterComponent();
 
