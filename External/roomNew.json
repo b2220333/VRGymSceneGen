@@ -47,7 +47,7 @@
 								{
 									"name" : "lamp",
 									"x" : -50,
-									"y" : 50,
+									"y" : 75,
 									"z" : 0,
 									"actorParams": {
 										"shapenetSynset" : "03636649"
@@ -56,7 +56,7 @@
 								{
 									"name" : "bottle",
 									"x" : -50,
-									"y" : -50,
+									"y" : -75,
 									"z" : 0,
 									"actorParams": {
 										"shapenetSynset" : "02876657"

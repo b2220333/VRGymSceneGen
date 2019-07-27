@@ -22,6 +22,7 @@
 #include "Runtime/Engine/Classes/Components/BoxComponent.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "PhysicsEngine/BodySetup.h"
+#include "Runtime/Engine/Classes/PhysicalMaterials/PhysicalMaterial.h"
 
 
 // Sets default values
@@ -166,13 +167,17 @@ void AShapenet::importMeshFromFile(FString path, FVector location, json::object_
 	} else {
 		BaseMesh->SetSimulatePhysics(true);
 		BaseMesh->SetEnableGravity(true);
+		BaseMesh->SetLinearDamping(20);
 	}
 
 
 	FBox box = BaseMesh->Bounds.GetBox();
 	FVector extents = box.GetExtent();
-	location.Z = extents.Z;
+	location.Z = extents.Z + 1;
 	RootComponent->SetWorldLocation(location);
+
+	
+
 	BaseMesh->RegisterComponent();
 }
 
@@ -211,11 +216,21 @@ void AShapenet::spawnFloor(float x, float y)
 	RootComponent->SetWorldRotation(FRotator(-90, 0, 0));
 	RootComponent->SetWorldScale3D(FVector(1, x / 256, y / 256));
 	RootComponent->SetMobility(EComponentMobility::Movable);
-	
+
+
+	//UPhysicalMaterial* physMat = BaseMesh->GetBodySetup()->GetPhysMaterial();
+
+	//physMat->Density = 10;
+
 	BaseMesh->SetStaticMesh(staticMeshReference);
 
 
 	BaseMesh->RegisterComponent();
 
 	
+}
+
+
+UStaticMeshComponent* AShapenet::getBaseMesh() {
+	return BaseMesh;
 }

@@ -33,6 +33,7 @@ public:
 	void importRandomFromSynset(FString synset, FVector location, json::object_t param);
 	void importMeshFromFile(FString path, FVector location, json::object_t param);
 
+	
 
 
 	void spawnFloor(float x, float y);
@@ -41,9 +42,13 @@ public:
 
 	UMaterialInterface* getRandomMaterialFromDir(FString path);
 
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* BaseMesh;
+	
+	UStaticMeshComponent* getBaseMesh();
 	
 	FString synset;
 	FString hash;
+
+private:
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* BaseMesh;
 };

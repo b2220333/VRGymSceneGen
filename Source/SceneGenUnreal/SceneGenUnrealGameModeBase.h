@@ -47,5 +47,5 @@ public:
 
 	FDateTime roomJsonLastChanged;
 	
-
+	void resetDamping();
 };

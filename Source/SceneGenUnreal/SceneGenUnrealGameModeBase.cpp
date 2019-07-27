@@ -21,6 +21,7 @@
 #include "json.hpp"
 using json = nlohmann::json;
 
+#include "Runtime/Engine/Public/TimerManager.h"
 
 
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
@@ -113,23 +114,17 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 	
 	
-	
-	
-	//FPlatformProcess::Sleep(3);
 	/*
-	for (int32 i = 0; i < shapenetActors.Num(); i++) {
-		
-	
-
-
-		UStaticMeshComponent* test = shapenetActors[i]->BaseMesh;
-		FBox box = test->Bounds.GetBox();
-		FVector extents = box.GetExtent();
-		UE_LOG(LogTemp, Warning, TEXT("BoxExtent: (%f, %f, %f)"), extents.X, extents.Y, extents.Z);
-
+	for (int32 i = 5; i > 0; i--) {
+		UE_LOG(LogTemp, Warning, TEXT("Waiting for actors to settle %d"), i);
+		FPlatformProcess::Sleep(1);
 	}
+	resetDamping();
 	*/
-	
+
+
+	GetWorldTimerManager().SetTimer(this, &ASceneGenUnrealGameModeBase::resetDamping,  false, 5);
+
 }
 
 void ASceneGenUnrealGameModeBase::listDescendants(json::object_t& actorGroup)
@@ -267,7 +262,12 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 }
 
 
-
+void ASceneGenUnrealGameModeBase::resetDamping()
+{
+	for (int32 i = 0; i < shapenetActors.Num(); i++) {
+		shapenetActors[i]->getBaseMesh()->SetLinearDamping(0);
+	}
+}
 
 
 
