@@ -48,4 +48,15 @@ public:
 	FDateTime roomJsonLastChanged;
 	
 	void resetDamping();
+
+
+	json parsed;
+
+
+	FDateTime roomJsonTimeStamp = FDateTime(0);
+
+
+
+
+
 };

@@ -56,32 +56,61 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 	FString jsonPath = FPaths::ProjectDir() + "External/roomNew.json";
 
-	FString jsonString;
-	FFileHelper::LoadFileToString(jsonString, *jsonPath);
+	IFileManager& FileManager = IFileManager::Get();
+	FDateTime newDT = FileManager.GetTimeStamp(*jsonPath);
 
-	std::string jsonStr = std::string(TCHAR_TO_UTF8(*jsonString));
+	if (roomJsonTimeStamp.GetTicks() < newDT.GetTicks()) {
+		roomJsonTimeStamp = newDT;
+		FString jsonString;
+		FFileHelper::LoadFileToString(jsonString, *jsonPath);
 
-	json newParsed = json::parse(jsonStr);
+		std::string jsonStr = std::string(TCHAR_TO_UTF8(*jsonString));
 
-	std::string dump = newParsed.dump(4);
-	FString dumpF = FString(dump.c_str());
-	UE_LOG(LogTemp, Warning, TEXT("Testing new parse %s"), *dumpF);
+		parsed = json::parse(jsonStr);
+
+		std::string dump = parsed.dump(4);
+		FString dumpF = FString(dump.c_str());
+		UE_LOG(LogTemp, Warning, TEXT("Testing new parse %s"), *dumpF);
+
+
+
+		json::array_t& baseGroups = parsed["shapenetActorGroups"].get_ref<json::array_t&>();
+
+		for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
+			if (it->is_object()) {
+				json::object_t& baseGroup = it->get_ref<json::object_t&>();
+				listDescendants(baseGroup);
+				passDownParams(baseGroup);
+			}
+		}
+
+		dump = parsed.dump(4);
+		dumpF = FString(dump.c_str());
+		UE_LOG(LogTemp, Warning, TEXT("Json with params passed down: %s"), *dumpF);
+	}
+
+	
+
+	
+	
+
+	
 
 	// spawn floor (default on xy plane i.e. z = 0)
 
 	float xWidth = 1000;
 	float yWidth = 1000;
 	float zWidth = 1000;
-	if (newParsed["xWidth"].is_number()) {
-		xWidth = newParsed["xWidth"].get<json::number_float_t>();
+	if (parsed["xWidth"].is_number()) {
+		xWidth = parsed["xWidth"].get<json::number_float_t>();
 	}
 
-	if (newParsed["yWidth"].is_number()) {
-		yWidth = newParsed["yWidth"].get<json::number_float_t>();
+	if (parsed["yWidth"].is_number()) {
+		yWidth = parsed["yWidth"].get<json::number_float_t>();
 	}
 
-	if (newParsed["zWidth"].is_number()) {
-		yWidth = newParsed["zWidth"].get<json::number_float_t>();
+	if (parsed["zWidth"].is_number()) {
+		yWidth = parsed["zWidth"].get<json::number_float_t>();
 	}
 
 
@@ -92,24 +121,12 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	spawnedActor->spawnFloor(xWidth, yWidth);
 	
 
-	json::array_t& baseGroups = newParsed["shapenetActorGroups"].get_ref<json::array_t&>();
-
+	json::array_t& baseGroups = parsed["shapenetActorGroups"].get_ref<json::array_t&>();
 	for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
-		if (it->is_object()) {
-			json::object_t& obj = it->get_ref<json::object_t&>();
-			listDescendants(obj);
-		}
-	}
-
-	for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
-		json::object_t& baseGroup = it->get_ref<json::object_t&>();
-		passDownParams(baseGroup);
 		importShapenetActorGroup(*it, FVector(0, 0, 0));
 	}
+
 	
-	dump = newParsed.dump(4);
-	dumpF = FString(dump.c_str());
-	UE_LOG(LogTemp, Warning, TEXT("Testing new parse passed down %s"), *dumpF);
 
 
 	
@@ -123,7 +140,10 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	*/
 
 
-	GetWorldTimerManager().SetTimer(this, &ASceneGenUnrealGameModeBase::resetDamping,  false, 5);
+	//GetWorldTimerManager().SetTimer(this, &ASceneGenUnrealGameModeBase::resetDamping,  false, 5);
+	
+
+	resetDamping();
 
 }
 
@@ -308,7 +328,6 @@ void ASceneGenUnrealGameModeBase::transferParamsBetween(json::object_t &srcObj, 
 		}
 
 		if (dstParams.find("spawnProbability") == dstParams.end() && srcParams.find("spawnProbability") != srcParams.end()) {
-			UE_LOG(LogTemp, Warning, TEXT("Probability"));
 			dstParams["spawnProbability"] = srcParams["spawnProbability"];
 		}
 
@@ -334,7 +353,6 @@ void ASceneGenUnrealGameModeBase::passDownParams(json::object_t &srcObj)
 {
 	std::string test = srcObj["name"].get<std::string>();
 	FString testF = FString(test.c_str());
-	UE_LOG(LogTemp, Warning, TEXT("Testing %s"), *testF);
 
 
 	if (srcObj["shapenetActors"].is_array()) {
