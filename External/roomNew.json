@@ -50,7 +50,9 @@
 									"y" : 75,
 									"z" : 0,
 									"actorParams": {
-										"shapenetSynset" : "03636649"
+										"shapenetSynset" : "03636649",
+										"shapenetHash" : "36943f6afca6cbf518134b529d13e79a",
+										"physicsEnabled" : true
 									}
 								},
 								{

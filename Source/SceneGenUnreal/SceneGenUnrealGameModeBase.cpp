@@ -42,7 +42,6 @@ void ASceneGenUnrealGameModeBase::BeginPlay() {
 
 void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
-
 }
 
 void ASceneGenUnrealGameModeBase::spawnShapenetActors()
@@ -125,7 +124,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
 		importShapenetActorGroup(*it, FVector(0, 0, 0));
 	}
-
+	objectsDamped = true;
 	
 
 
@@ -139,12 +138,8 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	resetDamping();
 	*/
 
-
-	//GetWorldTimerManager().SetTimer(this, &ASceneGenUnrealGameModeBase::resetDamping,  false, 5);
+	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &ASceneGenUnrealGameModeBase::resetDamping, 5);
 	
-
-	resetDamping();
-
 }
 
 void ASceneGenUnrealGameModeBase::listDescendants(json::object_t& actorGroup)
@@ -262,31 +257,35 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 	
-	json::value_type name = actor["name"];
-	if (name.is_string()) {
-		std::string nameStr = actor["name"];
-		FString displayName = "TestShapenet-" + FString(nameStr.c_str());
-		spawnedActor->SetActorLabel(displayName);
-	}
-
-	if (actor["actorParams"].is_object() && actor["actorParams"]["shapenetSynset"].is_string()) {
-		std::string syn = actor["actorParams"]["shapenetSynset"];
-		FString synset = FString(syn.c_str());
-
-
-
-		spawnedActor->importRandomFromSynset(synset, spawnLocation, actor["actorParams"]);
-		UE_LOG(LogTemp, Warning, TEXT("Spawning at (%f %f, %f)"), spawnLocation.X, spawnLocation.Y, spawnLocation.Z);
+	if (spawnedActor->importNew(spawnLocation, actor["actorParams"])) {
 		shapenetActors.Add(spawnedActor);
+		if (actor["name"].is_string()) {
+			FString displayName = FString(actor["name"].get<json::string_t>().c_str());
+			spawnedActor->SetActorLabel(displayName);
+			UE_LOG(LogTemp, Warning, TEXT("Spawning %s at (%f %f, %f)"), *displayName, spawnLocation.X, spawnLocation.Y, spawnLocation.Z);
+		}
+	} else {
+		spawnedActor->Destroy();
+
+		// try again with lower CoM?
+
 	}
+
 }
 
 
 void ASceneGenUnrealGameModeBase::resetDamping()
 {
 	for (int32 i = 0; i < shapenetActors.Num(); i++) {
-		shapenetActors[i]->getBaseMesh()->SetLinearDamping(0);
+		if (shapenetActors[i]) {
+			//shapenetActors[i]->tryRespawnNewCM();
+			if (shapenetActors[i]->getBaseMesh()) {
+				shapenetActors[i]->getBaseMesh()->SetLinearDamping(0);
+			}
+		}
 	}
+	objectsDamped = false;
+	UE_LOG(LogTemp, Warning, TEXT("Ready to run episode"));
 }
 
 

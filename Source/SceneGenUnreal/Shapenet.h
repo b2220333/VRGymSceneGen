@@ -28,10 +28,11 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	void importMeshFromSynsetAndHash(FString synset, FString hash, FVector location, json::object_t param);
-	void importRandomFromSynset(FString synset, FVector location, json::object_t param);
-	void importMeshFromFile(FString path, FVector location, json::object_t param);
+	
+	bool importNew(FVector location, json::object_t params);
+	void importMeshFromSynsetAndHash(FString synset, FString hash, FVector location, json::object_t params);
+	void importRandomFromSynset(FString synset, FVector location, json::object_t params);
+	void importMeshFromFile(FString path, FVector location, json::object_t params);
 
 	
 
@@ -47,6 +48,9 @@ public:
 	
 	FString synset;
 	FString hash;
+	FString modelPath;
+
+	bool tryRespawnNewCM();
 
 private:
 	UPROPERTY(EditAnywhere)

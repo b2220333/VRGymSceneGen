@@ -31,47 +31,6 @@ AShapenet::AShapenet()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//importMesh(synset, hash);
-
-	//importMesh("02818832", "2f44a88e17474295e66f707221b74f43");
-
-	/*
-	FString synset = "04554684";
-	FString hash = "fcc0bdba1a95be2546cde67a6a1ea328";
-
-	importMesh(synset, hash);
-	*/
-
-	/*
-		testing import FBX third party library
-
-	// create a SdkManager
-	FbxManager *lSdkManager = FbxManager::Create();
-
-	// create an IOSettings object
-	FbxIOSettings * ios = FbxIOSettings::Create(lSdkManager, IOSROOT);
-
-	// set some IOSettings options 
-	ios->SetBoolProp(IMP_FBX_MATERIAL, true);
-	ios->SetBoolProp(IMP_FBX_TEXTURE, true);
-
-	// create an empty scene
-	FbxScene* lScene = FbxScene::Create(lSdkManager, "");
-
-	// Create an importer.
-	FbxImporter* lImporter = FbxImporter::Create(lSdkManager, "");
-
-	// Initialize the importer by providing a filename and the IOSettings to use
-	lImporter->Initialize("C:\\myfile.fbx", -1, ios);
-
-	// Import the scene.
-	lImporter->Import(lScene);
-
-	// Destroy the importer.
-	lImporter->Destroy();
-
-
-	*/
 }
 
 // Called when the game starts or when spawned
@@ -119,7 +78,7 @@ UMaterialInterface* AShapenet::getRandomMaterial()
 }
 
 
-void AShapenet::importRandomFromSynset(FString synset, FVector location, json::object_t param)
+void AShapenet::importRandomFromSynset(FString synset, FVector location, json::object_t params)
 {
 	IFileManager& FileManager = IFileManager::Get();
 	FString path = FPaths::ProjectContentDir() + "shapenetOBJ/" + synset + "/*.*";
@@ -129,15 +88,15 @@ void AShapenet::importRandomFromSynset(FString synset, FVector location, json::o
 	UE_LOG(LogTemp, Warning, TEXT("Found %d models"), Hashes.Num());
 	int32 i = FMath::RandRange(0, Hashes.Num() - 1);
 	if (Hashes.Num() > 0) {
-		importMeshFromSynsetAndHash(synset, Hashes[i], location, param);
+		importMeshFromSynsetAndHash(synset, Hashes[i], location, params);
 	}
 }
 
-void AShapenet::importMeshFromFile(FString path, FVector location, json::object_t param)
+void AShapenet::importMeshFromFile(FString path, FVector location, json::object_t params)
 {
-	if (param["spawnProbability"].is_number()) {
+	if (params["spawnProbability"].is_number()) {
 		float rng = FMath::RandRange(0.0f, 1.0f);
-		if (rng > param["spawnProbability"] && param["spawnProbability"] >= 0.0f) {
+		if (rng > params["spawnProbability"] && params["spawnProbability"] >= 0.0f) {
 			return;
 		}
 	}
@@ -145,69 +104,64 @@ void AShapenet::importMeshFromFile(FString path, FVector location, json::object_
 	
 
 	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
-	BaseMesh = NewObject<UStaticMeshComponent>(this, "BaseMesh");
-	BaseMesh->SetMobility(EComponentMobility::Movable);
-	RootComponent = BaseMesh;
-	RootComponent->SetWorldLocation(location);
-	RootComponent->SetMobility(EComponentMobility::Movable);
-	BaseMesh->SetStaticMesh(staticMeshReference);
+	if (staticMeshReference) {
+		modelPath = path;
+		BaseMesh = NewObject<UStaticMeshComponent>(this, "BaseMesh");
+		BaseMesh->SetMobility(EComponentMobility::Movable);
+		RootComponent = BaseMesh;
+		RootComponent->SetWorldLocation(location);
+		RootComponent->SetMobility(EComponentMobility::Movable);
+		BaseMesh->SetStaticMesh(staticMeshReference);
 
-	//if (param["useRandomTextures"].is_boolean() && param["useRandomTextures"]) {
+		//if (params["useRandomTextures"].is_boolean() && params["useRandomTextures"]) {
 		int32 numMats = BaseMesh->GetNumMaterials();
 		for (int32 i = 0; i < numMats; i++) {
 			UMaterialInterface* material = getRandomMaterial();
 			BaseMesh->SetMaterial(i, material);
 		}
-	//}
+		//}
 
-	// physics comes last to allow for other setup first
-	if ( (param["physicsEnabled"].is_boolean() && !param["physicsEnabled"].get<bool>()) ) {
-		BaseMesh->SetSimulatePhysics(false);
-		BaseMesh->SetEnableGravity(false);
-	} else {
-		BaseMesh->SetSimulatePhysics(true);
-		BaseMesh->SetEnableGravity(true);
-		BaseMesh->SetLinearDamping(20);
+		// physics comes last to allow for other setup first
+		if ((params["physicsEnabled"].is_boolean() && !params["physicsEnabled"].get<bool>())) {
+			BaseMesh->SetSimulatePhysics(false);
+			BaseMesh->SetEnableGravity(false);
+		}
+		else {
+			BaseMesh->SetSimulatePhysics(true);
+			BaseMesh->SetEnableGravity(true);
+			BaseMesh->SetLinearDamping(20);
+
+			//UPhysicalMaterial* physMat = BaseMesh->GetBodySetup()->GetPhysMaterial();
+			//physMat->Density = 10;
+		}
+
+
+		FBox box = BaseMesh->Bounds.GetBox();
+		FVector extents = box.GetExtent();
+		location.Z = extents.Z + 1;
+		RootComponent->SetWorldLocation(location);
+
+
+		FVector offset = FVector(0, 0, -extents.Z);
+		FVector currCoM = BaseMesh->GetCenterOfMass();
+		BaseMesh->SetCenterOfMass(currCoM + offset);
+
+
+
+
+		BaseMesh->RegisterComponent();
 	}
-
-
-	FBox box = BaseMesh->Bounds.GetBox();
-	FVector extents = box.GetExtent();
-	location.Z = extents.Z + 1;
-	RootComponent->SetWorldLocation(location);
-
-	
-
-	BaseMesh->RegisterComponent();
 }
 
-void AShapenet::importMeshFromSynsetAndHash(FString synset, FString hash, FVector location, json::object_t param)
+void AShapenet::importMeshFromSynsetAndHash(FString synset, FString hash, FVector location, json::object_t params)
 {
 	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
-	importMeshFromFile(path, location, param);
+	importMeshFromFile(path, location, params);
 }
 
 void AShapenet::spawnFloor(float x, float y)
 {
 	// spawn floor with x width, y length centered at (0,0,0)
-
-	/*
-	UBoxComponent* boxComponent = NewObject<UBoxComponent>(this, UBoxComponent::StaticClass(), TEXT("FloorBoxComponent"));
-	RootComponent = boxComponent;
-	FVector extent = FVector(x / 2, y / 2, 0.01);
-	boxComponent->SetBoxExtent(extent);
-
-	UStaticMeshComponent* floorVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FloorVisual"));
-	floorVisual->SetupAttachment(RootComponent);
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeVisualAsset(TEXT("/Engine/EngineMeshes/Cube.Cube"));
-	if (CubeVisualAsset.Succeeded())
-	{
-		floorVisual->SetStaticMesh(CubeVisualAsset.Object);
-		floorVisual->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-		floorVisual->SetWorldScale3D(FVector(1.0f));
-	}
-	*/
-
 	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/DefaultFloor.DefaultFloor")));
 	BaseMesh = NewObject<UStaticMeshComponent>(this, "BaseMesh");
 	BaseMesh->SetMobility(EComponentMobility::Movable);
@@ -216,15 +170,8 @@ void AShapenet::spawnFloor(float x, float y)
 	RootComponent->SetWorldRotation(FRotator(-90, 0, 0));
 	RootComponent->SetWorldScale3D(FVector(1, x / 256, y / 256));
 	RootComponent->SetMobility(EComponentMobility::Movable);
-
-
-	//UPhysicalMaterial* physMat = BaseMesh->GetBodySetup()->GetPhysMaterial();
-
-	//physMat->Density = 10;
-
+	SetActorLabel("SpawnedFloor");
 	BaseMesh->SetStaticMesh(staticMeshReference);
-
-
 	BaseMesh->RegisterComponent();
 
 	
@@ -233,4 +180,61 @@ void AShapenet::spawnFloor(float x, float y)
 
 UStaticMeshComponent* AShapenet::getBaseMesh() {
 	return BaseMesh;
+}
+
+bool AShapenet::importNew(FVector location, json::object_t params)
+{
+
+	if (params["meshOverride"].is_string()) {
+		FString meshOverride = FString(params["meshOverride"].get<json::string_t>().c_str());
+		importMeshFromFile(meshOverride, location, params);
+	}
+	else if (params["shapenetSynset"].is_string() && params["shapenetHash"].is_string()) {
+		FString synset = FString(params["shapenetSynset"].get<json::string_t>().c_str());
+		FString hash = FString(params["shapenetHash"].get<json::string_t>().c_str());
+		importMeshFromSynsetAndHash(synset, hash, location, params);
+	}
+	else if (params["shapenetSynset"].is_string()) {
+		FString synset = FString(params["shapenetSynset"].get<json::string_t>().c_str());
+		importRandomFromSynset(synset, location, params);
+	}
+
+
+	return true;
+}
+
+
+
+bool AShapenet::tryRespawnNewCM()
+{
+	FRotator actorRotation = GetActorRotation();
+	FVector offset = FVector(0, 0, 0);
+	bool stable = true;
+
+
+	if (FMath::Abs(actorRotation.Roll) > 10) {
+
+		offset.Y = (actorRotation.Roll / 10) * -1;
+		stable = false;
+	}
+
+	if ((FMath::Abs(actorRotation.Pitch) > 10)) {
+		offset.Y = (actorRotation.Pitch / 10) * -1;
+		stable = false;
+	}
+
+	if (!stable) {
+		// redo CoM
+		if (BaseMesh) {
+			SetActorRotation(FRotator::ZeroRotator);
+			UE_LOG(LogTemp, Warning, TEXT("Set new CoM offset by: (%f, %f, %f)"), offset.X, offset.Y, offset.Z);
+			FVector currCoM = BaseMesh->GetCenterOfMass();
+			BaseMesh->SetCenterOfMass(currCoM + offset);
+			
+			return true;
+		}
+	}
+
+	return false;
+	
 }

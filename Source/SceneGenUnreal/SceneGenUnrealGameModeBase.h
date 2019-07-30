@@ -48,7 +48,7 @@ public:
 	FDateTime roomJsonLastChanged;
 	
 	void resetDamping();
-
+	bool objectsDamped;
 
 	json parsed;
 
@@ -56,6 +56,7 @@ public:
 	FDateTime roomJsonTimeStamp = FDateTime(0);
 
 
+	FTimerHandle FuzeTimerHandle;
 
 
 
