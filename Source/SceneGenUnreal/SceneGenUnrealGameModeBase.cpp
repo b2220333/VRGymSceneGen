@@ -186,7 +186,10 @@ void ASceneGenUnrealGameModeBase::listDescendants(json::object_t& actorGroup)
 
 void ASceneGenUnrealGameModeBase::importShapenetActorGroup(json::object_t actorGroup, FVector origin)
 {
-	int32 relX, relY, relZ;
+	float relX = 0;
+	float relY = 0;
+	float relZ = 0;
+
 
 
 	json::value_type x = actorGroup["xCenter"];
@@ -200,6 +203,17 @@ void ASceneGenUnrealGameModeBase::importShapenetActorGroup(json::object_t actorG
 	json::value_type z = actorGroup["zCenter"];
 	if (z.is_number()) {
 		relZ = z;
+	}
+
+
+	if (actorGroup["xDist"].is_object()) {
+		relX = sampleLocation(actorGroup["xDist"].get_ref<json::object_t&>());
+	}
+	if (actorGroup["yDist"].is_object()) {
+		relY = sampleLocation(actorGroup["yDist"].get_ref<json::object_t&>());
+	}
+	if (actorGroup["zDist"].is_object()) {
+		relZ = sampleLocation(actorGroup["zDist"].get_ref<json::object_t&>());
 	}
 
 	FVector absoluteOrigin = origin + FVector(relX, relY, relZ);
@@ -228,7 +242,9 @@ void ASceneGenUnrealGameModeBase::importShapenetActorGroup(json::object_t actorG
 
 void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVector origin)
 {
-	int32 relX, relY, relZ;
+	float relX = 0;
+	float relY = 0;
+	float relZ = 0;
 
 	json::value_type x = actor["x"];
 	if (x.is_number()) {
@@ -241,6 +257,16 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 	json::value_type z = actor["z"];
 	if (z.is_number()) {
 		relZ = z;
+	}
+
+	if (actor["xDist"].is_object()) {
+		relX = sampleLocation(actor["xDist"].get_ref<json::object_t&>());
+	}
+	if (actor["yDist"].is_object()) {
+		relY = sampleLocation(actor["yDist"].get_ref<json::object_t&>());
+	}
+	if (actor["zDist"].is_object()) {
+		relZ = sampleLocation(actor["zDist"].get_ref<json::object_t&>());
 	}
 
 	FVector spawnLocation = FVector(origin.X + relX, origin.Y + relY, origin.Z + relZ) * FVector(-1.0, 1.0, 1.0);
@@ -378,10 +404,12 @@ float ASceneGenUnrealGameModeBase::sampleLocation(json::object_t &location)
 		}
 	}
 	else if (location["gaussian"].is_object()) {
+		UE_LOG(LogTemp, Warning, TEXT("HERE"));
 		if (location["gaussian"]["mean"].is_number() && location["gaussian"]["std"].is_number()) {
 			float mean = location["gaussian"]["mean"].get<json::number_float_t>();
 			float std = location["gaussian"]["std"].get<json::number_float_t>();
-			std::default_random_engine generator;
+			std::random_device rd;
+			std::default_random_engine generator(rd());
 			std::normal_distribution<float> distribution(mean, std);
 			return distribution(generator);
 		}
