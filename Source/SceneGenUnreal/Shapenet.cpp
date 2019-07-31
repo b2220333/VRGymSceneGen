@@ -121,7 +121,7 @@ void AShapenet::importMeshFromFile(FString path, FVector location, json::object_
 		//}
 
 		// physics comes last to allow for other setup first
-		if ((params["physicsEnabled"].is_boolean() && !params["physicsEnabled"].get<bool>())) {
+		if (params["physicsEnabled"].is_boolean() && !params["physicsEnabled"].get<bool>()) {
 			BaseMesh->SetSimulatePhysics(false);
 			BaseMesh->SetEnableGravity(false);
 		}

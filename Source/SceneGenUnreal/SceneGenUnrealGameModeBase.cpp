@@ -24,6 +24,7 @@ using json = nlohmann::json;
 #include <random>
 
 #include "Runtime/Engine/Public/TimerManager.h"
+#include "Runtime/Engine/Classes/Engine/PointLight.h"
 
 
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
@@ -128,6 +129,17 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	}
 	resetDamping();
 	*/
+
+	// testing add light
+	FVector lightLocation = FVector(0, 0, 200);
+	FRotator lightRotation = FRotator(0, -45, 0);
+	FActorSpawnParameters lightSpawnParams;
+	APointLight* spawnedLight = GetWorld()->SpawnActor<APointLight>(lightLocation, lightRotation, lightSpawnParams);
+	spawnedLight->GetRootComponent()->SetMobility(EComponentMobility::Movable);
+
+
+
+
 
 	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &ASceneGenUnrealGameModeBase::resetDamping, 5);
 	

@@ -56,6 +56,7 @@ public:
 
 	FDateTime roomJsonTimeStamp = FDateTime(0);
 
+	void spawnLighting();
 
 	FTimerHandle FuzeTimerHandle;
 
