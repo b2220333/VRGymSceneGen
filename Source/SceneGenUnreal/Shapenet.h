@@ -49,6 +49,7 @@ public:
 	FString synset;
 	FString hash;
 	FString modelPath;
+	FVector originalSpawnLocation;
 
 	bool tryRespawnNewCM();
 

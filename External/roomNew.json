@@ -3,16 +3,44 @@
 	"xWidth" : 1000,
 	"yWidth": 1000,
 	"zWidth": 1000,
+	"autoGenWalls" : true,
 	"shapenetActorGroups" : [
 		{
 			"name" : "deskArea",
-			"xCenter": -300,
-			"yCenter" : 300,
+			"xDist": {
+				"gaussian" : {
+					"mean" : 5,
+					"std" : 2
+				},
+				"discrete" : {
+					"values" : [
+						1,
+						2,
+						3
+					],
+					"probabilityDensities" : [
+						0.5,
+						0.2,
+						0.3
+					]
+				},
+				"uniformContinuous" : {
+					"min" : 0,
+					"max" : 10
+				},
+				"uniformDiscrete" : {
+					"min" : 0,
+					"max" : 10,
+					"step" : 2 
+				}
+			},
+			"xCenter": -100,
+			"yCenter" : 200,
 			"zCenter" : 0,
 			"shapenetActors": [
 				{
 					"name" : "chairForDesk",
-					"x" : 100,
+					"x" : 50,
 					"y" : 0,
 					"z" : 0,
 					"actorParams": {
@@ -51,7 +79,6 @@
 									"z" : 0,
 									"actorParams": {
 										"shapenetSynset" : "03636649",
-										"shapenetHash" : "36943f6afca6cbf518134b529d13e79a",
 										"physicsEnabled" : true
 									}
 								},
@@ -72,8 +99,8 @@
 		},
 		{
 			"name" : "bedArea",
-			"xCenter": 250,
-			"yCenter" : -150,
+			"xCenter": 150,
+			"yCenter" : -50,
 			"zCenter" : 0,
 			"shapenetActors": [
 				{

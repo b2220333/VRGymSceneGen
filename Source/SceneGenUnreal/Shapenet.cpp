@@ -109,7 +109,6 @@ void AShapenet::importMeshFromFile(FString path, FVector location, json::object_
 		BaseMesh = NewObject<UStaticMeshComponent>(this, "BaseMesh");
 		BaseMesh->SetMobility(EComponentMobility::Movable);
 		RootComponent = BaseMesh;
-		RootComponent->SetWorldLocation(location);
 		RootComponent->SetMobility(EComponentMobility::Movable);
 		BaseMesh->SetStaticMesh(staticMeshReference);
 
@@ -139,13 +138,15 @@ void AShapenet::importMeshFromFile(FString path, FVector location, json::object_
 		FBox box = BaseMesh->Bounds.GetBox();
 		FVector extents = box.GetExtent();
 		location.Z = extents.Z + 1;
+		originalSpawnLocation = location;
 		RootComponent->SetWorldLocation(location);
 
 
+		/*
 		FVector offset = FVector(0, 0, -extents.Z);
 		FVector currCoM = BaseMesh->GetCenterOfMass();
 		BaseMesh->SetCenterOfMass(currCoM + offset);
-
+		*/
 
 
 
@@ -207,29 +208,44 @@ bool AShapenet::importNew(FVector location, json::object_t params)
 
 bool AShapenet::tryRespawnNewCM()
 {
-	FRotator actorRotation = GetActorRotation();
-	FVector offset = FVector(0, 0, 0);
+	return false; // do nothing for now
 	bool stable = true;
-
-
-	if (FMath::Abs(actorRotation.Roll) > 10) {
-
-		offset.Y = (actorRotation.Roll / 10) * -1;
-		stable = false;
-	}
-
-	if ((FMath::Abs(actorRotation.Pitch) > 10)) {
-		offset.Y = (actorRotation.Pitch / 10) * -1;
-		stable = false;
-	}
-
-	if (!stable) {
+	
+	if (FMath::Abs(GetActorRotation().Roll) > 10 || FMath::Abs(GetActorRotation().Pitch) > 10) {
 		// redo CoM
 		if (BaseMesh) {
-			SetActorRotation(FRotator::ZeroRotator);
+			//RootComponent->SetWorldLocation(originalSpawnLocation);
+			//SetActorRotation(FRotator::ZeroRotator);
+
+			// reset rotation
+			
+			/*
+			while (FMath::Abs(GetActorRotation().Roll) > 1 || FMath::Abs(GetActorRotation().Pitch) > 1) {
+				if (FMath::Abs(GetActorRotation().Roll) > 1) {
+					BaseMesh->AddTorqueInDegrees(FVector(GetActorRotation().Roll,0,0));
+				}
+				if (FMath::Abs(GetActorRotation().Pitch) > 1) {
+					BaseMesh->AddTorqueInDegrees(FVector(0, GetActorRotation().Pitch, 0));
+				}
+			}
+			
+			
+
+			
+			FVector offset = FVector(0, 0, 0);
+			offset.Y = (GetActorRotation().Roll / 10) * -1;
+			offset.X = (GetActorRotation().Pitch / 10) * -1;
+			
+
 			UE_LOG(LogTemp, Warning, TEXT("Set new CoM offset by: (%f, %f, %f)"), offset.X, offset.Y, offset.Z);
+			
 			FVector currCoM = BaseMesh->GetCenterOfMass();
 			BaseMesh->SetCenterOfMass(currCoM + offset);
+			*/
+
+			//BaseMesh->SetCenterOfMass(currCoM + FVector(0,-20,0));
+
+			BaseMesh->GetBodyInstance()->UpdateMassProperties();
 			
 			return true;
 		}

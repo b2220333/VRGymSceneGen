@@ -20,6 +20,7 @@
 				"physicsEnabled" : 0,
 				"useRandomTextures" : 1,
 				"canOverlap" : 1
+				"rootActorIndex" : 0
 			},
 			"shapenetActors": [
 				{

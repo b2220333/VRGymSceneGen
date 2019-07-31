@@ -37,6 +37,7 @@ public:
 
 
 	void importShapenetActorGroup(json::object_t actorGroup, FVector origin);
+	float sampleLocation(json::object_t &location);
 	void importShapenetActor(json::object_t actor, FVector origin);
 
 	void listDescendants(json::object_t&  actorGroup);
@@ -58,6 +59,7 @@ public:
 
 	FTimerHandle FuzeTimerHandle;
 
+	void spawnWalls();
 
 
 };

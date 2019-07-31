@@ -21,6 +21,8 @@
 #include "json.hpp"
 using json = nlohmann::json;
 
+#include <random>
+
 #include "Runtime/Engine/Public/TimerManager.h"
 
 
@@ -86,40 +88,32 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		dump = parsed.dump(4);
 		dumpF = FString(dump.c_str());
 		UE_LOG(LogTemp, Warning, TEXT("Json with params passed down: %s"), *dumpF);
-	}
 
+		// spawn floor (default on xy plane i.e. z = 0)
+
+		float xWidth = 1000;
+		float yWidth = 1000;
+		float zWidth = 1000;
+		if (parsed["xWidth"].is_number()) {
+			xWidth = parsed["xWidth"].get<json::number_float_t>();
+		}
+
+		if (parsed["yWidth"].is_number()) {
+			yWidth = parsed["yWidth"].get<json::number_float_t>();
+		}
+
+		if (parsed["zWidth"].is_number()) {
+			yWidth = parsed["zWidth"].get<json::number_float_t>();
+		}
+
+
+		FVector spawnLocation = FVector(0, 0, 0);
+		FActorSpawnParameters spawnParams;
+		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		spawnedActor->spawnFloor(xWidth, yWidth);
+	}	
 	
-
-	
-	
-
-	
-
-	// spawn floor (default on xy plane i.e. z = 0)
-
-	float xWidth = 1000;
-	float yWidth = 1000;
-	float zWidth = 1000;
-	if (parsed["xWidth"].is_number()) {
-		xWidth = parsed["xWidth"].get<json::number_float_t>();
-	}
-
-	if (parsed["yWidth"].is_number()) {
-		yWidth = parsed["yWidth"].get<json::number_float_t>();
-	}
-
-	if (parsed["zWidth"].is_number()) {
-		yWidth = parsed["zWidth"].get<json::number_float_t>();
-	}
-
-
-	FVector spawnLocation =  FVector(0, 0, 0);
-	FActorSpawnParameters spawnParams;
-	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
-	spawnedActor->spawnFloor(xWidth, yWidth);
-	
-
 	json::array_t& baseGroups = parsed["shapenetActorGroups"].get_ref<json::array_t&>();
 	for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
 		importShapenetActorGroup(*it, FVector(0, 0, 0));
@@ -127,9 +121,6 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	objectsDamped = true;
 	
 
-
-	
-	
 	/*
 	for (int32 i = 5; i > 0; i--) {
 		UE_LOG(LogTemp, Warning, TEXT("Waiting for actors to settle %d"), i);
@@ -278,7 +269,7 @@ void ASceneGenUnrealGameModeBase::resetDamping()
 {
 	for (int32 i = 0; i < shapenetActors.Num(); i++) {
 		if (shapenetActors[i]) {
-			//shapenetActors[i]->tryRespawnNewCM();
+			shapenetActors[i]->tryRespawnNewCM();
 			if (shapenetActors[i]->getBaseMesh()) {
 				shapenetActors[i]->getBaseMesh()->SetLinearDamping(0);
 			}
@@ -375,4 +366,67 @@ void ASceneGenUnrealGameModeBase::passDownParams(json::object_t &srcObj)
 		}
 	}
 
+}
+
+float ASceneGenUnrealGameModeBase::sampleLocation(json::object_t &location)
+{
+	if (location["uniform"].is_object()) {
+		if (location["uniformContinuous"]["min"].is_number() && location["uniform"]["max"].is_number()) {
+			float min = location["uniformContinuous"]["min"].get<json::number_float_t>();
+			float max = location["uniformContinuous"]["min"].get<json::number_float_t>();
+			return FMath::RandRange(min, max);
+		}
+	}
+	else if (location["gaussian"].is_object()) {
+		if (location["gaussian"]["mean"].is_number() && location["gaussian"]["std"].is_number()) {
+			float mean = location["gaussian"]["mean"].get<json::number_float_t>();
+			float std = location["gaussian"]["std"].get<json::number_float_t>();
+			std::default_random_engine generator;
+			std::normal_distribution<float> distribution(mean, std);
+			return distribution(generator);
+		}
+	}
+	else if (location["uniformDiscrete"].is_object()) {
+		if (location["uniformDiscrete"]["min"].is_number() && location["uniformDiscrete"]["max"].is_number() && location["uniformDiscrete"]["step"].is_number()) {
+			float min = location["uniformDiscrete"]["min"].get<json::number_float_t>();
+			float max = location["uniformDiscrete"]["min"].get<json::number_float_t>();
+			float step = location["uniformDiscrete"]["step"].get<json::number_float_t>();
+			int numSteps = (max - min) / step + 1;
+			int32 sampleSteps = FMath::RandRange(0, numSteps);
+			return min + step * sampleSteps;
+		}
+	}
+	else if (location["discrete"].is_object()) {
+		float rng = FMath::RandRange(0.0f, 1.0f);
+		if (location["discrete"]["probabilityDensities"].is_array()) {
+			json::array_t& densities = location["discrete"]["probabilityDensities"].get_ref<json::array_t&>();
+			float cummulative = 0;
+			int index = 0;
+			for (auto it = densities.begin(); it != densities.end(); it++) {
+				if (it->is_number_float()) {
+					float density = it->get<json::number_float_t>();
+					if (cummulative + density > rng) {
+						break;
+					}
+					else {
+						cummulative += density;
+					}
+				}
+				index++;
+			}
+
+			if (location["discrete"]["values"].is_array()) {
+				json::array_t& values = location["discrete"]["values"].get_ref<json::array_t&>();
+
+				int valuesIndex = 0;
+				for (auto it = values.begin(); it != values.end(); it++) {
+					if (valuesIndex == index && it->is_number()) {
+						return it->get<json::number_float_t>();
+					}
+					valuesIndex++;
+				}
+			}
+		}
+	}
+	return 0;
 }
