@@ -288,6 +288,16 @@ FString FShapenetImportModule::getShapenetDir()
 
 void FShapenetImportModule::onImportButtonClicked()
 {
+
+	TArray<FString> annotationIDs = searchPartnet("chair");
+
+	for (int32 i = 0; i < 5; i++) {
+		FString srcPath = partnetDir + "/" + annotationIDs[i] + "/objs";
+		FString dstPath = "/Game/partnetOBJ/" + annotationIDs[i] +"/";
+		importFromDir(srcPath, dstPath);
+	}
+
+	/*
 	
 	FString path = FPaths::ProjectDir() + "External/import.json";
 	UE_LOG(LogTemp, Warning, TEXT("onImportButtonClicked: Importing from %s"), *path);
@@ -296,7 +306,7 @@ void FShapenetImportModule::onImportButtonClicked()
 	FFileHelper::LoadFileToString(jsonString, *path);
 
 	importFromJson(jsonString);
-	
+	*/
 
 	//importFromDir("D:/data/ShapeNetCore.v2/02843684/7a2642b37028b462d39f9e7f9f528702", "/Game/Test");
 
@@ -441,8 +451,9 @@ bool FShapenetImportModule::importFromDir(FString srcPath, FString dstPath)
 
 
 	for (int32 i = 0; i < modelFiles.Num(); i++) {
-		UE_LOG(LogTemp, Warning, TEXT("importFromDir:Importing %s"), *modelFiles[i]);
-		importFromFile(srcPath + "/" + modelFiles[i], dstPath + "/" +  modelFiles[i]);
+		FString test = dstPath + "/" + modelFiles[i].Replace(*srcPath, TEXT(""));
+		UE_LOG(LogTemp, Warning, TEXT("importFromDir:Importing %s to %s"), *modelFiles[i], *test);
+		importFromFile(modelFiles[i], dstPath);
 	}
 
 	modelFiles.Empty();
@@ -452,14 +463,36 @@ bool FShapenetImportModule::importFromDir(FString srcPath, FString dstPath)
 
 
 	for (int32 i = 0; i < modelFiles.Num(); i++) {
-		UE_LOG(LogTemp, Warning, TEXT("importFromDir:Importing %s"), *modelFiles[i]);
-		importFromFile(srcPath + "/" + modelFiles[i], dstPath + "/" + modelFiles[i]);
+		FString test = dstPath + "/" + modelFiles[i].Replace(*srcPath, TEXT(""));
+		UE_LOG(LogTemp, Warning, TEXT("importFromDir:Importing %s to %s"), *modelFiles[i], *test);
+		importFromFile(modelFiles[i], dstPath);
 	}
-
-
-
-
 	return false;
+}
+
+
+TArray<FString> FShapenetImportModule::searchPartnet(FString query)
+{
+	FString path = partnetDir + "/partnet_dataset/stats/all_valid_anno_info.txt";
+	FString annotationInfo;
+	FFileHelper::LoadFileToString(annotationInfo, *path);
+	FString delimitter = "\n";
+
+	TArray<FString> annotationIds;
+
+	TArray<FString> lines;
+	annotationInfo.ParseIntoArray(lines, *delimitter, true);
+
+	for (int32 i = 0; i < lines.Num(); i++) {
+		FString line = lines[i];
+		FString delimitter2 = " ";
+		TArray<FString> columns;
+		line.ParseIntoArray(columns, *delimitter2, true);
+		if (columns.Num() == 5 && columns[2] == query.ToLower()) {
+			annotationIds.Add(columns[0]);
+		}
+	}
+	return annotationIds;
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -25,6 +25,7 @@ class FShapenetImportModule : public IModuleInterface
 {
 private:
 	FString shapenetDir = "D://data/ShapeNetCore.v2";
+	FString partnetDir = "D://data/data_v0";
 	TSharedPtr<class FUICommandList> ModuleCommands;
 	
 
@@ -70,5 +71,11 @@ public:
 	bool importFromJson(FString jsonString);
 
 	FDateTime importJsonLastChanged;
+	 
+
+
+	
+	TArray<FString> searchPartnet(FString query);
+	
 
 };
