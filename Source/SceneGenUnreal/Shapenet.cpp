@@ -23,6 +23,8 @@
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "PhysicsEngine/BodySetup.h"
 #include "Runtime/Engine/Classes/PhysicalMaterials/PhysicalMaterial.h"
+#include "Runtime/Core/Public/Misc/FileHelper.h"
+
 
 
 // Sets default values
@@ -146,10 +148,7 @@ void AShapenet::importMeshFromFile(FString path, FVector location, json::object_
 		FVector offset = FVector(0, 0, -extents.Z);
 		FVector currCoM = BaseMesh->GetCenterOfMass();
 		BaseMesh->SetCenterOfMass(currCoM + offset);
-		*/
-
-
-
+		*/		
 		BaseMesh->RegisterComponent();
 	}
 }
@@ -253,4 +252,25 @@ bool AShapenet::tryRespawnNewCM()
 
 	return false;
 	
+}
+
+void AShapenet::importPartnet(FString annotationID)
+{
+	FString modelPath = "/Game/partOBJ/" + annotationID + "/";
+	
+	// read metdata for model hierarchy
+	FString metaPath = partnetDir + "/" + annotationID + "meta.json";
+	FString metaJson;
+	FFileHelper::LoadFileToString(metaJson, *metaPath);
+
+	FString resultPath = partnetDir + "/" + annotationID + "result_after_merging.json";
+	FString resultJson;
+	FFileHelper::LoadFileToString(resultJson, *resultPath);
+	
+
+	// import base mesh
+
+	// import submeshes
+
+	// configure settings for base meshes
 }

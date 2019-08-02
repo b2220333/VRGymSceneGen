@@ -3,10 +3,12 @@
 		{
 
 			"query": "search term 1",
+			"dataset" : "partnet",
 			"numModelsToImport": 10
 		},
 		{
-			"query" : "search term 2"// do not imclude numModels to import all
+			"query" : "search term 2",// do not imclude numModels to import all
+			"dataset" : "shapenet"
 		}
 	],
 	"synsets" : [

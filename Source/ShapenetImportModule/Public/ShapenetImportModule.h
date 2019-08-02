@@ -25,7 +25,7 @@ class FShapenetImportModule : public IModuleInterface
 {
 private:
 	FString shapenetDir = "D://data/ShapeNetCore.v2";
-	FString partnetDir = "D://data/data_v0";
+	FString partnetDir = "D://data/data_v0"; //clone partnet github repo into this directory
 	TSharedPtr<class FUICommandList> ModuleCommands;
 	
 
@@ -74,7 +74,9 @@ public:
 	 
 
 
-	
+	void importPartnetFromAnnotationID(FString annotationID);
+	void tryImportPartnetQuery(FString query, int32 numToImport);
+	json::object_t getPartnetMetaJson(FString annotationID);
 	TArray<FString> searchPartnet(FString query);
 	
 

@@ -85,40 +85,6 @@ void FShapenetImportModule::StartupModule()
 
 		LevelEditorModule.GetToolBarExtensibilityManager()->AddExtender(ToolbarExtender);
 	}
-
-
-
-
-	
-
-	/*
-		original test
-
-	FString synset = "04554684";
-	//FString synset = "234214123wrong";
-	FString hash = "fcc0bdba1a95be2546cde67a6a1ea328";
-	bool test = modelAlreadyImported(synset, hash);
-
-	*/
-
-	
-	/*
-	FString synset = "02818832";
-	FString hash = "1aa55867200ea789465e08d496c0420f";
-	importFromSynsetAndHash(synset, hash);
-	*/
-
-
-
-	//FString synset = "04379243";
-	//FString hash = "1a00aa6b75362cc5b324368d54a7416f";
-	//importOBJ(synset, hash);
-
-	//searchShapenet(synset);
-	//importSynset(synset);
-
-
-
 }
 
 void FShapenetImportModule::ShutdownModule()
@@ -128,7 +94,6 @@ void FShapenetImportModule::ShutdownModule()
 
 bool FShapenetImportModule::importFromSynsetAndHash(FString synset, FString hash)
 {
-	// do not import if model already imported
 	if (modelAlreadyImported(synset, hash)) {
 		return true;
 	}
@@ -246,14 +211,12 @@ bool FShapenetImportModule::importSynset(FString synset, int32 numToImport)
 		TArray<FString> Hashes;
 		FileManager.FindFiles(Hashes, *path, false, true);
 
-		UE_LOG(LogTemp, Warning, TEXT("importSynset: here1"));
 		for (int32 i = Hashes.Num() - 1; i > 0; i--) {
 			int32 j = FMath::RandRange(0, i - 1);
 			FString temp = Hashes[i];
 			Hashes[i] = Hashes[j];
 			Hashes[j] = temp;
 		}
-		UE_LOG(LogTemp, Warning, TEXT("importSynset: here2"));
 
 		if (numToImport == -1) {
 			numToImport = Hashes.Num();
@@ -288,17 +251,10 @@ FString FShapenetImportModule::getShapenetDir()
 
 void FShapenetImportModule::onImportButtonClicked()
 {
-
-	TArray<FString> annotationIDs = searchPartnet("chair");
-
-	for (int32 i = 0; i < 5; i++) {
-		FString srcPath = partnetDir + "/" + annotationIDs[i] + "/objs";
-		FString dstPath = "/Game/partnetOBJ/" + annotationIDs[i] +"/";
-		importFromDir(srcPath, dstPath);
-	}
-
 	/*
-	
+	Main 
+
+
 	FString path = FPaths::ProjectDir() + "External/import.json";
 	UE_LOG(LogTemp, Warning, TEXT("onImportButtonClicked: Importing from %s"), *path);
 
@@ -308,15 +264,6 @@ void FShapenetImportModule::onImportButtonClicked()
 	importFromJson(jsonString);
 	*/
 
-	//importFromDir("D:/data/ShapeNetCore.v2/02843684/7a2642b37028b462d39f9e7f9f528702", "/Game/Test");
-
-	//importSynset("02818832");
-
-
-	// testing text input
-
-	//FObjectInitializer init;
-	//UEditableTextBox test = UEditableTextBox(init);
 
 	/*
 	FText DialogText = FText::Format(
@@ -494,5 +441,49 @@ TArray<FString> FShapenetImportModule::searchPartnet(FString query)
 	}
 	return annotationIds;
 }
+
+void FShapenetImportModule::importPartnetFromAnnotationID(FString annotationID)
+{
+	json::object_t metaJson= getPartnetMetaJson(annotationID);
+	if (metaJson["model_cat"].is_string()) {
+		FString srcPath = partnetDir + "/" + annotationID + "/objs";
+		FString dstPath = "/Game/partnetOBJ/" + FString(metaJson["model_cat"].get<json::string_t>().c_str()) + "/" + annotationID + "/";
+		importFromDir(srcPath, dstPath);
+	}
+	
+}
+
+void FShapenetImportModule::tryImportPartnetQuery(FString query, int32 numToImport)
+{
+	TArray<FString> searchResults = searchPartnet(query);
+
+	for (int32 i = searchResults.Num() - 1; i > 0; i--) {
+		int32 j = FMath::RandRange(0, i - 1);
+		FString temp = searchResults[i];
+		searchResults[i] = searchResults[j];
+		searchResults[j] = temp;
+	}
+
+	for (int32 i = 0; i < numToImport; i++) {
+		importPartnetFromAnnotationID(searchResults[i]);
+	}
+
+
+}
+
+json::object_t FShapenetImportModule::getPartnetMetaJson(FString annotationID)
+{
+	json::object_t metaJson;
+	FString path = partnetDir + +"/" + annotationID + "/meta.json";
+	FString metaJsonStr;
+	FFileHelper::LoadFileToString(metaJsonStr, *path);
+	json parsed = json::parse(std::string(TCHAR_TO_UTF8(*metaJsonStr)));
+
+	if (parsed.is_object()) {
+		metaJson = parsed.get<json::object_t>();
+	}
+	return metaJson;
+}
+
 
 #undef LOCTEXT_NAMESPACE
