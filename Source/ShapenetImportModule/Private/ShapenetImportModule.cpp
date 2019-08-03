@@ -85,6 +85,8 @@ void FShapenetImportModule::StartupModule()
 
 		LevelEditorModule.GetToolBarExtensibilityManager()->AddExtender(ToolbarExtender);
 	}
+	
+
 }
 
 void FShapenetImportModule::ShutdownModule()
@@ -251,6 +253,8 @@ FString FShapenetImportModule::getShapenetDir()
 
 void FShapenetImportModule::onImportButtonClicked()
 {
+
+	tryImportPartnetQuery("chair", 5);
 	/*
 	Main 
 
@@ -444,12 +448,16 @@ TArray<FString> FShapenetImportModule::searchPartnet(FString query)
 
 void FShapenetImportModule::importPartnetFromAnnotationID(FString annotationID)
 {
+	
 	json::object_t metaJson= getPartnetMetaJson(annotationID);
+	
 	if (metaJson["model_cat"].is_string()) {
 		FString srcPath = partnetDir + "/" + annotationID + "/objs";
 		FString dstPath = "/Game/partnetOBJ/" + FString(metaJson["model_cat"].get<json::string_t>().c_str()) + "/" + annotationID + "/";
 		importFromDir(srcPath, dstPath);
 	}
+
+	
 	
 }
 
@@ -464,6 +472,9 @@ void FShapenetImportModule::tryImportPartnetQuery(FString query, int32 numToImpo
 		searchResults[j] = temp;
 	}
 
+	if (numToImport == -1) {
+		numToImport = searchResults.Num();
+	}
 	for (int32 i = 0; i < numToImport; i++) {
 		importPartnetFromAnnotationID(searchResults[i]);
 	}

@@ -13,8 +13,16 @@ UCLASS()
 class SCENEGENUNREAL_API AShapenetChair : public AShapenet
 {
 	GENERATED_BODY()
+
+	AShapenetChair();
 	
-	
-	spawn
-	
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
+
+	virtual void importMeshFromFile(FString path, FVector location, json::object_t params);
+
+
+	TArray<FString> partnetCategories = { "Chair" };
+
+
 };

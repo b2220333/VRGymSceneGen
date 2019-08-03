@@ -30,7 +30,7 @@ using json = nlohmann::json;
 
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 {
-
+	
 }
 
 void ASceneGenUnrealGameModeBase::BeginPlay() {
