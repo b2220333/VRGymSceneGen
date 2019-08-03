@@ -34,7 +34,8 @@ public:
 	void importRandomFromSynset(FString synset, FVector location, json::object_t params);
 	void importMeshFromFile(FString path, FVector location, json::object_t params);
 
-	void importPartnet(FString annotationID);
+	
+	
 	FString partnetDir = "D://data/data_v0"; //clone partnet github repo into this directory
 
 

@@ -253,24 +253,3 @@ bool AShapenet::tryRespawnNewCM()
 	return false;
 	
 }
-
-void AShapenet::importPartnet(FString annotationID)
-{
-	FString modelPath = "/Game/partOBJ/" + annotationID + "/";
-	
-	// read metdata for model hierarchy
-	FString metaPath = partnetDir + "/" + annotationID + "meta.json";
-	FString metaJson;
-	FFileHelper::LoadFileToString(metaJson, *metaPath);
-
-	FString resultPath = partnetDir + "/" + annotationID + "result_after_merging.json";
-	FString resultJson;
-	FFileHelper::LoadFileToString(resultJson, *resultPath);
-	
-
-	// import base mesh
-
-	// import submeshes
-
-	// configure settings for base meshes
-}

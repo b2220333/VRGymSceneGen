@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ShapenetChair.h"
-
+#include "Runtime/Core/Public/Misc/FileHelper.h"
 
 
 
@@ -25,9 +25,21 @@ void AShapenetChair::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AShapenetChair::importMeshFromFile(FString path, FVector location, json::object_t params)
+void AShapenetChair::importModel(FString annotationID)
 {
+	json::object_t metaJson;
+	FString path = partnetDir + "/" + annotationID + "/meta.json";
+	FString metaJsonStr;
+	FFileHelper::LoadFileToString(metaJsonStr, *path);
+	json parsed = json::parse(std::string(TCHAR_TO_UTF8(*metaJsonStr)));
 
+	if (parsed.is_object()) {
+		metaJson = parsed.get<json::object_t>();
+	}
+	else {
+		return;
+	}
+	
 
-	return;
 }
+

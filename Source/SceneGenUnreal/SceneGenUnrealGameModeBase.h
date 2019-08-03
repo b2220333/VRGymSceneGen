@@ -26,6 +26,8 @@ public:
 	// spawns shapenet model actors from AShapenetClass
 	void spawnShapenetActors();
 
+	FString partnetDir = "D://data/data_v0";
+
 	TArray<AShapenet*> shapenetActors;
 	
 

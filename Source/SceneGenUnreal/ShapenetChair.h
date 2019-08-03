@@ -2,6 +2,7 @@
 
 #pragma once
 
+
 #include "CoreMinimal.h"
 #include "Shapenet.h"
 #include "ShapenetChair.generated.h"
@@ -19,10 +20,13 @@ class SCENEGENUNREAL_API AShapenetChair : public AShapenet
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
-	virtual void importMeshFromFile(FString path, FVector location, json::object_t params);
 
+	void importModel(FString annotationID);
 
+	FString partnetDir = "D://data/data_v0";
 	TArray<FString> partnetCategories = { "Chair" };
+
+	FString mainPartnetCategory = "Chair";
 
 
 };
