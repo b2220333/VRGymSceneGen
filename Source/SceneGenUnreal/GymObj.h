@@ -14,9 +14,9 @@ class SCENEGENUNREAL_API AGymObj : public AActor
 	/*
 		Class for objects in VRGym
 
-		GymObj (Only for objects not in Shapenet or Partnet)
+		GymObj (Only for objects not in Shapenet, Partnet, Wall, or Lighting)
 		|
-		|___GLighting
+		|___GLighting (Unreal pointlights and directional lights)
 		|
 		|___GWall (Floor, Ceiling, Sidewalls)
 		|
@@ -56,7 +56,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-
 	// assigns base mesh only
 	bool importMeshFromPath(FString path, FVector location, json::object_t params);
 
@@ -69,19 +68,27 @@ public:
 	// get json object of params used to originally import this gym object
 	json::object_t getImportParams();
 
-	// gets random material from game content directory
-	UMaterialInterface* getRandomMaterial();
+	// gets random material from game content directory path
+	UMaterialInterface* getRandomMaterialFrom(FString path);
 
 	// gets all assets of class type T
 	template<typename T>
-	void getAssetsOfClass(TArray<T*>& OutArray);
+	static void getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> paths, bool searchRecursive);
 
 private:
+	// name of object
 	FString name;
+	
+	// path to .uasset file in game content folder
 	FString baseMeshPath;
+	
+	// original json parameters used to import
 	json::object_t importParams;
+
+	// location where object was originally spawnned
 	FVector originalSpawnLocation;
 	
+	// root component of object all additional meshes are attached to this mesh
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* baseMesh;
 };

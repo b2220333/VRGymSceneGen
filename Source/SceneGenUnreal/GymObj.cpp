@@ -4,6 +4,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 #include "Runtime/Core/Public/HAL/FileManager.h"
+#include "Runtime/AssetRegistry/Public/ARFilter.h"
+#include "Runtime/AssetRegistry/Public/AssetRegistryModule.h"
 
 // Sets default values
 AGymObj::AGymObj()
@@ -58,7 +60,7 @@ bool AGymObj::importMeshFromPath(FString path, FVector location, json::object_t 
 	//if (params["useRandomTextures"].is_boolean() && params["useRandomTextures"]) {
 	int32 numMats = baseMesh->GetNumMaterials();
 	for (int32 i = 0; i < numMats; i++) {
-		UMaterialInterface* material = getRandomMaterial();
+		UMaterialInterface* material = getRandomMaterialFrom("/Game/");
 		baseMesh->SetMaterial(i, material);
 	}
 	//}
@@ -108,8 +110,18 @@ json::object_t AGymObj::getImportParams()
 	return importParams;
 }
 
-UMaterialInterface* AGymObj::getRandomMaterial()
+UMaterialInterface* AGymObj::getRandomMaterialFrom(FString path)
 {
+
+	TArray<UMaterialInterface*> materialAssets;
+	TArray<FString> paths = { "/Game/" };
+	getAssetsOfClass<UMaterialInterface>(materialAssets, paths, true);
+
+	if (materialAssets.Num() > 0) {
+		int32 i = FMath::RandRange(0, materialAssets.Num() - 1);
+		return materialAssets[i];
+	}
+	/*
 	IFileManager& FileManager = IFileManager::Get();
 	TArray<FString> assetFiles;
 	FString fileName = "*.uasset";
@@ -136,18 +148,27 @@ UMaterialInterface* AGymObj::getRandomMaterial()
 		FString matPath = "/Game" + FPaths::GetBaseFilename(subPath, false) + "." + FPaths::GetBaseFilename(subPath, true);
 		return Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *matPath));
 	}
+	*/
 
 	return nullptr;
 }
 
 template<typename T>
-void AGymObj::getAssetsOfClass(TArray<T*>& OutArray)
+static void AGymObj::getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> paths, bool searchRecursive)
 {
 	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
 	TArray<FAssetData> AssetData;
-	AssetRegistryModule.Get().GetAssetsByClass(T::StaticClass()->GetFName(), AssetData);
+	FARFilter Filter;
+	Filter.ClassNames.Add(T::StaticClass()->GetFName());
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *T::StaticClass()->GetFName().ToString())
+	Filter.bRecursivePaths = searchRecursive;
+	Filter.bRecursiveClasses = true;
+	AssetRegistryModule.Get().GetAssets(Filter , AssetData);
+	UE_LOG(LogTemp, Warning, TEXT("Assetdata num: %d"), AssetData.Num())
 	for (int i = 0; i < AssetData.Num(); i++) {
 		T* Object = Cast<T>(AssetData[i].GetAsset());
 		OutArray.Add(Object);
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("AGymObj.getAssetsOfClass: Found %d instances of %s"), OutArray.Num(), *T::StaticClass()->GetFName().ToString())
 }
