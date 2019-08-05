@@ -60,7 +60,7 @@ bool AGymObj::importMeshFromPath(FString path, FVector location, json::object_t 
 	//if (params["useRandomTextures"].is_boolean() && params["useRandomTextures"]) {
 	int32 numMats = baseMesh->GetNumMaterials();
 	for (int32 i = 0; i < numMats; i++) {
-		UMaterialInterface* material = getRandomMaterialFrom("/Game/");
+		UMaterialInterface* material = getRandomMaterialFrom({ "/Game/" }, true);
 		baseMesh->SetMaterial(i, material);
 	}
 	//}
@@ -100,8 +100,14 @@ bool AGymObj::importMeshesFromPath(FString path, FVector location, json::object_
 		return false;
 	}
 
+	TArray<UStaticMesh*> staticMeshes;
+	getAssetsOfClass<UStaticMesh>(staticMeshes, { path }, true, true);
 
-
+	for (int32 i = 0; i < staticMeshes.Num(); i++) {
+		UStaticMeshComponent* child = NewObject<UStaticMeshComponent>(this, "baseMesh");
+		child->SetStaticMesh(staticMeshes[i]);
+		child->AttachTo(RootComponent);
+	}
 	return true;
 }
 
@@ -110,46 +116,16 @@ json::object_t AGymObj::getImportParams()
 	return importParams;
 }
 
-UMaterialInterface* AGymObj::getRandomMaterialFrom(FString path)
+UMaterialInterface* AGymObj::getRandomMaterialFrom(TArray<FString> paths,  bool recursivePaths)
 {
 
 	TArray<UMaterialInterface*> materialAssets;
-	TArray<FString> paths = { "/Game/" };
-	getAssetsOfClass<UMaterialInterface>(materialAssets, paths, true);
+	getAssetsOfClass<UMaterialInterface>(materialAssets, paths, true, recursivePaths);
 
 	if (materialAssets.Num() > 0) {
 		int32 i = FMath::RandRange(0, materialAssets.Num() - 1);
 		return materialAssets[i];
 	}
-	/*
-	IFileManager& FileManager = IFileManager::Get();
-	TArray<FString> assetFiles;
-	FString fileName = "*.uasset";
-	FString path = FPaths::ProjectContentDir() + "shapenetOBJ/";
-	FileManager.FindFilesRecursive(assetFiles, *path, *fileName, true, false, false);
-
-	bool found = false;
-
-	int32 i;
-	while (!found) {
-		i = FMath::RandRange(0, assetFiles.Num() - 1);
-		if (assetFiles[i].Contains("material")) {
-			found = true;
-		}
-		else {
-			assetFiles.RemoveAt(i);
-		}
-	}
-
-	if (found) {
-		int32 index = assetFiles[i].Find(TEXT("VRGymSceneGen/Content/"));
-		FString subPath = assetFiles[i].Mid(index + 21, assetFiles[i].Len() - (index + 21));
-
-		FString matPath = "/Game" + FPaths::GetBaseFilename(subPath, false) + "." + FPaths::GetBaseFilename(subPath, true);
-		return Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *matPath));
-	}
-	*/
-
 	return nullptr;
 }
 
@@ -170,7 +146,6 @@ static void AGymObj::getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> path
 	AssetRegistryModule.Get().GetAssets(Filter , AssetData);
 	for (int32 i = 0; i < AssetData.Num(); i++) {
 		T* Object = Cast<T>(AssetData[i].GetAsset());
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *AssetData[i].GetFullName())
 		OutArray.Add(Object);
 	}
 

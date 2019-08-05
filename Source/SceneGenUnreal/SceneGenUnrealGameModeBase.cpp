@@ -55,9 +55,12 @@ void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
 void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 {
 	// testing 
+	/*
 	TArray<UMaterialInterface*> materialAssets;
-	TArray<FString> paths = { "/Game/" };
+	TArray<FString> paths = { "/Engine/" };
 	AGymObj::getAssetsOfClass<UMaterialInterface>(materialAssets, paths, true, true);
+	*/
+	
 
 
 

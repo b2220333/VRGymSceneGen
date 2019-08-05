@@ -69,7 +69,7 @@ public:
 	json::object_t getImportParams();
 
 	// gets random material from game content directory path
-	UMaterialInterface* getRandomMaterialFrom(FString path);
+	UMaterialInterface* getRandomMaterialFrom(TArray<FString> paths,  bool recursivePaths = false);
 
 	// gets all assets of class type T
 	template<typename T>
