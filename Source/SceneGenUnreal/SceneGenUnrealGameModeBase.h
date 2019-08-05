@@ -65,4 +65,8 @@ public:
 	void spawnWalls();
 
 
+
+	json::object_t parseJsonFromPath(FString path);
+	json::array_t parseJsonArrayFromPath(FString path);
+
 };

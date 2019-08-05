@@ -471,3 +471,31 @@ float ASceneGenUnrealGameModeBase::sampleLocation(json::object_t &location)
 	}
 	return 0;
 }
+
+json::object_t ASceneGenUnrealGameModeBase::parseJsonFromPath(FString path)
+{
+	json::object_t jsonObj;
+	FString jsonString;
+	FFileHelper::LoadFileToString(jsonString, *path);
+	std::string jsonStr = std::string(TCHAR_TO_UTF8(*jsonString));
+	auto parsed = json::parse(jsonStr);
+
+	if (parsed.is_object()) {
+		jsonObj = parsed.get<json::object_t>();
+	}
+	return jsonObj;
+}
+
+json::array_t ASceneGenUnrealGameModeBase::parseJsonArrayFromPath(FString path)
+{
+	json::array_t jsonArray;
+	FString jsonString;
+	FFileHelper::LoadFileToString(jsonString, *path);
+	std::string jsonStr = std::string(TCHAR_TO_UTF8(*jsonString));
+	auto parsed = json::parse(jsonStr);
+
+	if (parsed.is_array()) {
+		jsonArray = parsed.get<json::array_t>();
+	}
+	return jsonArray;
+}
