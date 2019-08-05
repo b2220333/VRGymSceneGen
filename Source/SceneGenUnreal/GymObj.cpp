@@ -27,7 +27,7 @@ void AGymObj::Tick(float DeltaTime)
 
 }
 
-UStaticMeshComponent* AGymObj::getbaseMesh()
+UStaticMeshComponent* AGymObj::getBaseMesh()
 {
 	return baseMesh;
 }
@@ -77,20 +77,14 @@ bool AGymObj::importMeshFromPath(FString path, FVector location, json::object_t 
 		//physMat->Density = 10;
 	}
 
-
+	// spawn object directly above floor
 	FBox box = baseMesh->Bounds.GetBox();
 	FVector extents = box.GetExtent();
 	location.Z = extents.Z + 1;
 	originalSpawnLocation = location;
 	RootComponent->SetWorldLocation(location);
 
-
-	/*
-	FVector offset = FVector(0, 0, -extents.Z);
-	FVector currCoM = baseMesh->GetCenterOfMass();
-	baseMesh->SetCenterOfMass(currCoM + offset);
-	*/
-
+	// set private memebers after successful setup
 	baseMeshPath = path;
 	importParams = params;
 	baseMesh->RegisterComponent();
@@ -130,11 +124,30 @@ UMaterialInterface* AGymObj::getRandomMaterial()
 		if (assetFiles[i].Contains("material")) {
 			found = true;
 		}
+		else {
+			assetFiles.RemoveAt(i);
+		}
 	}
 
-	int32 index = assetFiles[i].Find(TEXT("VRGymSceneGen/Content/"));
-	FString subPath = assetFiles[i].Mid(index + 21, assetFiles[i].Len() - (index + 21));
+	if (found) {
+		int32 index = assetFiles[i].Find(TEXT("VRGymSceneGen/Content/"));
+		FString subPath = assetFiles[i].Mid(index + 21, assetFiles[i].Len() - (index + 21));
 
-	FString matPath = "/Game" + FPaths::GetBaseFilename(subPath, false) + "." + FPaths::GetBaseFilename(subPath, true);
-	return Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *matPath));
+		FString matPath = "/Game" + FPaths::GetBaseFilename(subPath, false) + "." + FPaths::GetBaseFilename(subPath, true);
+		return Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *matPath));
+	}
+
+	return nullptr;
+}
+
+template<typename T>
+void AGymObj::getAssetsOfClass(TArray<T*>& OutArray)
+{
+	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
+	TArray<FAssetData> AssetData;
+	AssetRegistryModule.Get().GetAssetsByClass(T::StaticClass()->GetFName(), AssetData);
+	for (int i = 0; i < AssetData.Num(); i++) {
+		T* Object = Cast<T>(AssetData[i].GetAsset());
+		OutArray.Add(Object);
+	}
 }

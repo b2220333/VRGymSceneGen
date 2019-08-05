@@ -72,6 +72,10 @@ public:
 	// gets random material from game content directory
 	UMaterialInterface* getRandomMaterial();
 
+	// gets all assets of class type T
+	template<typename T>
+	void getAssetsOfClass(TArray<T*>& OutArray);
+
 private:
 	FString name;
 	FString baseMeshPath;
