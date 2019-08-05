@@ -55,19 +55,11 @@ void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
 void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 {
 	// testing 
-	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
-
-	TArray<FAssetData> AssetData;
-	AssetRegistryModule.Get().GetAssetsByClass(FName("MaterialInterface"), AssetData, true);
-	UE_LOG(LogTemp, Warning, TEXT("Testing new mat found %d"), AssetData.Num());
-	for (int32 i = 0; i < AssetData.Num(); i++) {
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *AssetData[i].GetFullName());
-	}
-
-
 	TArray<UMaterialInterface*> materialAssets;
 	TArray<FString> paths = { "/Game/" };
-	AGymObj::getAssetsOfClass<UMaterialInterface>(materialAssets, paths, true);
+	AGymObj::getAssetsOfClass<UMaterialInterface>(materialAssets, paths, true, true);
+
+
 
 	for (int32 i = 0; i < shapenetActors.Num(); i++) {
 		if (shapenetActors[i]) {

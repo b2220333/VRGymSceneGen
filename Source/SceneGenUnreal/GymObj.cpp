@@ -154,19 +154,23 @@ UMaterialInterface* AGymObj::getRandomMaterialFrom(FString path)
 }
 
 template<typename T>
-static void AGymObj::getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> paths, bool searchRecursive)
+static void AGymObj::getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> paths, bool recursiveClasses, bool recursivePaths)
 {
 	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
 	TArray<FAssetData> AssetData;
 	FARFilter Filter;
 	Filter.ClassNames.Add(T::StaticClass()->GetFName());
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *T::StaticClass()->GetFName().ToString())
-	Filter.bRecursivePaths = searchRecursive;
-	Filter.bRecursiveClasses = true;
+	Filter.bRecursivePaths = recursivePaths;
+	Filter.bRecursiveClasses = recursiveClasses;
+	
+	for (int32 i = 0; i < paths.Num(); i++) {
+		Filter.PackagePaths.Add(FName(*paths[i]));
+	}
+	
 	AssetRegistryModule.Get().GetAssets(Filter , AssetData);
-	UE_LOG(LogTemp, Warning, TEXT("Assetdata num: %d"), AssetData.Num())
-	for (int i = 0; i < AssetData.Num(); i++) {
+	for (int32 i = 0; i < AssetData.Num(); i++) {
 		T* Object = Cast<T>(AssetData[i].GetAsset());
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *AssetData[i].GetFullName())
 		OutArray.Add(Object);
 	}
 

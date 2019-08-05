@@ -73,7 +73,7 @@ public:
 
 	// gets all assets of class type T
 	template<typename T>
-	static void getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> paths, bool searchRecursive);
+	static void getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> paths = { }, bool recursiveClasses = false, bool recursivePaths = false);
 
 private:
 	// name of object
