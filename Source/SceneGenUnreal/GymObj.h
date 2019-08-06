@@ -75,6 +75,9 @@ public:
 	template<typename T>
 	static void getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> paths = { }, bool recursiveClasses = false, bool recursivePaths = false);
 
+	// applies optionsin parameters json to base mesh only if basemesh already initialized
+	void applyParamsToBaseMesh(json::object_t params);
+
 private:
 	// name of object
 	FString name;
@@ -91,4 +94,8 @@ private:
 	// root component of object all additional meshes are attached to this mesh
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* baseMesh;
+
+	// additional meshes attached to the base mesh
+	UPROPERTY(EditAnywhere)
+	TArray<UStaticMeshComponent*> additionalMeshes;
 };

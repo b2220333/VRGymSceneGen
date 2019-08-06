@@ -80,8 +80,15 @@ bool AGymObj::importMeshFromPath(FString path, FVector location, json::object_t 
 	}
 
 	// spawn object directly above floor
-	FBox box = baseMesh->Bounds.GetBox();
+	
+	
+	/*FBox box = baseMesh->Bounds.GetBox();
 	FVector extents = box.GetExtent();
+	*/
+	FVector origin;
+	FVector extents;
+	GetActorBounds(false, origin, extents);
+
 	location.Z = extents.Z + 1;
 	originalSpawnLocation = location;
 	RootComponent->SetWorldLocation(location);
@@ -95,7 +102,7 @@ bool AGymObj::importMeshFromPath(FString path, FVector location, json::object_t 
 
 bool AGymObj::importMeshesFromPath(FString path, FVector location, json::object_t params)
 {
-	if (!baseMesh ||!RootComponent) {
+	if (!baseMesh || !RootComponent) {
 		UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: must first set baseMesh"))
 		return false;
 	}
@@ -153,4 +160,9 @@ static void AGymObj::getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> path
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("AGymObj.getAssetsOfClass: Found %d instances of %s"), OutArray.Num(), *T::StaticClass()->GetFName().ToString())
+}
+
+void AGymObj::applyParamsToBaseMesh(json::object_t params)
+{
+
 }
