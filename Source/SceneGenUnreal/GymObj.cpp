@@ -36,8 +36,6 @@ UStaticMeshComponent* AGymObj::getBaseMesh()
 	return baseMesh;
 }
 
-
-
 bool AGymObj::importMeshFromPath(FString path, FVector location, json::object_t params)
 {
 	if (params["spawnProbability"].is_number()) {
@@ -46,8 +44,6 @@ bool AGymObj::importMeshFromPath(FString path, FVector location, json::object_t 
 			return false;
 		}
 	}
-
-
 
 	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
 	if (!staticMeshReference) {
@@ -82,32 +78,24 @@ bool AGymObj::importMeshesFromPath(FString path, FVector location, json::object_
 		if (staticMeshes[i]->GetName() != baseMesh->GetStaticMesh()->GetName()) {
 			UStaticMeshComponent* child = NewObject<UStaticMeshComponent>(this, FName(*staticMeshes[i]->GetName()));
 			child->SetStaticMesh(staticMeshes[i]);
-			
-			
-			
-			
 			child->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
 			bool welded = child->WeldToImplementation(baseMesh);
 			
 			if (welded) {
-				UE_LOG(LogTemp, Warning, TEXT("Successful Weld"))
+				UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Successful weld"));
+				child->RegisterComponent();
+				json::object_t modifiedParams = params;
+				modifiedParams["physicsEnabled"] = false;
+				applyParamsToMesh(child, modifiedParams);
+				additionalMeshes.Add(child);
 			}
 			else {
-				UE_LOG(LogTemp, Warning, TEXT("Failed to Weld"))
-			}
-			
-			child->RegisterComponent();
-			
-			
-			json::object_t modifiedParams = params;
-			modifiedParams["physicsEnabled"] = false;
-			applyParamsToMesh(child, modifiedParams);
-			additionalMeshes.Add(child);
-			
-			
+				UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Failed to weld, skipping this child mesh"));
+				return false;
+			}			
 		}
 	}
-
+	// setup location of entire actor including base and child meshes
 	locationSetup(location, params);
 	return true;
 }
@@ -139,7 +127,6 @@ static void AGymObj::getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> path
 	Filter.ClassNames.Add(T::StaticClass()->GetFName());
 	Filter.bRecursivePaths = recursivePaths;
 	Filter.bRecursiveClasses = recursiveClasses;
-	
 	for (int32 i = 0; i < paths.Num(); i++) {
 		Filter.PackagePaths.Add(FName(*paths[i]));
 	}
@@ -155,16 +142,18 @@ static void AGymObj::getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> path
 
 void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t params)
 {
-	//if (params["useRandomTextures"].is_boolean() && params["useRandomTextures"]) {
-	int32 numMats = mesh->GetNumMaterials();
-	for (int32 i = 0; i < numMats; i++) {
-		UMaterialInterface* material = getRandomMaterialFrom({ "/Game" }, true);
-		mesh->SetMaterial(i, material);
+	// setting random material
+	if (params["useRandomTextures"].is_boolean() && params["useRandomTextures"]) {
+		int32 numMats = mesh->GetNumMaterials();
+		for (int32 i = 0; i < numMats; i++) {
+			UMaterialInterface* material = getRandomMaterialFrom({ "/Game" }, true);
+			if (material) {
+			mesh->SetMaterial(i, material);
+			}
+		}
 	}
-	//}
 
-	
-	// physics comes last to allow for other setup first
+	// setting physics
 	if (params["physicsEnabled"].is_boolean() && !params["physicsEnabled"].get<bool>()) {
 		mesh->SetSimulatePhysics(false);
 	}
@@ -174,7 +163,7 @@ void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t param
 		mesh->SetLinearDamping(20);
 	}
 	
-
+	// setting gravity
 	if (params["gravityEnabled"].is_boolean() && !params["gravityEnabled"].get<bool>()) {
 		mesh->SetEnableGravity(false);
 	}
@@ -184,6 +173,7 @@ void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t param
 		mesh->SetLinearDamping(20);
 	}
 
+	// setting mass density
 	//UPhysicalMaterial* physMat = baseMesh->GetBodySetup()->GetPhysMaterial();
 	//physMat->Density = 10;
 
@@ -191,11 +181,11 @@ void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t param
 
 void AGymObj::locationSetup(FVector location, json::object_t params)
 {
-	// spawn object directly above floor
 	FVector origin;
 	FVector extents;
 	GetActorBounds(false, origin, extents);
-
+	
+	// spawn object directly above floor (assuming automatic heigh adjustment for now
 	location.Z = extents.Z + 1;
 	originalSpawnLocation = location;
 	RootComponent->SetWorldLocation(location);
