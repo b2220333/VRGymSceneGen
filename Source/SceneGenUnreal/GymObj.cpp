@@ -57,41 +57,7 @@ bool AGymObj::importMeshFromPath(FString path, FVector location, json::object_t 
 	RootComponent->SetMobility(EComponentMobility::Movable);
 	baseMesh->SetStaticMesh(staticMeshReference);
 
-	//if (params["useRandomTextures"].is_boolean() && params["useRandomTextures"]) {
-	int32 numMats = baseMesh->GetNumMaterials();
-	for (int32 i = 0; i < numMats; i++) {
-		UMaterialInterface* material = getRandomMaterialFrom({ "/Game" }, true);
-		baseMesh->SetMaterial(i, material);
-	}
-	//}
-
-	// physics comes last to allow for other setup first
-	if (params["physicsEnabled"].is_boolean() && !params["physicsEnabled"].get<bool>()) {
-		baseMesh->SetSimulatePhysics(false);
-		baseMesh->SetEnableGravity(false);
-	}
-	else {
-		baseMesh->SetSimulatePhysics(true);
-		baseMesh->SetEnableGravity(true);
-		baseMesh->SetLinearDamping(20);
-
-		//UPhysicalMaterial* physMat = baseMesh->GetBodySetup()->GetPhysMaterial();
-		//physMat->Density = 10;
-	}
-
-	// spawn object directly above floor
-	
-	
-	/*FBox box = baseMesh->Bounds.GetBox();
-	FVector extents = box.GetExtent();
-	*/
-	FVector origin;
-	FVector extents;
-	GetActorBounds(false, origin, extents);
-
-	location.Z = extents.Z + 1;
-	originalSpawnLocation = location;
-	RootComponent->SetWorldLocation(location);
+	applyParamsToMesh(baseMesh, params);
 
 	// set private memebers after successful setup
 	baseMeshPath = path;
@@ -115,9 +81,12 @@ bool AGymObj::importMeshesFromPath(FString path, FVector location, json::object_
 			UStaticMeshComponent* child = NewObject<UStaticMeshComponent>(this, FName(*staticMeshes[i]->GetName()));
 			child->SetStaticMesh(staticMeshes[i]);
 			child->AttachTo(RootComponent);
+			//applyParamsToMesh(child, params);
 			child->RegisterComponent();
+			additionalMeshes.Add(child);
 		}
 	}
+	locationSetup(location, params);
 	return true;
 }
 
@@ -162,7 +131,41 @@ static void AGymObj::getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> path
 	UE_LOG(LogTemp, Warning, TEXT("AGymObj.getAssetsOfClass: Found %d instances of %s"), OutArray.Num(), *T::StaticClass()->GetFName().ToString())
 }
 
-void AGymObj::applyParamsToBaseMesh(json::object_t params)
+void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t params)
 {
+	//if (params["useRandomTextures"].is_boolean() && params["useRandomTextures"]) {
+	int32 numMats = mesh->GetNumMaterials();
+	for (int32 i = 0; i < numMats; i++) {
+		UMaterialInterface* material = getRandomMaterialFrom({ "/Game" }, true);
+		mesh->SetMaterial(i, material);
+	}
+	//}
 
+	// physics comes last to allow for other setup first
+	if (params["physicsEnabled"].is_boolean() && !params["physicsEnabled"].get<bool>()) {
+		mesh->SetSimulatePhysics(false);
+		mesh->SetEnableGravity(false);
+	}
+	else {
+		mesh->SetSimulatePhysics(true);
+		mesh->SetEnableGravity(true);
+		// damping for stable setup, to be removed after all actors have spawned and settled in position
+		mesh->SetLinearDamping(20);
+
+		//UPhysicalMaterial* physMat = baseMesh->GetBodySetup()->GetPhysMaterial();
+		//physMat->Density = 10;
+	}
+
+}
+
+void AGymObj::locationSetup(FVector location, json::object_t params)
+{
+	// spawn object directly above floor
+	FVector origin;
+	FVector extents;
+	GetActorBounds(false, origin, extents);
+
+	location.Z = extents.Z + 1;
+	originalSpawnLocation = location;
+	RootComponent->SetWorldLocation(location);
 }

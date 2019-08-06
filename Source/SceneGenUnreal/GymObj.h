@@ -76,7 +76,10 @@ public:
 	static void getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> paths = { }, bool recursiveClasses = false, bool recursivePaths = false);
 
 	// applies optionsin parameters json to base mesh only if basemesh already initialized
-	void applyParamsToBaseMesh(json::object_t params);
+	void applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t params);
+
+	// handles all location setup including automatic height adjustment
+	void locationSetup(FVector location, json::object_t params);
 
 private:
 	// name of object
