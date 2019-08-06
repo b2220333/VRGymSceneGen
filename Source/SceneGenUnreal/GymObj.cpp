@@ -75,26 +75,28 @@ bool AGymObj::assignMeshesFromPath(FString path, FVector location, json::object_
 	getAssetsOfClass<UStaticMesh>(staticMeshes, { path }, true, true);
 
 	for (int32 i = 0; i < staticMeshes.Num(); i++) {
-		if (staticMeshes[i] && staticMeshes[i]->GetName() != baseMesh->GetStaticMesh()->GetName()) {
-			UStaticMeshComponent* child = NewObject<UStaticMeshComponent>(this, FName(*staticMeshes[i]->GetName()));
-			child->SetStaticMesh(staticMeshes[i]);
-			child->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
-			
-			// merging physics body
-			bool welded = child->WeldToImplementation(baseMesh);
-			if (welded) {
-				UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Successful weld"));
-			}
-			else {
-				UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Failed to weld"));
-			}
+		if (staticMeshes[i]) {
+			if (staticMeshes[i]->GetName() != baseMesh->GetStaticMesh()->GetName()) {
+				UStaticMeshComponent* child = NewObject<UStaticMeshComponent>(this, FName(*staticMeshes[i]->GetName()));
+					child->SetStaticMesh(staticMeshes[i]);
+					child->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
 
-			child->RegisterComponent();
-			json::object_t modifiedParams = params;
-			// physics disabled for child meshes when merged for proper functionality
-			modifiedParams["physicsEnabled"] = false;
-			applyParamsToMesh(child, modifiedParams);
-			additionalMeshes.Add(child);
+					// merging physics body
+					bool welded = child->WeldToImplementation(baseMesh);
+					if (welded) {
+						UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Successful weld"));
+					}
+					else {
+						UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Failed to weld"));
+					}
+
+				child->RegisterComponent();
+				json::object_t modifiedParams = params;
+				// physics disabled for child meshes when merged for proper functionality
+				modifiedParams["physicsEnabled"] = false;
+				applyParamsToMesh(child, modifiedParams);
+				additionalMeshes.Add(child);
+			}
 		}
 		else {
 			return false;
