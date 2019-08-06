@@ -36,7 +36,7 @@ UStaticMeshComponent* AGymObj::getBaseMesh()
 	return baseMesh;
 }
 
-bool AGymObj::importMeshFromPath(FString path, FVector location, json::object_t params)
+bool AGymObj::assignMeshFromPath(FString path, FVector location, json::object_t params)
 {
 	if (params["spawnProbability"].is_number()) {
 		float rng = FMath::RandRange(0.0f, 1.0f);
@@ -64,7 +64,7 @@ bool AGymObj::importMeshFromPath(FString path, FVector location, json::object_t 
 	return true;
 }
 
-bool AGymObj::importMeshesFromPath(FString path, FVector location, json::object_t params)
+bool AGymObj::assignMeshesFromPath(FString path, FVector location, json::object_t params)
 {
 	if (!baseMesh || !RootComponent) {
 		UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: must first set baseMesh"))
@@ -75,24 +75,29 @@ bool AGymObj::importMeshesFromPath(FString path, FVector location, json::object_
 	getAssetsOfClass<UStaticMesh>(staticMeshes, { path }, true, true);
 
 	for (int32 i = 0; i < staticMeshes.Num(); i++) {
-		if (staticMeshes[i]->GetName() != baseMesh->GetStaticMesh()->GetName()) {
+		if (staticMeshes[i] && staticMeshes[i]->GetName() != baseMesh->GetStaticMesh()->GetName()) {
 			UStaticMeshComponent* child = NewObject<UStaticMeshComponent>(this, FName(*staticMeshes[i]->GetName()));
 			child->SetStaticMesh(staticMeshes[i]);
 			child->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
-			bool welded = child->WeldToImplementation(baseMesh);
 			
+			// merging physics body
+			bool welded = child->WeldToImplementation(baseMesh);
 			if (welded) {
 				UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Successful weld"));
-				child->RegisterComponent();
-				json::object_t modifiedParams = params;
-				modifiedParams["physicsEnabled"] = false;
-				applyParamsToMesh(child, modifiedParams);
-				additionalMeshes.Add(child);
 			}
 			else {
-				UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Failed to weld, skipping this child mesh"));
-				return false;
-			}			
+				UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Failed to weld"));
+			}
+
+			child->RegisterComponent();
+			json::object_t modifiedParams = params;
+			// physics disabled for child meshes when merged for proper functionality
+			modifiedParams["physicsEnabled"] = false;
+			applyParamsToMesh(child, modifiedParams);
+			additionalMeshes.Add(child);
+		}
+		else {
+			return false;
 		}
 	}
 	// setup location of entire actor including base and child meshes

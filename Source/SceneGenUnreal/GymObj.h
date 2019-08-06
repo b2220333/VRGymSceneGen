@@ -57,10 +57,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// assigns base mesh only
-	bool importMeshFromPath(FString path, FVector location, json::object_t params);
+	virtual bool assignMeshFromPath(FString path, FVector location, json::object_t params);
 
 	// imports all meshes in directory only if base mesh is set first with importMeshFromPath
-	bool importMeshesFromPath(FString path, FVector location, json::object_t params);
+	virtual bool assignMeshesFromPath(FString path, FVector location, json::object_t params);
 	
 	// gets pointer to gym object's base mesh component
 	UStaticMeshComponent* getBaseMesh();

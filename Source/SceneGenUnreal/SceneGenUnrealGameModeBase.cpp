@@ -164,8 +164,9 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	AGymObj* test = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 	json::object_t testparams;
-	test->importMeshFromPath("/Game/partnetOBJ/Chair/36366/new-0.new-0", spawnLocation, testparams);
-	test->importMeshesFromPath("/Game/partnetOBJ/Chair/36366", spawnLocation, testparams);
+	//testparams["physicsEnabled"] = false;
+	test->assignMeshFromPath("/Game/partnetOBJ/Chair/36366/new-0.new-0", spawnLocation, testparams);
+	test->assignMeshesFromPath("/Game/partnetOBJ/Chair/36366", spawnLocation, testparams);
 
 
 	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &ASceneGenUnrealGameModeBase::resetDamping, 5);
