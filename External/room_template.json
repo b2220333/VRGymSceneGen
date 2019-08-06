@@ -18,6 +18,7 @@
 				"spawnProbability": 0.9, //default: 0
 				"destructable" : 1, //default: 1
 				"physicsEnabled" : 0,
+				"gravityEnabled" : true,
 				"useRandomTextures" : 1,
 				"canOverlap" : 1,
 				"rootActorIndex" : 0

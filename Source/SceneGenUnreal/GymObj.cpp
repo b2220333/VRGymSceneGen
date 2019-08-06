@@ -85,45 +85,10 @@ bool AGymObj::importMeshesFromPath(FString path, FVector location, json::object_
 			
 			
 			
-			// welding automatically attaches child to baseMesh
+			
 			child->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
 			bool welded = child->WeldToImplementation(baseMesh);
-			child->RegisterComponent();
-			//applyParamsToMesh(child, params);
 			
-			/*
-			FString physicsConstraintName = "Constraint";
-			physicsConstraintName.AppendInt(i);
-			UPhysicsConstraintComponent* constraint = NewObject<UPhysicsConstraintComponent>(this, *physicsConstraintName);
-			constraint->SetupAttachment(RootComponent);
-
-			constraint->ConstraintActor1 = this;
-			constraint->ConstraintActor2 = this;
-
-			// FConstraintInstance constraintInstance;
-			// constraint->ConstraintInstance = constraintInstance;
-
-			constraint->SetConstrainedComponents(baseMesh, baseMesh->GetFName(), child, child->GetFName());
-			constraint->SetConstraintReferencePosition(EConstraintFrame::Type::Frame1, FVector::ZeroVector);
-
-			
-			constraint->SetWorldLocation(RootComponent->GetComponentLocation());
-			constraint->RegisterComponent();
-			*/
-			
-
-			/*
-			FTransform relativeTransform = FTransform(FVector::ZeroVector);
-			bool welded = baseMesh->BodyInstance.Weld(&child->BodyInstance, relativeTransform);
-			
-			if (child->BodyInstance.BodySetup.IsValid()) {
-				UE_LOG(LogTemp, Warning, TEXT("Setup Valid"))
-			}
-			else {
-				UE_LOG(LogTemp, Warning, TEXT("Setup invalid"))
-			}
-			*/
-
 			if (welded) {
 				UE_LOG(LogTemp, Warning, TEXT("Successful Weld"))
 			}
@@ -131,7 +96,12 @@ bool AGymObj::importMeshesFromPath(FString path, FVector location, json::object_
 				UE_LOG(LogTemp, Warning, TEXT("Failed to Weld"))
 			}
 			
+			child->RegisterComponent();
 			
+			
+			json::object_t modifiedParams = params;
+			modifiedParams["physicsEnabled"] = false;
+			applyParamsToMesh(child, modifiedParams);
 			additionalMeshes.Add(child);
 			
 			
@@ -197,18 +167,25 @@ void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t param
 	// physics comes last to allow for other setup first
 	if (params["physicsEnabled"].is_boolean() && !params["physicsEnabled"].get<bool>()) {
 		mesh->SetSimulatePhysics(false);
-		mesh->SetEnableGravity(false);
 	}
 	else {
 		mesh->SetSimulatePhysics(true);
+		// damping for stable setup, to be removed after all actors have spawned and settled in position
+		mesh->SetLinearDamping(20);
+	}
+	
+
+	if (params["gravityEnabled"].is_boolean() && !params["gravityEnabled"].get<bool>()) {
+		mesh->SetEnableGravity(false);
+	}
+	else {
 		mesh->SetEnableGravity(true);
 		// damping for stable setup, to be removed after all actors have spawned and settled in position
 		mesh->SetLinearDamping(20);
-
-		//UPhysicalMaterial* physMat = baseMesh->GetBodySetup()->GetPhysMaterial();
-		//physMat->Density = 10;
 	}
-	
+
+	//UPhysicalMaterial* physMat = baseMesh->GetBodySetup()->GetPhysMaterial();
+	//physMat->Density = 10;
 
 }
 
