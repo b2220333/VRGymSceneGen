@@ -60,7 +60,7 @@ bool AGymObj::importMeshFromPath(FString path, FVector location, json::object_t 
 	//if (params["useRandomTextures"].is_boolean() && params["useRandomTextures"]) {
 	int32 numMats = baseMesh->GetNumMaterials();
 	for (int32 i = 0; i < numMats; i++) {
-		UMaterialInterface* material = getRandomMaterialFrom({ "/Game/" }, true);
+		UMaterialInterface* material = getRandomMaterialFrom({ "/Game" }, true);
 		baseMesh->SetMaterial(i, material);
 	}
 	//}
@@ -95,7 +95,7 @@ bool AGymObj::importMeshFromPath(FString path, FVector location, json::object_t 
 
 bool AGymObj::importMeshesFromPath(FString path, FVector location, json::object_t params)
 {
-	if (!baseMesh) {
+	if (!baseMesh ||!RootComponent) {
 		UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: must first set baseMesh"))
 		return false;
 	}
@@ -104,9 +104,12 @@ bool AGymObj::importMeshesFromPath(FString path, FVector location, json::object_
 	getAssetsOfClass<UStaticMesh>(staticMeshes, { path }, true, true);
 
 	for (int32 i = 0; i < staticMeshes.Num(); i++) {
-		UStaticMeshComponent* child = NewObject<UStaticMeshComponent>(this, "baseMesh");
-		child->SetStaticMesh(staticMeshes[i]);
-		child->AttachTo(RootComponent);
+		if (staticMeshes[i]->GetName() != baseMesh->GetStaticMesh()->GetName()) {
+			UStaticMeshComponent* child = NewObject<UStaticMeshComponent>(this, FName(*staticMeshes[i]->GetName()));
+			child->SetStaticMesh(staticMeshes[i]);
+			child->AttachTo(RootComponent);
+			child->RegisterComponent();
+		}
 	}
 	return true;
 }

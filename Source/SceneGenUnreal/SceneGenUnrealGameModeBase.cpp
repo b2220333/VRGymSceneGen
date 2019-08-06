@@ -55,6 +55,10 @@ void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
 void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 {
 	// testing 
+
+	
+
+
 	/*
 	TArray<UMaterialInterface*> materialAssets;
 	TArray<FString> paths = { "/Engine/" };
@@ -153,7 +157,13 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	spawnedLight->GetRootComponent()->SetMobility(EComponentMobility::Movable);
 
 
-
+	FVector spawnLocation = FVector(0, 0, 300);
+	FActorSpawnParameters spawnParams;
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	AGymObj* test = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+	json::object_t testparams;
+	test->importMeshFromPath("/Game/partnetOBJ/Chair/36366/new-0.new-0", spawnLocation, testparams);
+	test->importMeshesFromPath("/Game/partnetOBJ/Chair/36366", spawnLocation, testparams);
 
 
 	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &ASceneGenUnrealGameModeBase::resetDamping, 5);
@@ -324,7 +334,7 @@ void ASceneGenUnrealGameModeBase::resetDamping()
 		if (shapenetActors[i]) {
 			shapenetActors[i]->tryRespawnNewCM();
 			if (shapenetActors[i]->getBaseMesh()) {
-				shapenetActors[i]->getBaseMesh()->SetLinearDamping(0);
+				shapenetActors[i]->getBaseMesh()->SetLinearDamping(1);
 			}
 		}
 	}
