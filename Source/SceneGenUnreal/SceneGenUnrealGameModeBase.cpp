@@ -150,11 +150,13 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	*/
 
 	// testing add light
+	/*
 	FVector lightLocation = FVector(0, 0, 50);
 	FRotator lightRotation = FRotator(90, 0, 0);
 	FActorSpawnParameters lightSpawnParams;
 	ADirectionalLight* spawnedLight = GetWorld()->SpawnActor<ADirectionalLight>(lightLocation, lightRotation, lightSpawnParams);
 	spawnedLight->GetRootComponent()->SetMobility(EComponentMobility::Movable);
+	*/
 
 
 	FVector spawnLocation = FVector(0, 0, 300);

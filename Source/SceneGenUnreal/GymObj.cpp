@@ -6,6 +6,8 @@
 #include "Runtime/Core/Public/HAL/FileManager.h"
 #include "Runtime/AssetRegistry/Public/ARFilter.h"
 #include "Runtime/AssetRegistry/Public/AssetRegistryModule.h"
+#include "Runtime/Engine/Classes/PhysicsEngine/PhysicsConstraintComponent.h"
+#include "Runtime/Engine/Classes/PhysicsEngine/ConstraintInstance.h"
 
 // Sets default values
 AGymObj::AGymObj()
@@ -80,12 +82,62 @@ bool AGymObj::importMeshesFromPath(FString path, FVector location, json::object_
 		if (staticMeshes[i]->GetName() != baseMesh->GetStaticMesh()->GetName()) {
 			UStaticMeshComponent* child = NewObject<UStaticMeshComponent>(this, FName(*staticMeshes[i]->GetName()));
 			child->SetStaticMesh(staticMeshes[i]);
-			child->AttachTo(RootComponent);
-			//applyParamsToMesh(child, params);
+			
+			
+			
+			// welding automatically attaches child to baseMesh
+			child->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
+			bool welded = child->WeldToImplementation(baseMesh);
 			child->RegisterComponent();
+			//applyParamsToMesh(child, params);
+			
+			/*
+			FString physicsConstraintName = "Constraint";
+			physicsConstraintName.AppendInt(i);
+			UPhysicsConstraintComponent* constraint = NewObject<UPhysicsConstraintComponent>(this, *physicsConstraintName);
+			constraint->SetupAttachment(RootComponent);
+
+			constraint->ConstraintActor1 = this;
+			constraint->ConstraintActor2 = this;
+
+			// FConstraintInstance constraintInstance;
+			// constraint->ConstraintInstance = constraintInstance;
+
+			constraint->SetConstrainedComponents(baseMesh, baseMesh->GetFName(), child, child->GetFName());
+			constraint->SetConstraintReferencePosition(EConstraintFrame::Type::Frame1, FVector::ZeroVector);
+
+			
+			constraint->SetWorldLocation(RootComponent->GetComponentLocation());
+			constraint->RegisterComponent();
+			*/
+			
+
+			/*
+			FTransform relativeTransform = FTransform(FVector::ZeroVector);
+			bool welded = baseMesh->BodyInstance.Weld(&child->BodyInstance, relativeTransform);
+			
+			if (child->BodyInstance.BodySetup.IsValid()) {
+				UE_LOG(LogTemp, Warning, TEXT("Setup Valid"))
+			}
+			else {
+				UE_LOG(LogTemp, Warning, TEXT("Setup invalid"))
+			}
+			*/
+
+			if (welded) {
+				UE_LOG(LogTemp, Warning, TEXT("Successful Weld"))
+			}
+			else {
+				UE_LOG(LogTemp, Warning, TEXT("Failed to Weld"))
+			}
+			
+			
 			additionalMeshes.Add(child);
+			
+			
 		}
 	}
+
 	locationSetup(location, params);
 	return true;
 }
@@ -141,6 +193,7 @@ void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t param
 	}
 	//}
 
+	
 	// physics comes last to allow for other setup first
 	if (params["physicsEnabled"].is_boolean() && !params["physicsEnabled"].get<bool>()) {
 		mesh->SetSimulatePhysics(false);
@@ -155,6 +208,7 @@ void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t param
 		//UPhysicalMaterial* physMat = baseMesh->GetBodySetup()->GetPhysMaterial();
 		//physMat->Density = 10;
 	}
+	
 
 }
 

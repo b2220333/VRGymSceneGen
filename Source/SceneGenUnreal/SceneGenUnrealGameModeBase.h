@@ -7,6 +7,8 @@
 #include "json.hpp"
 using json = nlohmann::json;
 
+#include "GymObj.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "SceneGenUnrealGameModeBase.generated.h"
@@ -37,20 +39,31 @@ public:
 
 	
 
-
+	// spawns a shapenet actor group from json, recursively spawns all children
 	void importShapenetActorGroup(json::object_t actorGroup, FVector origin);
+
+	// samples a location from a json location object
 	float sampleLocation(json::object_t &location);
+
+
+	// spawns a single actor
 	void importShapenetActor(json::object_t actor, FVector origin);
 
 	void listDescendants(json::object_t&  actorGroup);
 
-
+	// modifies json to pass down actorParams from parents to children
 	void passDownParams(json::object_t &srcObj);
+	
+	// helper function for transfer parameters between two actorParams json objects
 	void transferParamsBetween(json::object_t &srcObj, json::object_t &dstObj);
 
 	FDateTime roomJsonLastChanged;
 	
+
+	// resets physics damping to default values
 	void resetDamping();
+
+
 	bool objectsDamped;
 
 	json parsed;
@@ -65,8 +78,12 @@ public:
 	void spawnWalls();
 
 
-
+	// utility function for parsing json object file
 	json::object_t parseJsonFromPath(FString path);
+	
+	//utility function for parsing json array file
 	json::array_t parseJsonArrayFromPath(FString path);
 
+private:
+	TArray<AGymObj> gymObjects;
 };
