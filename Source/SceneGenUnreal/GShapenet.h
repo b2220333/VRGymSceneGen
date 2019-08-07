@@ -21,9 +21,6 @@ class SCENEGENUNREAL_API AGShapenet : public AGymObj
 
 	// imports a random mesh from wordnet synset
 	bool assignRandomFromSynset(FString synset, FVector location, json::object_t params);
-	
-	// calls assignMeshFromPath since shapenet models only have one mesh
-	virtual bool assignMeshesFromPath(FString path, FVector location, json::object_t params);
 
 private:
 	FString synset;

@@ -32,3 +32,20 @@ void AGymAgent::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void AGymAgent::MoveForward(float Value)
+{
+	if (Value != 0.0f)
+	{
+		// add movement in that direction
+		AddMovementInput(GetActorForwardVector(), Value);
+	}
+}
+
+void AGymAgent::MoveRight(float Value)
+{
+	if (Value != 0.0f)
+	{
+		// add movement in that direction
+		AddMovementInput(GetActorRightVector(), Value);
+	}
+}

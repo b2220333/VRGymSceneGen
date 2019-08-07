@@ -29,6 +29,7 @@ bool AGWall::spawnWall(float xWidth, float yWidth, float zWidth, FTransform wall
 bool AGWall::spawnFloor(float xWidth, float yWidth)
 {
 	FTransform wallTransform;
+
 	return spawnWall(xWidth, yWidth, 0, wallTransform);
 }
 

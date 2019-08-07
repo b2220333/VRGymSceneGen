@@ -26,6 +26,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	
-	
+	// moves forward when W or up arrow pressed, backward when S or down arrow pressed
+	void MoveForward(float Value);
+
+	// moves right when D or right arrow pressed, left when A or left arrow pressed
+	void MoveRight(float Value);
+
+	// interacts with GymObj if nearby and facing when spacebar pressed
+	void interact();
 };

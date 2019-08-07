@@ -78,17 +78,17 @@ bool AGymObj::assignMeshesFromPath(FString path, FVector location, json::object_
 		if (staticMeshes[i]) {
 			if (staticMeshes[i]->GetName() != baseMesh->GetStaticMesh()->GetName()) {
 				UStaticMeshComponent* child = NewObject<UStaticMeshComponent>(this, FName(*staticMeshes[i]->GetName()));
-					child->SetStaticMesh(staticMeshes[i]);
-					child->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
+				child->SetStaticMesh(staticMeshes[i]);
+				child->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, true));
 
-					// merging physics body
-					bool welded = child->WeldToImplementation(baseMesh);
-					if (welded) {
-						UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Successful weld"));
-					}
-					else {
-						UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Failed to weld"));
-					}
+				// merging physics body
+				bool welded = child->WeldToImplementation(baseMesh);
+				if (welded) {
+					UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Successful weld"));
+				}
+				else {
+					UE_LOG(LogTemp, Warning, TEXT("GymObj.importMeshesFromPath: Failed to weld"));
+				}
 
 				child->RegisterComponent();
 				json::object_t modifiedParams = params;

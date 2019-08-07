@@ -21,7 +21,7 @@ class SCENEGENUNREAL_API AGymObj : public AActor
 		|___GWall (Floor, Ceiling, Sidewalls)
 		|
 		|___GShapenet
-		|	|___GSNChair
+		|	|___GSNChair (GShapnet children are defined only for specific interactions with GymAgents or other GymObjs)
 		|	|___GSNDishwasher
 		|	|
 		|	.
@@ -29,7 +29,7 @@ class SCENEGENUNREAL_API AGymObj : public AActor
 		|	.
 		|
 		|___GPartnet (No animations / interaction with specific partnet parts)
-			|___GPNChair
+			|___GPNChair (GPartnet children are defined only for specific interactions with GymAgents or other GymObjs)
 			|___GPNDishwasher
 			|
 			.

@@ -4,12 +4,9 @@
 #include "Runtime/Core/Public/HAL/FileManager.h"
 #include "Runtime/Core/Public/Misc/Paths.h"
 
+#include "json.hpp"
+using json = nlohmann::json;
 
-
-bool AGShapenet::assignMeshesFromPath(FString path, FVector location, json::object_t params)
-{
-	return assignMeshFromPath(path, location, params);
-}
 
 
 bool AGShapenet::assignMeshFromSynsetAndModelID(FString synset, FString modelID, FVector location, json::object_t params)
