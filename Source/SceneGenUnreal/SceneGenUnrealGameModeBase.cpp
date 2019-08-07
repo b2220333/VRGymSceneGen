@@ -526,3 +526,13 @@ json::array_t ASceneGenUnrealGameModeBase::parseJsonArrayFromPath(FString path)
 	}
 	return jsonArray;
 }
+
+
+/*
+void ASceneGenUnrealGameModeBase::interactWithinteractWith(AGymAgent* agent)
+{
+	for (int32 i = 0; i < interactiveGymObjects.Num(); i++) {
+
+	}
+}
+*/

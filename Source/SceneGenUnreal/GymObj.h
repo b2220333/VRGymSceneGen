@@ -3,6 +3,7 @@
 #pragma once
 #include "json.hpp"
 using json = nlohmann::json;
+#include "GymAgent.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -81,6 +82,12 @@ public:
 	// handles all location setup including automatic height adjustment
 	void locationSetup(FVector location, json::object_t params);
 
+	// interaction with a gym agent
+	void interactWith(AGymAgent* agent);
+
+	// interaction with a gym obj
+	void interactWith(class GymObj* obj);
+
 private:
 	// name of object
 	FString name;
@@ -101,4 +108,8 @@ private:
 	// additional meshes attached to the base mesh
 	UPROPERTY(EditAnywhere)
 	TArray<UStaticMeshComponent*> additionalMeshes;
+
+	// whether this gym object interacts with other gym objects and gym agetns
+	bool interactsWithGymObjs;
+	bool interactsWithGymAgents;
 };

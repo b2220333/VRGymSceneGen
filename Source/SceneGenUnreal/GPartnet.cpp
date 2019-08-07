@@ -23,14 +23,14 @@ bool AGPartnet::assignRandomMeshFromCategory(FString category, FVector location,
 	IFileManager& FileManager = IFileManager::Get();
 	FString path = FPaths::ProjectContentDir() + "partnetOBJ/" + category + "/*.*";
 	UE_LOG(LogTemp, Warning, TEXT("Importing random mesh from %s"), *path);
-	TArray<FString> modelIDs;
-	FileManager.FindFiles(modelIDs, *path, false, true);
-	UE_LOG(LogTemp, Warning, TEXT("Found %d models"), modelIDs.Num());
-	int32 i = FMath::RandRange(0, modelIDs.Num() - 1);
-	if (modelIDs.Num() > 0) {
-		if (assignMeshFromCategoryAndAnnotationID(category, modelIDs[i], location, params)) {
+	TArray<FString> annotationID;
+	FileManager.FindFiles(annotationID, *path, false, true);
+	UE_LOG(LogTemp, Warning, TEXT("Found %d models"), annotationID.Num());
+	int32 i = FMath::RandRange(0, annotationID.Num() - 1);
+	if (annotationID.Num() > 0) {
+		if (assignMeshFromCategoryAndAnnotationID(category, annotationID[i], location, params)) {
 			this->category = category;
-			this->annotationID = modelIDs[i];
+			this->annotationID = annotationID[i];
 			return true;
 		}
 	}

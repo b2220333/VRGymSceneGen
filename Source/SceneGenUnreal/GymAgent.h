@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "Runtime/Engine/Classes/Components/MeshComponent.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
@@ -34,4 +35,21 @@ public:
 
 	// interacts with GymObj if nearby and facing when spacebar pressed
 	void interact();
+
+
+	// sets mesh of agent
+	void setMesh(FString path);
+
+	// interaction with a gym agent
+	void interactWith(class AGymAgent* agent);
+
+	// interaction with a gym obj
+	void interactWith(class GymObj* obj);
+
+private:
+
+	UPROPERTY(EditAnywhere)
+	UMeshComponent* baseMesh;
+	
 };
+

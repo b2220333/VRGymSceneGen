@@ -8,7 +8,6 @@
 using json = nlohmann::json;
 
 
-
 bool AGShapenet::assignMeshFromSynsetAndModelID(FString synset, FString modelID, FVector location, json::object_t params)
 {
 	FString path = "/Game/ShapenetObj/" + synset + "/" + modelID + "/model_normalized.model_normalized";

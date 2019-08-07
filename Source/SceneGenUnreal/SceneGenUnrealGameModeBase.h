@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Shapenet.h"
+#include "GymAgent.h"
 
 #include "json.hpp"
 using json = nlohmann::json;
@@ -84,6 +85,11 @@ public:
 	//utility function for parsing json array file
 	json::array_t parseJsonArrayFromPath(FString path);
 
+
+	void interact(AGymAgent* agent);
+
 private:
-	TArray<AGymObj> gymObjects;
+	TArray<AGymObj*> gymObjects;
+	TArray<AGymObj*> interactiveGymObjects;
+	TArray<AGymAgent*> gymAgents;
 };

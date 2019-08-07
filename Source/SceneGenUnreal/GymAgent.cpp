@@ -30,6 +30,10 @@ void AGymAgent::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis("MoveForward", this, &AGymAgent::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AGymAgent::MoveRight);
+
+	PlayerInputComponent->BindAction("interact", IE_Pressed, this, &AGymAgent::interact);
 }
 
 void AGymAgent::MoveForward(float Value)
@@ -48,4 +52,20 @@ void AGymAgent::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(GetActorRightVector(), Value);
 	}
+}
+
+void AGymAgent::interact()
+{
+	
+}
+
+void AGymAgent::interactWith(AGymAgent* agent)
+{
+
+}
+
+
+void AGymAgent::interactWith(GymObj* obj)
+{
+
 }

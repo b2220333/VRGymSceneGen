@@ -101,8 +101,8 @@ bool FShapenetImportModule::importFromSynsetAndHash(FString synset, FString hash
 	}
 	FString srcPath = shapenetDir + "/" + synset + "/" + hash + "/models/model_normalized.obj";
 	FString RelativePath = FPaths::ProjectContentDir();
-	FString FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*RelativePath) + "ShapenetObj/" + synset + "/" + hash;
-	FString dstPath = "/Game/ShapenetOBJ/" + synset + "/" + hash + "/";
+	FString FullPath = IFileManager::Get().ConvertToAbsolutePathForExternalAppForRead(*RelativePath) + "shapenetObj/" + synset + "/" + hash;
+	FString dstPath = "/Game/shapenetOBJ/" + synset + "/" + hash + "/";
 	return importFromFile(srcPath, dstPath);
 }
 
@@ -145,7 +145,7 @@ bool FShapenetImportModule::importFromFile(FString srcPath, FString dstPath)
 
 bool FShapenetImportModule::modelAlreadyImported(FString synset, FString hash)
 {
-	FString path = "/Game/ShapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
+	FString path = "/Game/shapenetObj/" + synset + "/" + hash + "/model_normalized.model_normalized";
 	
 	UStaticMesh* mesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
 
