@@ -198,13 +198,12 @@ void AGymObj::locationSetup(FVector location, json::object_t params)
 	RootComponent->SetWorldLocation(location);
 }
 
-void AGymObj::interactWith(AGymAgent* agent)
-{
 
+bool AGymObj::getInteractsWithGymObjs()
+{
+	return interactsWithGymObjs;
 }
-
-
-void AGymObj::interactWith(GymObj* obj)
+bool AGymObj::getInteractsWithGymAgents()
 {
-
+	return interactsWithGymAgents;
 }

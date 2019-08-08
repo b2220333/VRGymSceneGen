@@ -347,14 +347,6 @@ void ASceneGenUnrealGameModeBase::resetDamping()
 
 
 
-void ASceneGenUnrealGameModeBase::randomizeTextures(AShapenet shapenetActor)
-{
-
-}
-void ASceneGenUnrealGameModeBase::randomizePosition(AShapenet shapenetActor, int32 constraints)
-{
-
-}
 
 
 
@@ -393,6 +385,14 @@ void ASceneGenUnrealGameModeBase::transferParamsBetween(json::object_t &srcObj, 
 
 		if (dstParams.find("physicsEnabled") == dstParams.end() && srcParams.find("physicsEnabled") != srcParams.end()) {
 			dstParams["physicsEnabled"] = srcParams["physicsEnabled"];
+		}
+
+		if (dstParams.find("gravityEnabled") == dstParams.end() && srcParams.find("gravityEnabled") != srcParams.end()) {
+			dstParams["gravityEnabled"] = srcParams["gravityEnabled"];
+		}
+
+		if (dstParams.find("globalScale") == dstParams.end() && srcParams.find("globalScale") != srcParams.end()) {
+			dstParams["globalScale"] = srcParams["globalScale"];
 		}
 
 		if (dstParams.find("useRandomTextures") == dstParams.end() && srcParams.find("useRandomTextures") != srcParams.end()) {
@@ -528,11 +528,69 @@ json::array_t ASceneGenUnrealGameModeBase::parseJsonArrayFromPath(FString path)
 }
 
 
-/*
-void ASceneGenUnrealGameModeBase::interactWithinteractWith(AGymAgent* agent)
+bool ASceneGenUnrealGameModeBase::interact(AGymAgent* agent, AGymObj* obj)
 {
-	for (int32 i = 0; i < interactiveGymObjects.Num(); i++) {
-
-	}
+	// no interaction by default
+	return false;
 }
-*/
+
+bool ASceneGenUnrealGameModeBase::interact(AGymObj* obj, AGymAgent* agent)
+{
+	// no interaction by default
+	return false;
+}
+
+bool ASceneGenUnrealGameModeBase::interact(AGymAgent* agent1, AGymAgent* agent2)
+{
+	// no interaction by default
+	return false;
+}
+
+bool ASceneGenUnrealGameModeBase::interact(AGymObj* obj1, AGymObj* obj2)
+{
+	// no interaction by default
+	return false;
+}
+
+
+TArray<AGymObj*> ASceneGenUnrealGameModeBase::getGymObjects()
+{
+	return gymObjects;
+}
+
+TArray<AGymObj*> ASceneGenUnrealGameModeBase::getInteractiveGymObjects()
+{
+	TArray<AGymObj*> interactiveGymObjects;
+	for (int32 i = 0; i < gymObjects.Num(); i++) {
+		if (gymObjects[i]->getInteractsWithGymObjs() || gymObjects[i]->getInteractsWithGymAgents()) {
+			interactiveGymObjects.Add(gymObjects[i]);
+		}
+	}
+	return interactiveGymObjects;
+}
+
+TArray<AGymObj*> ASceneGenUnrealGameModeBase::getAgentInteractiveGymObjects()
+{
+	TArray<AGymObj*> interactiveGymObjects;
+	for (int32 i = 0; i < gymObjects.Num(); i++) {
+		if (gymObjects[i]->getInteractsWithGymAgents()) {
+			interactiveGymObjects.Add(gymObjects[i]);
+		}
+	}
+	return interactiveGymObjects;
+}
+TArray<AGymObj*> ASceneGenUnrealGameModeBase::getObjectInteractiveGymObjects()
+{
+	TArray<AGymObj*> interactiveGymObjects;
+	for (int32 i = 0; i < gymObjects.Num(); i++) {
+		if (gymObjects[i]->getInteractsWithGymObjs()) {
+			interactiveGymObjects.Add(gymObjects[i]);
+		}
+	}
+	return interactiveGymObjects;
+}
+
+TArray<AGymAgent*> ASceneGenUnrealGameModeBase::getGymAgents()
+{
+	return gymAgents;
+}

@@ -12,6 +12,34 @@ class SCENEGENUNREAL_API AGymAgent : public APawn
 {
 	GENERATED_BODY()
 
+	/*
+		Parent class for all agents
+
+		GymAgent (Only for objects not in Shapenet, Partnet, Wall, or Lighting)
+		|
+		|___GDemoAgent (For Muri Demo)
+		|
+		|___GRobotAgent
+		|	|___GRBaxterAgent
+		|	|
+		|	.
+		|	.
+		|	.
+		|
+		|___GVehicleAgent
+		|	|___GCarAgent
+		|	|___GPlaneAgent
+		|	|___GHelicopterAgent
+		|	|
+		|	.
+		|	.
+		|	.
+		.
+		.
+		.
+
+
+	*/
 public:
 	// Sets default values for this pawn's properties
 	AGymAgent();
@@ -40,11 +68,7 @@ public:
 	// sets mesh of agent
 	void setMesh(FString path);
 
-	// interaction with a gym agent
-	void interactWith(class AGymAgent* agent);
-
-	// interaction with a gym obj
-	void interactWith(class GymObj* obj);
+	UMeshComponent* getMesh();
 
 private:
 

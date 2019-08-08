@@ -30,14 +30,10 @@ public:
 	void spawnShapenetActors();
 
 	FString partnetDir = "D://data/data_v0";
+	FString shapenetDir = "D://data/ShapeNetCore.v2";
 
 	TArray<AShapenet*> shapenetActors;
 	
-
-	void randomizeTextures(AShapenet shapenetActor);
-
-	void randomizePosition(AShapenet shapenetActor, int32 constraints);
-
 	
 
 	// spawns a shapenet actor group from json, recursively spawns all children
@@ -85,11 +81,33 @@ public:
 	//utility function for parsing json array file
 	json::array_t parseJsonArrayFromPath(FString path);
 
+	// agent interacts with object
+	virtual bool interact(AGymAgent* agent, AGymObj* obj);
 
-	void interact(AGymAgent* agent);
+	// object interacts with agent (different from reverse to allow for asymmetrial interaction
+	virtual bool interact(AGymObj* obj, AGymAgent* agent);
+
+	// interaction bewteen two agents
+	virtual bool interact(AGymAgent* agent1, AGymAgent* agent2);
+
+	// interaction between two objects
+	virtual bool interact(AGymObj* obj1, AGymObj* obj2);
+
+	// returns gym objects in game
+	TArray<AGymObj*> getGymObjects();
+	
+	// returns gym objects with interaction enabled
+	TArray<AGymObj*> getInteractiveGymObjects();
+	TArray<AGymObj*> getAgentInteractiveGymObjects();
+	TArray<AGymObj*> getObjectInteractiveGymObjects();
+	
+	// returns gym agents in game
+	TArray<AGymAgent*> getGymAgents();
 
 private:
+	// objects in game
 	TArray<AGymObj*> gymObjects;
-	TArray<AGymObj*> interactiveGymObjects;
+
+	// agents in game
 	TArray<AGymAgent*> gymAgents;
 };

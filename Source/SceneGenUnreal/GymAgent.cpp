@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GymAgent.h"
-
+#include "SceneGenUnrealGameModeBase.h"
 
 // Sets default values
 AGymAgent::AGymAgent()
@@ -56,16 +56,21 @@ void AGymAgent::MoveRight(float Value)
 
 void AGymAgent::interact()
 {
+	ASceneGenUnrealGameModeBase* gameMode = GetWorld()->GetAuthGameMode<ASceneGenUnrealGameModeBase>();
+	TArray<AGymObj*> gymObjects = gameMode->getAgentInteractiveGymObjects();
 	
+	// pickup object if close enough
+	for (int32 i = 0; i < gymObjects.Num(); i++) {
+		FVector objLocation = gymObjects[i]->GetActorLocation();
+		if (FVector::Dist(objLocation, GetActorLocation()) < 50) {
+			// game mode handles interaction mechanics
+			gameMode->interact(this, gymObjects[i]);
+		}
+	}
+
 }
 
-void AGymAgent::interactWith(AGymAgent* agent)
+UMeshComponent* AGymAgent::getMesh()
 {
-
-}
-
-
-void AGymAgent::interactWith(GymObj* obj)
-{
-
+	return baseMesh;
 }
