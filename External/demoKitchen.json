@@ -1,0 +1,41 @@
+{
+	"name" : "muriDemo",
+	"xWidth" : 1000,
+	"yWidth": 1000,
+	"zWidth": 1000,
+	"shapenetActorGroups" : [
+		{
+			"name" : "diningArea"
+		},
+		{
+			"name" : "cookingArea",
+			"childShapenetActorGroups" : [
+				{
+					"name" : "counterArea",
+					"shapenetActors": [
+						{
+							"name" : "ingredient1"
+						},
+						{
+							"name" : "ingredient2"
+						},
+						{
+							"name" : "ingredient3"
+						}
+					]
+				},
+				{
+					"name" : "heatSourceArea",
+					"shapenetActors" : [
+						{
+							"name" : "heatSource"
+						},
+						{
+							"name" : "waterSource"
+						}
+					],
+				}
+			]
+		}
+	]
+}

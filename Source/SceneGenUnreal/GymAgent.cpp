@@ -29,30 +29,9 @@ void AGymAgent::Tick(float DeltaTime)
 void AGymAgent::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAxis("MoveForward", this, &AGymAgent::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AGymAgent::MoveRight);
-
 	PlayerInputComponent->BindAction("interact", IE_Pressed, this, &AGymAgent::interact);
 }
 
-void AGymAgent::MoveForward(float Value)
-{
-	if (Value != 0.0f)
-	{
-		// add movement in that direction
-		AddMovementInput(GetActorForwardVector(), Value);
-	}
-}
-
-void AGymAgent::MoveRight(float Value)
-{
-	if (Value != 0.0f)
-	{
-		// add movement in that direction
-		AddMovementInput(GetActorRightVector(), Value);
-	}
-}
 
 void AGymAgent::interact()
 {
@@ -68,9 +47,4 @@ void AGymAgent::interact()
 		}
 	}
 
-}
-
-UMeshComponent* AGymAgent::getMesh()
-{
-	return baseMesh;
 }

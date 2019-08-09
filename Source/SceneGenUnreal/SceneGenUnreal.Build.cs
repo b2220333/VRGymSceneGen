@@ -8,7 +8,7 @@ public class SceneGenUnreal : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "FBX", "Json", "JsonUtilities" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "FBX", "Json", "JsonUtilities", "HeadMountedDisplay" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "FBX", "Projects"  });
 

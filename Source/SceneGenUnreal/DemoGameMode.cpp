@@ -5,3 +5,7 @@
 
 
 
+void ADemoGameMode::distributeReward(AGDemoAgent* agent)
+{
+	return;
+}

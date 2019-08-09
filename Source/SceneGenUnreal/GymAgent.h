@@ -13,26 +13,26 @@ class SCENEGENUNREAL_API AGymAgent : public APawn
 	GENERATED_BODY()
 
 	/*
-		Parent class for all agents
-
-		GymAgent (Only for objects not in Shapenet, Partnet, Wall, or Lighting)
+		GymAgent (Parent class for all agents)
 		|
 		|___GDemoAgent (For Muri Demo)
 		|
-		|___GRobotAgent
-		|	|___GRBaxterAgent
+		|___GPhysicalAgent (Agents with physical properties e.g. movement interaction with other physical actors
+		|	|___GRobotAgent
+		|	|	|___GRBaxterAgent
+		|	|	|
+		|	|	.
+		|	|	.
+		|	|	.
 		|	|
-		|	.
-		|	.
-		|	.
-		|
-		|___GVehicleAgent
-		|	|___GCarAgent
-		|	|___GPlaneAgent
-		|	|___GHelicopterAgent
-		|	|
-		|	.
-		|	.
+		|	|___GVehicleAgent
+		|	|	|___GCarAgent
+		|	|	|___GPlaneAgent
+		|	|	|___GHelicopterAgent
+		|	|	|
+		|	|	.
+		|	.	.
+		|	.	.
 		|	.
 		.
 		.
@@ -54,26 +54,28 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	// moves forward when W or up arrow pressed, backward when S or down arrow pressed
-	void MoveForward(float Value);
-
-	// moves right when D or right arrow pressed, left when A or left arrow pressed
-	void MoveRight(float Value);
+	
 
 	// interacts with GymObj if nearby and facing when spacebar pressed
 	void interact();
 
-
 	// sets mesh of agent
 	void setMesh(FString path);
 
-	UMeshComponent* getMesh();
+	
 
 private:
+	// total reward accumulated in current episode
+	float totalCurrentReward;
 
-	UPROPERTY(EditAnywhere)
-	UMeshComponent* baseMesh;
+	// previous rewards of current episode
+	TArray<float> rewardsFromThisEpisode;
+
+	// reward history of previous episodes (all time steps)
+	TArray<TArray<float>> rewardHistory;
+
+	// reward history of previous episodes (accumulated reward)
+	TArray<float> rewardHistoryAccumulated;
 	
 };
 

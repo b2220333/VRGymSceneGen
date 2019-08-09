@@ -594,3 +594,8 @@ TArray<AGymAgent*> ASceneGenUnrealGameModeBase::getGymAgents()
 {
 	return gymAgents;
 }
+
+void ASceneGenUnrealGameModeBase::distributeReward(AGymAgent* agent)
+{
+	return;
+}

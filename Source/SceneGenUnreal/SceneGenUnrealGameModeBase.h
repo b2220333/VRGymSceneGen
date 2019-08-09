@@ -104,8 +104,8 @@ public:
 	// returns gym agents in game
 	TArray<AGymAgent*> getGymAgents();
 
-	// gets reward for current time step
-	float getReward();
+	// gets reward for current time step for agent
+	void distributeReward(AGymAgent* agent);
 
 private:
 	// objects in game
@@ -114,17 +114,7 @@ private:
 	// agents in game
 	TArray<AGymAgent*> gymAgents;
 
-	// total reward accumulated in current episode
-	float totalReward;
-
-	// previous rewards of current episode
-	TArray<float> rewards;
-
-	// reward history of previous episodes (all time steps)
-	TArray<TArray<float>> rewardHistory;
-
-	// reward history of previous episodes (accumulated reward)
-	TArray<float> rewardHistoryAccumulated;
+	
 
 
 };
