@@ -5,7 +5,10 @@
 #include "Runtime/Engine/Classes/Engine/SkeletalMesh.h"
 #include "Runtime/Engine/Classes/GameFramework/SpringArmComponent.h"
 #include "Runtime/Engine/Classes/Camera/CameraComponent.h"
-
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
+#include "Runtime/Engine/Classes/Animation/AnimBlueprint.h"
+#include "Runtime/Engine/Classes/Animation/AnimSequence.h"
+#include "Runtime/HeadMountedDisplay/Public/HeadMountedDisplayFunctionLibrary.h"
 
 AGDemoAgent::AGDemoAgent()
 {
@@ -16,6 +19,11 @@ AGDemoAgent::AGDemoAgent()
 	baseMesh->SetSkeletalMesh(test);
 	baseMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
 	RootComponent = baseMesh;
+
+	
+	
+	
+
 
 	// from third person starter content
 
@@ -42,25 +50,87 @@ AGDemoAgent::AGDemoAgent()
 	
 }
 
+void AGDemoAgent::BeginPlay()
+{
+	// setting animation
+	UE_LOG(LogTemp, Warning, TEXT("Animation here"))
+		const ConstructorHelpers::FObjectFinder<UAnimSequence> AnimObj(TEXT("/Game/Mannequin/Animations/ThirdPersonRun.ThirdPersonRun"));
+
+	if (AnimObj.Succeeded()) {
+		UE_LOG(LogTemp, Warning, TEXT("Animation set"))
+			baseMesh->SetAnimation(AnimObj.Object);
+		baseMesh->PlayAnimation(AnimObj.Object, true);
+	}
+}
+
 void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
+	// Set up gameplay key bindings
+	check(PlayerInputComponent);
+	
 
+	PlayerInputComponent->BindAxis("MoveForward", this, &AGDemoAgent::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AGDemoAgent::MoveRight);
+
+	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
+	// "turn" handles devices that provide an absolute delta, such as a mouse.
+	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("TurnRate", this, &AGDemoAgent::TurnAtRate);
+	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &AGDemoAgent::LookUpAtRate);
+
+
+
+	// VR headset functionality
+	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AGDemoAgent::OnResetVR);
+}
+
+
+void AGDemoAgent::OnResetVR()
+{
+	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
+}
+
+
+
+void AGDemoAgent::TurnAtRate(float Rate)
+{
+	// calculate delta for this frame from the rate information
+	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+}
+
+void AGDemoAgent::LookUpAtRate(float Rate)
+{
+	// calculate delta for this frame from the rate information
+	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
 void AGDemoAgent::MoveForward(float Value)
 {
-	if (Value != 0.0f)
+	if ((Controller != NULL) && (Value != 0.0f))
 	{
-		// add movement in that direction
-		AddMovementInput(GetActorForwardVector(), Value);
+		// find out which way is forward
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get forward vector
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, Value);
 	}
 }
 
 void AGDemoAgent::MoveRight(float Value)
 {
-	if (Value != 0.0f)
+	if ((Controller != NULL) && (Value != 0.0f))
 	{
+		// find out which way is right
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get right vector 
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
-		AddMovementInput(GetActorRightVector(), Value);
+		AddMovementInput(Direction, Value);
 	}
 }

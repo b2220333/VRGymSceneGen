@@ -22,6 +22,8 @@ public:
 	//constructor
 	AGDemoAgent();
 
+	virtual void BeginPlay() override;
+
 	// tries to pickup a gym object e.g. pots, pans, ingredients
 	bool pickUpObject();
 
@@ -83,11 +85,7 @@ protected:
 	 */
 	void LookUpAtRate(float Rate);
 
-	/** Handler for when a touch input begins. */
-	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
-
-	/** Handler for when a touch input stops. */
-	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+	
 
 protected:
 	// APawn interface
