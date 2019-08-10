@@ -9,18 +9,21 @@
 #include "Runtime/Engine/Classes/Animation/AnimBlueprint.h"
 #include "Runtime/Engine/Classes/Animation/AnimSequence.h"
 #include "Runtime/HeadMountedDisplay/Public/HeadMountedDisplayFunctionLibrary.h"
+#include "Runtime/Engine/Classes/Animation/AnimInstance.h"
+#include "Runtime/Engine/Classes/Animation/AnimSingleNodeInstance.h"
+#include "Runtime/Engine/Classes/Animation/AnimationAsset.h"
 
 AGDemoAgent::AGDemoAgent()
 {
+	/*
 	baseMesh = CreateDefaultSubobject <USkeletalMeshComponent>("baseMesh");
 	FString path = "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin";
 	USkeletalMesh* test = Cast<USkeletalMesh>(StaticLoadObject(USkeletalMesh::StaticClass(), nullptr, *path));
 
 	baseMesh->SetSkeletalMesh(test);
-	baseMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+	
 	RootComponent = baseMesh;
 
-	
 	
 	
 
@@ -39,28 +42,61 @@ AGDemoAgent::AGDemoAgent()
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 300.0f; // The camera  follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
+	*/
 	
+	testSwitch = false;
 }
 
 void AGDemoAgent::BeginPlay()
 {
-	// setting animation
-	UE_LOG(LogTemp, Warning, TEXT("Animation here"))
-		const ConstructorHelpers::FObjectFinder<UAnimSequence> AnimObj(TEXT("/Game/Mannequin/Animations/ThirdPersonRun.ThirdPersonRun"));
-
-	if (AnimObj.Succeeded()) {
-		UE_LOG(LogTemp, Warning, TEXT("Animation set"))
-			baseMesh->SetAnimation(AnimObj.Object);
-		baseMesh->PlayAnimation(AnimObj.Object, true);
+	//Super::BeginPlay();
+	
+	FString path = "AnimSequence'/Game/Mannequin/Animations/ThirdPersonWalk.ThirdPersonWalk'B";
+	//UAnimationAsset* animation = Cast<UAnimationAsset>(StaticLoadObject(UAnimationAsset::StaticClass(), nullptr, *path));
+	animation = LoadObject<UAnimationAsset>(nullptr, *path);
+	
+	test->PlayAnimation(animation, true);
+	
+	/*
+	FString path = "AnimSequence'/Game/Mannequin/Animations/ThirdPersonRun.ThirdPersonRun'B";
+	animation = Cast<UAnimationAsset>(StaticLoadObject(UAnimationAsset::StaticClass(), nullptr, *path));
+	if (!animation) {
+		UE_LOG(LogTemp, Warning, TEXT("Could not find animation %s"), *path)
+		return;
 	}
+	
+	
+	//baseMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+	//baseMesh->AnimScriptInstance = &animObj.Object;
+	UE_LOG(LogTemp, Warning, TEXT("Animation set"))
+		
+
+	//bool test = baseMesh->InitializeAnimScriptInstance(true);
+	//baseMesh->AnimScriptInstance = NewObject<UAnimSingleNodeInstance>(baseMesh, UAnimSingleNodeInstance::StaticClass());
+	/*
+	if (!test) {
+		UE_LOG(LogTemp, Warning, TEXT("Failed initialization"))
+		if (!baseMesh->AnimScriptInstance) {
+			UE_LOG(LogTemp, Warning, TEXT("Actually Failed initialization"))
+		}
+	}*/
+	
+	/*
+	//baseMesh->SetAnimation(animation);
+	baseMesh->PlayAnimation(animation, true);
+	//baseMesh->Play(true);
+	*/
+	
+
+
+
 }
 
 void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

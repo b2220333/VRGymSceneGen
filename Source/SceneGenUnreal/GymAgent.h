@@ -59,10 +59,9 @@ public:
 	// interacts with GymObj if nearby and facing when spacebar pressed
 	void interact();
 
-	// sets mesh of agent
-	void setMesh(FString path);
-
-	
+	USkeletalMeshComponent* test;
+	UAnimationAsset* animation;
+	bool testSwitch = true;
 
 private:
 	// total reward accumulated in current episode
@@ -76,6 +75,7 @@ private:
 
 	// reward history of previous episodes (accumulated reward)
 	TArray<float> rewardHistoryAccumulated;
-	
+
+		
 };
 

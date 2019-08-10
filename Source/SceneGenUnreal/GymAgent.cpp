@@ -2,6 +2,8 @@
 
 #include "GymAgent.h"
 #include "SceneGenUnrealGameModeBase.h"
+#include "Runtime/Engine/Classes/Engine/SkeletalMesh.h"
+#include "Runtime/Engine/Classes/Components/SkeletalMeshComponent.h"
 
 // Sets default values
 AGymAgent::AGymAgent()
@@ -9,13 +11,25 @@ AGymAgent::AGymAgent()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	test = CreateDefaultSubobject <USkeletalMeshComponent>("baseMesh");
+	FString path = "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin";
+	USkeletalMesh* test2 = Cast<USkeletalMesh>(StaticLoadObject(USkeletalMesh::StaticClass(), nullptr, *path));
+
+	test->SetSkeletalMesh(test2);
+
+	RootComponent = test;
 }
 
 // Called when the game starts or when spawned
 void AGymAgent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	FString path = "AnimSequence'/Game/Mannequin/Animations/ThirdPersonWalk.ThirdPersonWalk'B";
+	animation = Cast<UAnimationAsset>(StaticLoadObject(UAnimationAsset::StaticClass(), nullptr, *path));
+	if(testSwitch) {
+		test->PlayAnimation(animation, true);
+	}
 }
 
 // Called every frame

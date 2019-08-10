@@ -36,8 +36,12 @@ public:
 private:
 	bool isHoldingObject;
 
-	UPROPERTY(EditAnywhere)
+	//UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* baseMesh;
+
+	//UPROPERTY(EditAnywhere)
+	UAnimationAsset *animation;
+
 
 
 
