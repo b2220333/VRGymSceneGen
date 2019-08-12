@@ -33,14 +33,16 @@ public:
 	// releases an object with an initial velocity forward
 	bool throwObject(float velocity);
 
+	USkeletalMeshComponent* baseMesh;
+	UAnimationAsset *animation;
 private:
 	bool isHoldingObject;
 
 	//UPROPERTY(EditAnywhere)
-	USkeletalMeshComponent* baseMesh;
+	
 
 	//UPROPERTY(EditAnywhere)
-	UAnimationAsset *animation;
+	
 
 
 

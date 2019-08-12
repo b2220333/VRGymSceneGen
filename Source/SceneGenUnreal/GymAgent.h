@@ -59,10 +59,11 @@ public:
 	// interacts with GymObj if nearby and facing when spacebar pressed
 	void interact();
 
+	/*
 	USkeletalMeshComponent* test;
 	UAnimationAsset* animation;
 	bool testSwitch = true;
-
+	*/
 private:
 	// total reward accumulated in current episode
 	float totalCurrentReward;

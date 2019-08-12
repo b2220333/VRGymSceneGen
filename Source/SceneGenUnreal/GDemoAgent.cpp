@@ -15,18 +15,20 @@
 
 AGDemoAgent::AGDemoAgent()
 {
-	/*
+	PrimaryActorTick.bCanEverTick = true;
+	
+	
 	baseMesh = CreateDefaultSubobject <USkeletalMeshComponent>("baseMesh");
 	FString path = "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin";
-	USkeletalMesh* test = Cast<USkeletalMesh>(StaticLoadObject(USkeletalMesh::StaticClass(), nullptr, *path));
+	USkeletalMesh* test2 = Cast<USkeletalMesh>(StaticLoadObject(USkeletalMesh::StaticClass(), nullptr, *path));
 
-	baseMesh->SetSkeletalMesh(test);
+	baseMesh->SetSkeletalMesh(test2);
 	
 	RootComponent = baseMesh;
-
 	
 	
-
+	
+	/*
 
 	// from third person starter content
 
@@ -51,18 +53,18 @@ AGDemoAgent::AGDemoAgent()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	*/
 	
-	testSwitch = false;
+	//testSwitch = false;
 }
 
 void AGDemoAgent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	FString path = "AnimSequence'/Game/Mannequin/Animations/ThirdPersonWalk.ThirdPersonWalk'B";
+	FString path = "AnimSequence'/Game/Mannequin/Animations/ThirdPersonRun.ThirdPersonRun'B";
 	//UAnimationAsset* animation = Cast<UAnimationAsset>(StaticLoadObject(UAnimationAsset::StaticClass(), nullptr, *path));
 	animation = LoadObject<UAnimationAsset>(nullptr, *path);
 	
-	test->PlayAnimation(animation, true);
+	baseMesh->PlayAnimation(animation, true);
 	
 	/*
 	FString path = "AnimSequence'/Game/Mannequin/Animations/ThirdPersonRun.ThirdPersonRun'B";
