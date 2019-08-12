@@ -56,7 +56,7 @@ AGDemoAgent::AGDemoAgent()
 
 void AGDemoAgent::BeginPlay()
 {
-	//Super::BeginPlay();
+	Super::BeginPlay();
 	
 	FString path = "AnimSequence'/Game/Mannequin/Animations/ThirdPersonWalk.ThirdPersonWalk'B";
 	//UAnimationAsset* animation = Cast<UAnimationAsset>(StaticLoadObject(UAnimationAsset::StaticClass(), nullptr, *path));

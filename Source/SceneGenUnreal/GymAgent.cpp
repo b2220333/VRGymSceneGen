@@ -23,13 +23,15 @@ AGymAgent::AGymAgent()
 // Called when the game starts or when spawned
 void AGymAgent::BeginPlay()
 {
+	
 	Super::BeginPlay();
-
+	/*
 	FString path = "AnimSequence'/Game/Mannequin/Animations/ThirdPersonWalk.ThirdPersonWalk'B";
 	animation = Cast<UAnimationAsset>(StaticLoadObject(UAnimationAsset::StaticClass(), nullptr, *path));
 	if(testSwitch) {
 		test->PlayAnimation(animation, true);
 	}
+	*/
 }
 
 // Called every frame
