@@ -152,7 +152,9 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		FVector spawnLocation = FVector(0, 0, 0);
 		FActorSpawnParameters spawnParams;
 		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+
+	//	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		AGWall* spawnedActor = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 		spawnedActor->spawnFloor(xWidth, yWidth);
 	}	
 	
@@ -180,7 +182,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	spawnedLight->GetRootComponent()->SetMobility(EComponentMobility::Movable);
 	*/
 
-	/*
+	
 	FVector spawnLocation = FVector(0, 0, 300);
 	FActorSpawnParameters spawnParams;
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
@@ -189,7 +191,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	//testparams["physicsEnabled"] = false;
 	test->assignMeshFromPath("/Game/partnetOBJ/Chair/36366/new-0.new-0", spawnLocation, testparams);
 	test->assignMeshesFromPath("/Game/partnetOBJ/Chair/36366", spawnLocation, testparams);
-	*/
+	gymObjects.Add(test);
 
 	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &ASceneGenUnrealGameModeBase::resetDamping, 5);
 	
@@ -401,6 +403,10 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 
 	if (success && spawnedObj) {
 		gymObjects.Add(spawnedObj);
+		if (actor["name"].is_string()) {
+			FString displayName = FString(actor["name"].get<json::string_t>().c_str());
+			spawnedObj->SetActorLabel(displayName);
+		}
 		UE_LOG(LogTemp, Warning, TEXT("Spawn Success"))
 	}
 	else {
@@ -410,45 +416,21 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 		UE_LOG(LogTemp, Warning, TEXT("Spawn Failure"))
 	}
 
-	/*
-	FActorSpawnParameters spawnParams;
-	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
-	
-	if (spawnedActor->importNew(spawnLocation, actor["actorParams"])) {
-		shapenetActors.Add(spawnedActor);
-		if (actor["name"].is_string()) {
-			FString displayName = FString(actor["name"].get<json::string_t>().c_str());
-			spawnedActor->SetActorLabel(displayName);
-			UE_LOG(LogTemp, Warning, TEXT("Spawning %s at (%f %f, %f)"), *displayName, spawnLocation.X, spawnLocation.Y, spawnLocation.Z);
-		}
-	} else {
-		spawnedActor->Destroy();
-
-		// try again with lower CoM?
-
-	}
-	*/
 }
 
 
 void ASceneGenUnrealGameModeBase::resetDamping()
 {
-	for (int32 i = 0; i < shapenetActors.Num(); i++) {
-		if (shapenetActors[i]) {
-			shapenetActors[i]->tryRespawnNewCM();
-			if (shapenetActors[i]->getBaseMesh()) {
-				shapenetActors[i]->getBaseMesh()->SetLinearDamping(1);
+	for (int32 i = 0; i < gymObjects.Num(); i++) {
+		if (gymObjects[i]) {
+			if (gymObjects[i]->getBaseMesh()) {
+				gymObjects[i]->getBaseMesh()->SetLinearDamping(0.01);
 			}
 		}
 	}
 	objectsDamped = false;
 	UE_LOG(LogTemp, Warning, TEXT("Ready to run episode"));
 }
-
-
-
-
 
 
 

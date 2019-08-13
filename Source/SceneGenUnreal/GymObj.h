@@ -65,6 +65,9 @@ public:
 	// gets pointer to gym object's base mesh component
 	UStaticMeshComponent* getBaseMesh();
 
+	//sets baseMesh component
+	void setBaseMesh(UStaticMeshComponent* newBaseMesh);
+
 	// get json object of params used to originally import this gym object
 	json::object_t getImportParams();
 

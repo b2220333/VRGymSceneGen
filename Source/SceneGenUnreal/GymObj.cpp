@@ -213,3 +213,8 @@ bool AGymObj::getInteractsWithGymAgents()
 {
 	return interactsWithGymAgents;
 }
+
+void AGymObj::setBaseMesh(UStaticMeshComponent* newBaseMesh)
+{
+	baseMesh = newBaseMesh;
+}

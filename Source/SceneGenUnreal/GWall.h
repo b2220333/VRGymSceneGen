@@ -14,7 +14,7 @@ class SCENEGENUNREAL_API AGWall : public AGymObj
 {
 	GENERATED_BODY()
 
-
+public:
 	bool spawnWall(float xWidth, float yWidth, float zWidth, FTransform wallTransform);
 	bool spawnFloor(float xWidth, float yWidth);
 

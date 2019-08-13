@@ -8,18 +8,19 @@ bool AGWall::spawnWall(float xWidth, float yWidth, float zWidth, FTransform wall
 
 	// spawn floor with x width, y length centered at (0,0,0)
 	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/DefaultFloor.DefaultFloor")));
-	UStaticMeshComponent* baseMeshReference = getBaseMesh();
-	if (staticMeshReference && baseMeshReference) {
-		baseMeshReference = NewObject<UStaticMeshComponent>(this, "BaseMesh");
-		baseMeshReference->SetMobility(EComponentMobility::Movable);
-		RootComponent = baseMeshReference;
+	if (staticMeshReference) {
+		setBaseMesh(NewObject<UStaticMeshComponent>(this, "BaseMesh"));
+		getBaseMesh()->SetMobility(EComponentMobility::Movable);
+		RootComponent = getBaseMesh();
 		RootComponent->SetWorldLocation(FVector(0, 0, 0));
 		RootComponent->SetWorldRotation(FRotator(-90, 0, 0));
 		RootComponent->SetWorldScale3D(FVector(1, xWidth / 256, yWidth / 256));
 		RootComponent->SetMobility(EComponentMobility::Movable);
 		SetActorLabel("SpawnedFloor");
-		baseMeshReference->SetStaticMesh(staticMeshReference);
-		baseMeshReference->RegisterComponent();
+		getBaseMesh()->SetStaticMesh(staticMeshReference);
+		getBaseMesh()->RegisterComponent();
+
+
 
 		return true;
 	}
