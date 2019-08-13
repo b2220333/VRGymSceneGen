@@ -133,6 +133,7 @@ bool AGymObj::setMaterial(FString materialAssetPath)
 	UMaterialInterface* matRef = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *materialAssetPath));
 	if (matRef) {
 		TArray<UStaticMeshComponent*> meshes;
+
 		meshes.Add(baseMesh);
 		meshes.Append(additionalMeshes);
 		for (int32 i = 0; i < meshes.Num(); i++) {

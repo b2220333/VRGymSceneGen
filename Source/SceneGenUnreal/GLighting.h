@@ -2,9 +2,12 @@
 
 #pragma once
 
+#include "Runtime/Engine/Classes/Components/LightComponent.h"
+#include "Runtime/Engine/Classes/Engine/Light.h"
 #include "CoreMinimal.h"
 #include "GymObj.h"
 #include "GLighting.generated.h"
+
 
 /**
  * 
@@ -14,14 +17,24 @@ class SCENEGENUNREAL_API AGLighting : public AGymObj
 {
 	GENERATED_BODY()
 	
-	// testing add light
-	/*
-	FVector lightLocation = FVector(0, 0, 50);
-	FRotator lightRotation = FRotator(90, 0, 0);
-	FActorSpawnParameters lightSpawnParams;
-	ADirectionalLight* spawnedLight = GetWorld()->SpawnActor<ADirectionalLight>(lightLocation, lightRotation, lightSpawnParams);
-	spawnedLight->GetRootComponent()->SetMobility(EComponentMobility::Movable);
-	*/
-	
+public:
+	// spawns a point light
+	bool spawnPointLight(FVector location);
+
+	// spawns a directional lights
+	bool spawnDirectionalLight(FVector location, FRotator rotation);
+
+
+	// getter for lightType
+	FString getLightType();
+
+	// getter for light
+	ULightComponent* getLight();
+
+private:
+	FString lightType = "";
+	ULightComponent* light;
+
+
 	
 };

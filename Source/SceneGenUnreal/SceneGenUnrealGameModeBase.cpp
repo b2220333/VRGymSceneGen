@@ -130,7 +130,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		floor->spawnFloor(xWidth, yWidth);
 		floor->applyDemoWallParams();
 		*/
-		autoSpawnWalls(true, false);
+		autoSpawnWalls(true, true);
 		
 	}	
 	
@@ -150,6 +150,11 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	test->assignMeshFromPath("/Game/partnetOBJ/Chair/36366/new-0.new-0", spawnLocation, testparams);
 	test->assignMeshesFromPath("/Game/partnetOBJ/Chair/36366", spawnLocation, testparams);
 	gymObjects.Add(test);
+
+	// lighting
+	AGLighting* light = GetWorld()->SpawnActor<AGLighting>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+	light->spawnPointLight(FVector(0, 0, 400));
+	gymObjects.Add(light);
 
 	// resets damping after 5 seconds to allow models to settle
 	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &ASceneGenUnrealGameModeBase::resetDamping, 5);
