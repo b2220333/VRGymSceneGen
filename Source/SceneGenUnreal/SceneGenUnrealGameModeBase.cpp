@@ -2,8 +2,6 @@
 
 #include "SceneGenUnrealGameModeBase.h"
 
-#include "Shapenet.h"
-
 #include "Runtime/JsonUtilities/Public/JsonObjectConverter.h"
 #include "Runtime/Core/Public/Misc/FileHelper.h"
 #include "Runtime/Core/Public/Misc/Paths.h"
@@ -145,18 +143,24 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		}
 
 		if (parsed["zWidth"].is_number()) {
-			yWidth = parsed["zWidth"].get<json::number_float_t>();
+			zWidth = parsed["zWidth"].get<json::number_float_t>();
 		}
 
-
+		UE_LOG(LogTemp, Warning, TEXT("Here wtf"))
 		FVector spawnLocation = FVector(0, 0, 0);
 		FActorSpawnParameters spawnParams;
 		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	//	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		UE_LOG(LogTemp, Warning, TEXT("FLOOR HERE"))
 		AGWall* floor = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 		floor->spawnFloor(xWidth, yWidth);
-		floor->applyDemoWallParams();
+		bool test  = floor->applyDemoWallParams();
+		if (test) {
+			UE_LOG(LogTemp, Warning, TEXT("Wood success"))
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("Wood fail"))
+		}
 	}	
 	
 	json::array_t& baseGroups = parsed["shapenetActorGroups"].get_ref<json::array_t&>();
@@ -519,7 +523,6 @@ float ASceneGenUnrealGameModeBase::sampleLocation(json::object_t &location)
 		}
 	}
 	else if (location["gaussian"].is_object()) {
-		UE_LOG(LogTemp, Warning, TEXT("HERE"));
 		if (location["gaussian"]["mean"].is_number() && location["gaussian"]["std"].is_number()) {
 			float mean = location["gaussian"]["mean"].get<json::number_float_t>();
 			float std = location["gaussian"]["std"].get<json::number_float_t>();

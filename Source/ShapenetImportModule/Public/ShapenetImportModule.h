@@ -15,7 +15,6 @@ using json = nlohmann::json;
 #include "Runtime/CoreUObject/Public/UObject/Class.h"
 
 
-#include "Shapenet.h"
 
 
 DECLARE_LOG_CATEGORY_EXTERN(ShapenetImportModule, All, All)

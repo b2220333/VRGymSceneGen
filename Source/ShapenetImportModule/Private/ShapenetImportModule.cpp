@@ -21,8 +21,6 @@
 #include "Editor/UnrealEd/Public/FileHelpers.h"
 
 
-#include "Shapenet.h"
-
 #include "Runtime/JsonUtilities/Public/JsonObjectConverter.h"
 #include "Runtime/Core/Public/GenericPlatform/GenericPlatformFile.h"
 #include "Runtime/Core/Public/HAL/FileManager.h"

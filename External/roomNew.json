@@ -22,6 +22,9 @@
 			"xCenter": -100,
 			"yCenter" : 200,
 			"zCenter" : 0,
+			"actorParams" : {
+				"useRandomTextures" : true
+			},
 			"shapenetActors": [
 				{
 					"name" : "chairForDesk",

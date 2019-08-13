@@ -26,13 +26,14 @@ bool AGWall::spawnFloor(float xWidth, float yWidth)
 	wallTransform.SetTranslation(FVector(0, 0, 0));
 	wallTransform.SetScale3D(FVector(1, xWidth / 256, yWidth / 256));
 
-	SetActorLabel("SpawnedFloor");
+	SetActorLabel("4206969");
 	return spawnWall(wallTransform);
 	
 }
 
 bool AGWall::applyDemoWallParams()
 {
+	
 	return setMaterial(woodMaterialPath);
 }
 

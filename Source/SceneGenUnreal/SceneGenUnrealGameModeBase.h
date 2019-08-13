@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Shapenet.h"
 #include "GymAgent.h"
 
 #include "json.hpp"
@@ -32,7 +31,6 @@ public:
 	FString partnetDir = "D://data/data_v0";
 	FString shapenetDir = "D://data/ShapeNetCore.v2";
 
-	TArray<AShapenet*> shapenetActors;
 	
 	
 
