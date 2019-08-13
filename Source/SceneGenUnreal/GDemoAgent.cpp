@@ -59,11 +59,13 @@ void AGDemoAgent::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	/*
 	FString path = "AnimSequence'/Game/Mannequin/Animations/ThirdPersonRun.ThirdPersonRun'B";
 	//UAnimationAsset* animation = Cast<UAnimationAsset>(StaticLoadObject(UAnimationAsset::StaticClass(), nullptr, *path));
 	animation = LoadObject<UAnimationAsset>(nullptr, *path);
 	
 	baseMesh->PlayAnimation(animation, true);
+	*/
 }
 
 void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -151,5 +153,29 @@ void AGDemoAgent::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
+	}
+}
+
+void AGDemoAgent::playRandomAnimation()
+{
+	TArray<FString> animations = {
+		"ThirdPerson_Jump", "ThirdPersonDrop", "ThirdPersonIdle", "ThirdPersonJump_End","ThirdPersonJump_Loop", 
+		"ThirdPersonJump_Start", "ThirdPersonPickup", "ThirdPersonRun", "ThirdPersonWalk"
+	};
+
+	int32 i = FMath::RandRange(0, animations.Num() - 1);
+	UE_LOG(LogTemp, Warning, TEXT("Trying to play animation: %s"), *animations[i])
+	FString path = "AnimSequence'/Game/Mannequin/Animations/" + animations[i] + "." + animations[i] + "'B";
+	playAnimation(path);
+
+
+}
+
+
+void AGDemoAgent::playAnimation(FString animationAssetPath)
+{
+	animation = LoadObject<UAnimationAsset>(nullptr, *animationAssetPath);
+	if (animation && baseMesh) {
+		baseMesh->PlayAnimation(animation, true);
 	}
 }

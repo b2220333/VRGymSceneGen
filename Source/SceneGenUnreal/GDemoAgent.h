@@ -36,19 +36,17 @@ public:
 	USkeletalMeshComponent* baseMesh;
 	UAnimationAsset *animation;
 
+
+	void playRandomAnimation();
+
+	void playAnimation(FString animationAssetPath);
+
+
 private:
 	bool isHoldingObject;
 
 	AGymObject* heldObject;
-	//UPROPERTY(EditAnywhere)
 	
-
-	//UPROPERTY(EditAnywhere)
-	
-
-
-
-
 
 	// from  third person starter content
 private:

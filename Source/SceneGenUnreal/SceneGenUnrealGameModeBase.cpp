@@ -32,6 +32,7 @@ using json = nlohmann::json;
 #include "GWall.h"
 #include "Runtime/Engine/Classes/Materials/Material.h"
 #include "Runtime/AssetRegistry/Public/AssetRegistryModule.h"
+#include "GDemoAgent.h"
 
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 {
@@ -121,17 +122,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		if (parsed["zWidth"].is_number()) {
 			zWidth = parsed["zWidth"].get<json::number_float_t>();
 		}
-
-		/*
-		FVector spawnLocation = FVector(0, 0, 0);
-		FActorSpawnParameters spawnParams;
-		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		AGWall* floor = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
-		floor->spawnFloor(xWidth, yWidth);
-		floor->applyDemoWallParams();
-		*/
 		autoSpawnWalls(true, true);
-		
 	}	
 	
 	json::array_t& baseGroups = parsed["shapenetActorGroups"].get_ref<json::array_t&>();
@@ -140,10 +131,21 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	}
 	objectsDamped = true;
 
-	// testing partnet models
-	FVector spawnLocation = FVector(0, 0, 300);
+	// spawn params for test objects
 	FActorSpawnParameters spawnParams;
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+	// spawn demo agent 
+	FVector agentSpawnLoc(310, -80, 0);
+	AGDemoAgent* demoAgent = GetWorld()->SpawnActor<AGDemoAgent>(agentSpawnLoc, FRotator::ZeroRotator, spawnParams);
+	if (demoAgent) {
+		demoAgent->playRandomAnimation();
+		primaryAgent = demoAgent;
+		gymAgents.Add(demoAgent);
+	}
+
+	// testing partnet models
+	FVector spawnLocation = FVector(0, 0, 300);
 	AGymObj* test = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 	json::object_t testparams;
 	//testparams["physicsEnabled"] = false;
@@ -162,7 +164,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 void ASceneGenUnrealGameModeBase::autoSpawnWalls(bool autoSpawnSideWalls, bool autoSpawnCeiling)
 {
-	// always spawn floor first 
+	// -z always spawn floor first 
 	float xWidth = 0;
 	float yWidth = 0;
 	if (parsed.is_object() && parsed["xWidth"].is_number() && parsed["yWidth"].is_number()) {
@@ -210,8 +212,7 @@ void ASceneGenUnrealGameModeBase::autoSpawnWalls(bool autoSpawnSideWalls, bool a
 		wall->spawnWall(wallTransform);
 		wall->applyDemoWallParams();
 
-		//-y
-
+		// -y
 		wall = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 		wallTransform.SetRotation(FQuat(FRotator(0, -90, 0)));
 		wallTransform.SetTranslation(FVector(0, -yWidth/2, height / 2));
@@ -220,7 +221,6 @@ void ASceneGenUnrealGameModeBase::autoSpawnWalls(bool autoSpawnSideWalls, bool a
 		wall->applyDemoWallParams();
 
 		//+y
-
 		wall = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 		wallTransform.SetRotation(FQuat(FRotator(0, 90, 0)));
 		wallTransform.SetTranslation(FVector(0, yWidth / 2, height / 2));
@@ -230,7 +230,7 @@ void ASceneGenUnrealGameModeBase::autoSpawnWalls(bool autoSpawnSideWalls, bool a
 
 	}
 
-	// spawn ceiling 
+	//+z spawn ceiling 
 	if (autoSpawnCeiling) {
 		FVector spawnLocation = FVector(0, 0, 0);
 		FActorSpawnParameters spawnParams;
