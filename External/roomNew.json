@@ -2,7 +2,7 @@
 	"name": "bedroom",
 	"xWidth" : 1000,
 	"yWidth": 1000,
-	"zWidth": 1000,
+	"zWidth": 500,
 	"autoGenWalls" : true,
 	"shapenetActorGroups" : [
 		{

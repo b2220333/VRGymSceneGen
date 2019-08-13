@@ -57,17 +57,6 @@ void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
 
 void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 {
-	// testing 
-
-	
-
-
-	/*
-	TArray<UMaterialInterface*> materialAssets;
-	TArray<FString> paths = { "/Engine/" };
-	AGymObj::getAssetsOfClass<UMaterialInterface>(materialAssets, paths, true, true);
-	*/
-	
 	for (int32 i = 0; i < gymObjects.Num(); i++) {
 		if (gymObjects[i]) {
 			gymObjects[i]->Destroy();
@@ -83,17 +72,6 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	if (primaryAgent) {
 		primaryAgent = nullptr;
 	}
-
-
-	/*
-	for (int32 i = 0; i < shapenetActors.Num(); i++) {
-		if (shapenetActors[i]) {
-			shapenetActors[i]->Destroy();
-		}
-	}
-	shapenetActors.Empty();
-	*/
-
 
 	FString jsonPath = FPaths::ProjectDir() + "External/roomNew.json";
 
@@ -112,8 +90,6 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		std::string dump = parsed.dump(4);
 		FString dumpF = FString(dump.c_str());
 		UE_LOG(LogTemp, Warning, TEXT("Testing new parse %s"), *dumpF);
-
-
 
 		json::array_t& baseGroups = parsed["shapenetActorGroups"].get_ref<json::array_t&>();
 
@@ -146,21 +122,16 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 			zWidth = parsed["zWidth"].get<json::number_float_t>();
 		}
 
-		UE_LOG(LogTemp, Warning, TEXT("Here wtf"))
+		/*
 		FVector spawnLocation = FVector(0, 0, 0);
 		FActorSpawnParameters spawnParams;
 		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-		UE_LOG(LogTemp, Warning, TEXT("FLOOR HERE"))
 		AGWall* floor = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 		floor->spawnFloor(xWidth, yWidth);
-		bool test  = floor->applyDemoWallParams();
-		if (test) {
-			UE_LOG(LogTemp, Warning, TEXT("Wood success"))
-		}
-		else {
-			UE_LOG(LogTemp, Warning, TEXT("Wood fail"))
-		}
+		floor->applyDemoWallParams();
+		*/
+		autoSpawnWalls(false, true);
+		
 	}	
 	
 	json::array_t& baseGroups = parsed["shapenetActorGroups"].get_ref<json::array_t&>();
@@ -169,16 +140,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	}
 	objectsDamped = true;
 
-	// testing add light
-	/*
-	FVector lightLocation = FVector(0, 0, 50);
-	FRotator lightRotation = FRotator(90, 0, 0);
-	FActorSpawnParameters lightSpawnParams;
-	ADirectionalLight* spawnedLight = GetWorld()->SpawnActor<ADirectionalLight>(lightLocation, lightRotation, lightSpawnParams);
-	spawnedLight->GetRootComponent()->SetMobility(EComponentMobility::Movable);
-	*/
-
-	
+	// testing partnet models
 	FVector spawnLocation = FVector(0, 0, 300);
 	FActorSpawnParameters spawnParams;
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
@@ -189,9 +151,65 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	test->assignMeshesFromPath("/Game/partnetOBJ/Chair/36366", spawnLocation, testparams);
 	gymObjects.Add(test);
 
+	// resets damping after 5 seconds to allow models to settle
 	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &ASceneGenUnrealGameModeBase::resetDamping, 5);
-	
 }
+
+void ASceneGenUnrealGameModeBase::autoSpawnWalls(bool autoSpawnSideWalls, bool autoSpawnCeiling)
+{
+	// always spawn floor first 
+	float xWidth = 0;
+	float yWidth = 0;
+	if (parsed.is_object() && parsed["xWidth"].is_number() && parsed["yWidth"].is_number()) {
+		xWidth = parsed["xWidth"].get<json::number_float_t>();
+		yWidth = parsed["xWidth"].get<json::number_float_t>();
+	}
+	FVector spawnLocation = FVector(0, 0, 0);
+	FActorSpawnParameters spawnParams;
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	AGWall* floor = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+	floor->spawnFloor(xWidth, yWidth);
+	floor->applyDemoWallParams();
+
+	float height = 0;
+	if (autoSpawnSideWalls || autoSpawnCeiling) {
+		if (parsed.is_object() && parsed["zWidth"].is_number()) {
+			height = parsed["zWidth"].get<json::number_float_t>();
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("Cannot auto spawn side walls or ceiling since no zwidth specified"))
+			return;
+		}
+	}
+
+	// spawn side walls
+	if (autoSpawnSideWalls) {
+		FVector spawnLocation = FVector(0, 0, 0);
+		FActorSpawnParameters spawnParams;
+		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		AGWall* wall = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		FTransform wallTransform;
+		wall->spawnWall(wallTransform);
+		wall->applyDemoWallParams();
+	}
+
+	// spawn ceiling 
+	if (autoSpawnCeiling) {
+		FVector spawnLocation = FVector(0, 0, 0);
+		FActorSpawnParameters spawnParams;
+		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		AGWall* wall = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		FTransform wallTransform;
+		wallTransform.SetRotation(FQuat(FRotator(90, 0, 0)));
+		wallTransform.SetTranslation(FVector(0, 0, height));
+		wallTransform.SetScale3D(FVector(1, xWidth / 256, yWidth / 256));
+
+		wall->spawnWall(wallTransform);
+		wall->applyDemoWallParams();
+	}
+}
+
+
 
 void ASceneGenUnrealGameModeBase::listDescendants(json::object_t& actorGroup)
 {

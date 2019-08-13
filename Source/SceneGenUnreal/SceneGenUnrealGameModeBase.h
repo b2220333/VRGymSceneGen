@@ -70,7 +70,8 @@ public:
 
 	FTimerHandle FuzeTimerHandle;
 
-	void spawnWalls();
+	// automatically spawns floor also spawns ceiling and sidewalls if parameters set to true, assumes rectangular walls
+	void autoSpawnWalls(bool autoSpawnSideWalls=false, bool autoSpawnCeiling=false);
 
 
 	// utility function for parsing json object file
