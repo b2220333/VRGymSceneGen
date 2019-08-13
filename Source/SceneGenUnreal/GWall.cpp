@@ -3,25 +3,17 @@
 #include "GWall.h"
 #include "Runtime/Engine/Classes/Engine/StaticMesh.h"
 
-bool AGWall::spawnWall(float xWidth, float yWidth, float zWidth, FTransform wallTransform)
+bool AGWall::spawnWall(FTransform wallTransform)
 {
-
-	// spawn floor with x width, y length centered at (0,0,0)
 	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, TEXT("/Game/DefaultFloor.DefaultFloor")));
 	if (staticMeshReference) {
 		setBaseMesh(NewObject<UStaticMeshComponent>(this, "BaseMesh"));
 		getBaseMesh()->SetMobility(EComponentMobility::Movable);
 		RootComponent = getBaseMesh();
-		RootComponent->SetWorldLocation(FVector(0, 0, 0));
-		RootComponent->SetWorldRotation(FRotator(-90, 0, 0));
-		RootComponent->SetWorldScale3D(FVector(1, xWidth / 256, yWidth / 256));
+		RootComponent->SetWorldTransform(wallTransform);
 		RootComponent->SetMobility(EComponentMobility::Movable);
-		SetActorLabel("SpawnedFloor");
 		getBaseMesh()->SetStaticMesh(staticMeshReference);
 		getBaseMesh()->RegisterComponent();
-
-
-
 		return true;
 	}
 	return false;
@@ -30,7 +22,17 @@ bool AGWall::spawnWall(float xWidth, float yWidth, float zWidth, FTransform wall
 bool AGWall::spawnFloor(float xWidth, float yWidth)
 {
 	FTransform wallTransform;
+	wallTransform.SetRotation(FQuat(FRotator(-90, 0, 0)));
+	wallTransform.SetTranslation(FVector(0, 0, 0));
+	wallTransform.SetScale3D(FVector(1, xWidth / 256, yWidth / 256));
 
-	return spawnWall(xWidth, yWidth, 0, wallTransform);
+	SetActorLabel("SpawnedFloor");
+	return spawnWall(wallTransform);
+	
+}
+
+bool AGWall::applyDemoWallParams()
+{
+	return setMaterial(woodMaterialPath);
 }
 

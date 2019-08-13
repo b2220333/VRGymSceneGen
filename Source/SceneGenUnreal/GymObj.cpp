@@ -128,6 +128,25 @@ UMaterialInterface* AGymObj::getRandomMaterialFrom(TArray<FString> paths,  bool 
 	return nullptr;
 }
 
+bool AGymObj::setMaterial(FString materialAssetPath)
+{
+	UMaterialInterface* matRef = Cast<UMaterialInterface>(StaticLoadObject(UMaterialInterface::StaticClass(), nullptr, *materialAssetPath));
+	if (matRef) {
+		TArray<UStaticMeshComponent*> meshes;
+		meshes.Add(baseMesh);
+		meshes.Append(additionalMeshes);
+		for (int32 i = 0; i < meshes.Num(); i++) {
+			int32 numMats = meshes[i]->GetNumMaterials();
+			for (int32 j = 0; j < numMats; j++) {
+				meshes[i]->SetMaterial(j, matRef);
+			}
+		}
+
+		return true;
+	}
+	return false;
+}
+
 template<typename T>
 static void AGymObj::getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> paths, bool recursiveClasses, bool recursivePaths)
 {

@@ -154,8 +154,9 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	//	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
-		AGWall* spawnedActor = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
-		spawnedActor->spawnFloor(xWidth, yWidth);
+		AGWall* floor = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		floor->spawnFloor(xWidth, yWidth);
+		floor->applyDemoWallParams();
 	}	
 	
 	json::array_t& baseGroups = parsed["shapenetActorGroups"].get_ref<json::array_t&>();
@@ -163,15 +164,6 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		importShapenetActorGroup(*it, FVector(0, 0, 0));
 	}
 	objectsDamped = true;
-	
-
-	/*
-	for (int32 i = 5; i > 0; i--) {
-		UE_LOG(LogTemp, Warning, TEXT("Waiting for actors to settle %d"), i);
-		FPlatformProcess::Sleep(1);
-	}
-	resetDamping();
-	*/
 
 	// testing add light
 	/*

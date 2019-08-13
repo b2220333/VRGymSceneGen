@@ -74,6 +74,9 @@ public:
 	// gets random material from game content directory path
 	UMaterialInterface* getRandomMaterialFrom(TArray<FString> paths,  bool recursivePaths = false);
 
+	// sets material of mesh
+	bool setMaterial(FString materialAssetPath);
+
 	// gets all assets of class type T
 	template<typename T>
 	static void getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> paths = { }, bool recursiveClasses = false, bool recursivePaths = false);
