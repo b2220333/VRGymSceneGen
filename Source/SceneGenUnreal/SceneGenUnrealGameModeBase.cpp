@@ -130,7 +130,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		floor->spawnFloor(xWidth, yWidth);
 		floor->applyDemoWallParams();
 		*/
-		autoSpawnWalls(false, true);
+		autoSpawnWalls(true, false);
 		
 	}	
 	
@@ -187,10 +187,42 @@ void ASceneGenUnrealGameModeBase::autoSpawnWalls(bool autoSpawnSideWalls, bool a
 		FVector spawnLocation = FVector(0, 0, 0);
 		FActorSpawnParameters spawnParams;
 		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		
+		// -x
 		AGWall* wall = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 		FTransform wallTransform;
+		wallTransform.SetRotation(FQuat(FRotator(180, 0, 0)));
+		wallTransform.SetTranslation(FVector(-xWidth/2, 0, height / 2));
+		wallTransform.SetScale3D(FVector(1, xWidth / 256, height / 256));
 		wall->spawnWall(wallTransform);
 		wall->applyDemoWallParams();
+
+		// +x
+		wall = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		wallTransform.SetRotation(FQuat(FRotator(0, 0, 0)));
+		wallTransform.SetTranslation(FVector(xWidth / 2, 0, height / 2));
+		wallTransform.SetScale3D(FVector(1, xWidth / 256, height / 256));
+		wall->spawnWall(wallTransform);
+		wall->applyDemoWallParams();
+
+		//-y
+
+		wall = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		wallTransform.SetRotation(FQuat(FRotator(0, -90, 0)));
+		wallTransform.SetTranslation(FVector(0, -yWidth/2, height / 2));
+		wallTransform.SetScale3D(FVector(1, xWidth / 256, height / 256));
+		wall->spawnWall(wallTransform);
+		wall->applyDemoWallParams();
+
+		//+y
+
+		wall = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		wallTransform.SetRotation(FQuat(FRotator(0, 90, 0)));
+		wallTransform.SetTranslation(FVector(0, yWidth / 2, height / 2));
+		wallTransform.SetScale3D(FVector(1, xWidth / 256, height / 256));
+		wall->spawnWall(wallTransform);
+		wall->applyDemoWallParams();
+
 	}
 
 	// spawn ceiling 
