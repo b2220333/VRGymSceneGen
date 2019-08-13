@@ -6,9 +6,8 @@
 #include "GymAgent.h"
 #include "GDemoAgent.generated.h"
 
-/**
- * 
- */
+class AGymObject;
+
 UCLASS()
 class SCENEGENUNREAL_API AGDemoAgent : public AGymAgent
 {
@@ -32,12 +31,15 @@ public:
 
 	// releases an object with an initial velocity forward
 	bool throwObject(float velocity);
-
+	
+	// must be public for animation to work for some reason
 	USkeletalMeshComponent* baseMesh;
 	UAnimationAsset *animation;
+
 private:
 	bool isHoldingObject;
 
+	AGymObject* heldObject;
 	//UPROPERTY(EditAnywhere)
 	
 

@@ -114,6 +114,10 @@ private:
 	// agents in game
 	TArray<AGymAgent*> gymAgents;
 
+	// primary agent, automatically possesd by player
+	AGymAgent* primaryAgent;
+
+
 	
 
 

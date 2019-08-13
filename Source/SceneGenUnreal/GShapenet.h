@@ -16,6 +16,7 @@ class SCENEGENUNREAL_API AGShapenet : public AGymObj
 {
 	GENERATED_BODY()
 	
+public:
 	// imports  mesh from wordnet synset and model ID
 	bool assignMeshFromSynsetAndModelID(FString synset, FString modelID, FVector location, json::object_t params);
 

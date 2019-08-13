@@ -14,6 +14,7 @@ class SCENEGENUNREAL_API AGPartnet : public AGymObj
 {
 	GENERATED_BODY()
 
+public:
 	// assigns mesh from partnet category and annotation id
 	bool assignMeshFromCategoryAndAnnotationID(FString category, FString annotationID, FVector location, json::object_t params);
 

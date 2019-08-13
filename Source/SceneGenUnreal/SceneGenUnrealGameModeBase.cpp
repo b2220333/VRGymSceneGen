@@ -27,6 +27,11 @@ using json = nlohmann::json;
 #include "Runtime/Engine/Classes/Engine/DirectionalLight.h" 
 #include "Runtime/Engine/Classes/Engine/PointLight.h"
 #include "GymObj.h"
+#include "GymAgent.h"
+#include "GShapenet.h"
+#include "GPartnet.h"
+#include "GLighting.h"
+#include "GWall.h"
 #include "Runtime/Engine/Classes/Materials/Material.h"
 #include "Runtime/AssetRegistry/Public/AssetRegistryModule.h"
 
@@ -65,15 +70,32 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	AGymObj::getAssetsOfClass<UMaterialInterface>(materialAssets, paths, true, true);
 	*/
 	
+	for (int32 i = 0; i < gymObjects.Num(); i++) {
+		if (gymObjects[i]) {
+			gymObjects[i]->Destroy();
+		}
+	}
+	gymObjects.Empty();
+	for (int32 i = 0; i < gymAgents.Num(); i++) {
+		if (gymAgents[i]) {
+			gymAgents[i]->Destroy();
+		}
+	}
+	gymObjects.Empty();
+	if (primaryAgent) {
+		primaryAgent = nullptr;
+	}
 
 
-
+	/*
 	for (int32 i = 0; i < shapenetActors.Num(); i++) {
 		if (shapenetActors[i]) {
 			shapenetActors[i]->Destroy();
 		}
 	}
 	shapenetActors.Empty();
+	*/
+
 
 	FString jsonPath = FPaths::ProjectDir() + "External/roomNew.json";
 
@@ -158,7 +180,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	spawnedLight->GetRootComponent()->SetMobility(EComponentMobility::Movable);
 	*/
 
-
+	/*
 	FVector spawnLocation = FVector(0, 0, 300);
 	FActorSpawnParameters spawnParams;
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
@@ -167,7 +189,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	//testparams["physicsEnabled"] = false;
 	test->assignMeshFromPath("/Game/partnetOBJ/Chair/36366/new-0.new-0", spawnLocation, testparams);
 	test->assignMeshesFromPath("/Game/partnetOBJ/Chair/36366", spawnLocation, testparams);
-
+	*/
 
 	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &ASceneGenUnrealGameModeBase::resetDamping, 5);
 	
@@ -309,7 +331,86 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 		relZ = sampleLocation(actor["zDist"].get_ref<json::object_t&>());
 	}
 
-	FVector spawnLocation = FVector(origin.X + relX, origin.Y + relY, origin.Z + relZ) * FVector(-1.0, 1.0, 1.0);
+	//FVector spawnLocation = FVector(origin.X + relX, origin.Y + relY, origin.Z + relZ) * FVector(-1.0, 1.0, 1.0);
+	FVector spawnLocation = FVector(origin.X + relX, origin.Y + relY, 500) * FVector(-1.0, 1.0, 1.0);
+
+	if (actor["name"].is_string()) {
+		FString displayName = FString(actor["name"].get<json::string_t>().c_str());
+		UE_LOG(LogTemp, Warning, TEXT("Spawning %s at (%f %f, %f)"), *displayName, spawnLocation.X, spawnLocation.Y, spawnLocation.Z);
+	}
+
+	if (!actor["type"].is_string()) {
+		return;
+	}
+	FActorSpawnParameters spawnParams;
+	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	FString type = FString(actor["type"].get<json::string_t>().c_str());
+	bool success = false;
+	AGymObj* spawnedObj = nullptr;
+	if (actor["actorParams"].is_object()) {
+		json::object_t& actorParams = actor["actorParams"].get_ref<json::object_t&>();
+		if (type.ToLower() == "GymObj") {
+			AGymObj* spawnedGymObj = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+			if (actorParams["meshPath"].is_string()) {
+				FString path = FString(actorParams["meshPath"].get<json::string_t>().c_str());
+				success = spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
+			}
+			spawnedObj = spawnedGymObj;
+		}
+		else if (type.ToLower() == "GShapenet") {
+			AGShapenet* spawnedGymShapenetObj = GetWorld()->SpawnActor<AGShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+			if (actorParams["shapenetSynset"].is_string() && actorParams["shapenetHash"].is_string()) {
+				FString synset = FString(actorParams["shapenetSynset"].get<json::string_t>().c_str());
+				FString id = FString(actorParams["shapenetHash"].get<json::string_t>().c_str());
+				success = spawnedGymShapenetObj->assignMeshFromSynsetAndModelID(synset, id, spawnLocation, actorParams);
+			}
+			else if (actorParams["shapenetSynset"].is_string()) {
+				FString synset = FString(actorParams["shapenetSynset"].get<json::string_t>().c_str());
+				success = spawnedGymShapenetObj->assignRandomFromSynset(synset, spawnLocation, actorParams);
+			}
+			spawnedObj = spawnedGymShapenetObj;
+		}
+		else if (type.ToLower() == "GPartnet") {
+			AGPartnet* spawnedGymPartnetObj = GetWorld()->SpawnActor<AGPartnet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+
+			if (actorParams["category"].is_string() && actorParams["annotatrioID"].is_string()) {
+				FString category = FString(actorParams["category"].get<json::string_t>().c_str());
+				FString annotationId = FString(actorParams["annotationId"].get<json::string_t>().c_str());
+				success = spawnedGymPartnetObj->assignMeshFromCategoryAndAnnotationID(category, annotationId, spawnLocation, actorParams);
+			}
+			else if (actorParams["category"].is_string()) {
+				FString category = FString(actorParams["category"].get<json::string_t>().c_str());
+				success = spawnedGymPartnetObj->assignRandomMeshFromCategory(category, spawnLocation, actorParams);
+			}
+			spawnedObj = spawnedGymPartnetObj;
+
+		}
+		else if (type.ToLower() == "GLighting") {
+			spawnedObj = GetWorld()->SpawnActor<AGLighting>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+			// TODO: implement GLighting
+		}
+		else if (type.ToLower() == "GWall") {
+			spawnedObj = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+			// TODO: implement GWall
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("GymObj type %s not supported"), *type)
+				return;
+		}
+	}
+
+	if (success && spawnedObj) {
+		gymObjects.Add(spawnedObj);
+		UE_LOG(LogTemp, Warning, TEXT("Spawn Success"))
+	}
+	else {
+		if (spawnedObj) {
+			spawnedObj->Destroy();
+		}
+		UE_LOG(LogTemp, Warning, TEXT("Spawn Failure"))
+	}
+
+	/*
 	FActorSpawnParameters spawnParams;
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	AShapenet* spawnedActor = GetWorld()->SpawnActor<AShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);
@@ -327,7 +428,7 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 		// try again with lower CoM?
 
 	}
-
+	*/
 }
 
 

@@ -38,6 +38,7 @@ UStaticMeshComponent* AGymObj::getBaseMesh()
 
 bool AGymObj::assignMeshFromPath(FString path, FVector location, json::object_t params)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Here again"))
 	if (params["spawnProbability"].is_number()) {
 		float rng = FMath::RandRange(0.0f, 1.0f);
 		if (rng > params["spawnProbability"] && params["spawnProbability"] >= 0.0f) {
@@ -56,6 +57,7 @@ bool AGymObj::assignMeshFromPath(FString path, FVector location, json::object_t 
 	baseMesh->SetStaticMesh(staticMeshReference);
 
 	applyParamsToMesh(baseMesh, params);
+	locationSetup(location, params);
 
 	// set private memebers after successful setup
 	baseMeshPath = path;
@@ -188,11 +190,19 @@ void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t param
 
 void AGymObj::locationSetup(FVector location, json::object_t params)
 {
+	/*
 	FVector origin;
 	FVector extents;
 	GetActorBounds(false, origin, extents);
 	
 	// spawn object directly above floor (assuming automatic heigh adjustment for now
+	location.Z = extents.Z + 1;
+	originalSpawnLocation = location;
+	RootComponent->SetWorldLocation(location);
+	*/
+
+	FBox box = baseMesh->Bounds.GetBox();
+	FVector extents = box.GetExtent();
 	location.Z = extents.Z + 1;
 	originalSpawnLocation = location;
 	RootComponent->SetWorldLocation(location);

@@ -12,6 +12,7 @@
 #include "Runtime/Engine/Classes/Animation/AnimInstance.h"
 #include "Runtime/Engine/Classes/Animation/AnimSingleNodeInstance.h"
 #include "Runtime/Engine/Classes/Animation/AnimationAsset.h"
+#include "GymObj.h"
 
 AGDemoAgent::AGDemoAgent()
 {
@@ -28,7 +29,7 @@ AGDemoAgent::AGDemoAgent()
 	
 	
 	
-	/*
+	
 
 	// from third person starter content
 
@@ -51,9 +52,7 @@ AGDemoAgent::AGDemoAgent()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-	*/
 	
-	//testSwitch = false;
 }
 
 void AGDemoAgent::BeginPlay()
@@ -65,40 +64,6 @@ void AGDemoAgent::BeginPlay()
 	animation = LoadObject<UAnimationAsset>(nullptr, *path);
 	
 	baseMesh->PlayAnimation(animation, true);
-	
-	/*
-	FString path = "AnimSequence'/Game/Mannequin/Animations/ThirdPersonRun.ThirdPersonRun'B";
-	animation = Cast<UAnimationAsset>(StaticLoadObject(UAnimationAsset::StaticClass(), nullptr, *path));
-	if (!animation) {
-		UE_LOG(LogTemp, Warning, TEXT("Could not find animation %s"), *path)
-		return;
-	}
-	
-	
-	//baseMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
-	//baseMesh->AnimScriptInstance = &animObj.Object;
-	UE_LOG(LogTemp, Warning, TEXT("Animation set"))
-		
-
-	//bool test = baseMesh->InitializeAnimScriptInstance(true);
-	//baseMesh->AnimScriptInstance = NewObject<UAnimSingleNodeInstance>(baseMesh, UAnimSingleNodeInstance::StaticClass());
-	/*
-	if (!test) {
-		UE_LOG(LogTemp, Warning, TEXT("Failed initialization"))
-		if (!baseMesh->AnimScriptInstance) {
-			UE_LOG(LogTemp, Warning, TEXT("Actually Failed initialization"))
-		}
-	}*/
-	
-	/*
-	//baseMesh->SetAnimation(animation);
-	baseMesh->PlayAnimation(animation, true);
-	//baseMesh->Play(true);
-	*/
-	
-
-
-
 }
 
 void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -124,13 +89,29 @@ void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AGDemoAgent::OnResetVR);
 }
 
+bool AGDemoAgent::pickUpObject()
+{
+	return false;
+}
+
+bool AGDemoAgent::dropObject()
+{
+	return false;
+}
+
+bool AGDemoAgent::throwObject(float velocity)
+{
+	return false;
+}
+
+
+
+// function below are  from third person starter content
 
 void AGDemoAgent::OnResetVR()
 {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
-
-
 
 void AGDemoAgent::TurnAtRate(float Rate)
 {

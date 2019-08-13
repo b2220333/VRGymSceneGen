@@ -10,17 +10,6 @@ AGymAgent::AGymAgent()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
-	/*
-	test = CreateDefaultSubobject <USkeletalMeshComponent>("baseMesh");
-	FString path = "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin";
-	USkeletalMesh* test2 = Cast<USkeletalMesh>(StaticLoadObject(USkeletalMesh::StaticClass(), nullptr, *path));
-
-	test->SetSkeletalMesh(test2);
-
-	RootComponent = test;
-	*/
-	
 }
 
 // Called when the game starts or when spawned
