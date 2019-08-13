@@ -57,12 +57,13 @@ bool AGymObj::assignMeshFromPath(FString path, FVector location, json::object_t 
 	baseMesh->SetStaticMesh(staticMeshReference);
 
 	applyParamsToMesh(baseMesh, params);
-	locationSetup(location, params);
+	
 
 	// set private memebers after successful setup
 	baseMeshPath = path;
 	importParams = params;
 	baseMesh->RegisterComponent();
+	locationSetup(location, params);
 	return true;
 }
 
@@ -190,7 +191,7 @@ void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t param
 
 void AGymObj::locationSetup(FVector location, json::object_t params)
 {
-	/*
+	
 	FVector origin;
 	FVector extents;
 	GetActorBounds(false, origin, extents);
@@ -199,13 +200,8 @@ void AGymObj::locationSetup(FVector location, json::object_t params)
 	location.Z = extents.Z + 1;
 	originalSpawnLocation = location;
 	RootComponent->SetWorldLocation(location);
-	*/
+	
 
-	FBox box = baseMesh->Bounds.GetBox();
-	FVector extents = box.GetExtent();
-	location.Z = extents.Z + 1;
-	originalSpawnLocation = location;
-	RootComponent->SetWorldLocation(location);
 }
 
 
