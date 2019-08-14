@@ -3,41 +3,107 @@
 	"xWidth" : 1000,
 	"yWidth": 1000,
 	"zWidth": 1000,
+	"autoGenWalls" : true,
 	"shapenetActorGroups" : [
 		{
-			"name" : "diningArea"
+			"name" : "tableArea",
+			"childShapenetActorGroups" :[
+				{
+					"name" : "itemsOnTable",
+					"shapenetActors" : [
+
+						{
+							"name" : "plate1"
+						},
+						{
+							"name" : "plate2"
+						},
+						{
+							"name" : "plate3"
+						},
+						{
+							"name" : "plate4"
+						}
+					]
+				},
+				{
+					"name" : "chairs",
+					"shapenetActors" : [
+						{
+							"name" : "chair1"
+						},
+						{
+							"name" : "chair2"
+						},
+						{
+							"name" : "chair3"
+						},
+						{
+							"name" : "chair4"
+						}
+					]
+				}
+			],
+			"shapenetActors" : [
+				{
+					"name" : "table"
+				}
+			]
 		},
 		{
 			"name" : "cookingArea",
 			"childShapenetActorGroups" : [
 				{
 					"name" : "counterArea",
-					"shapenetActors": [
+					"childShapenetActorGroups" : [
 						{
-							"name" : "ingredient1"
-						},
+							"name" : "ingredients",
+							"shapenetActors": [
+								{
+									"name" : "ingredient1"
+								},
+								{
+									"name" : "ingredient2"
+								},
+								{
+									"name" : "ingredient3"
+								}
+							]
+						}
+					],
+					"shapenetActors" : [
 						{
-							"name" : "ingredient2"
-						},
-						{
-							"name" : "ingredient3"
+							"name" : "counterTop"
 						}
 					]
 				},
 				{
-					"name" : "heatSourceArea",
+					"name" : "heatingArea",
 					"shapenetActors" : [
 						{
-							"name" : "heatSource"
-						},
-						{
-							"name" : "waterSource"
-						},
-						{
-							"name" : "liquidsContainer"
+							"name" : "heatSource",
+							"type" : "gsnstove"
 						}
 					],
 				}
+			]
+		},
+		{
+			"name" : "backGroundObjects",
+			"shapenetActors" : [
+				{
+					"name" : "dishawasher",
+					"type" : "gshapenet"
+				},
+				{
+					"name" : "sink",
+					"type" : "gshapenet"
+				}
+				{
+					"name" : "counter",
+					"type" : "gshapenet"
+				}
+
 			]
 		}
 	]

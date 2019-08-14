@@ -36,7 +36,7 @@ using json = nlohmann::json;
 
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 {
-	
+	DefaultPawnClass = AGDemoAgent::StaticClass();
 }
 
 void ASceneGenUnrealGameModeBase::BeginPlay() {
@@ -144,6 +144,12 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		if (numResets != 0) {
 			demoAgent->playRandomAnimation();
 		}
+		/*
+		AController* playerController;
+		playerController->Possess(demoAgent);
+		*/
+
+
 		primaryAgent = demoAgent;
 		gymAgents.Add(demoAgent);
 	}

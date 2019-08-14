@@ -13,6 +13,7 @@
 #include "Runtime/Engine/Classes/Animation/AnimSingleNodeInstance.h"
 #include "Runtime/Engine/Classes/Animation/AnimationAsset.h"
 #include "GymObj.h"
+#include "Runtime/Engine/Classes/Engine/EngineTypes.h"
 
 AGDemoAgent::AGDemoAgent()
 {
@@ -44,7 +45,10 @@ AGDemoAgent::AGDemoAgent()
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
+	//CameraBoom->SetupAttachment(RootComponent);
+	FVector agentLocation = GetActorLocation();
+	CameraBoom->SetWorldLocation(agentLocation + FVector(0, 0, 140));
+	CameraBoom->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 	CameraBoom->TargetArmLength = 300.0f; // The camera  follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 

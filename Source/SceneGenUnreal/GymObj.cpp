@@ -205,7 +205,7 @@ void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t param
 	if (params["useRandomTextures"].is_boolean() && params["useRandomTextures"]) {
 		int32 numMats = mesh->GetNumMaterials();
 		for (int32 i = 0; i < numMats; i++) {
-			UMaterialInterface* material = getRandomMaterialFrom({ "/Game" }, true);
+			UMaterialInterface* material = getRandomMaterialFrom({ "/Game/ShapenetOBJ" }, true);
 			if (material) {
 			mesh->SetMaterial(i, material);
 			}
