@@ -541,6 +541,21 @@ void ASceneGenUnrealGameModeBase::transferParamsBetween(json::object_t &srcObj, 
 		if (dstParams.find("canOverlap") == dstParams.end() && srcParams.find("canOverlap") != srcParams.end()) {
 			dstParams["canOverlap"] = srcParams["canOverlap"];
 		}
+		if (dstParams.find("worldScale") == dstParams.end() && srcParams.find("worldScale") != srcParams.end()) {
+			dstParams["worldScale"] = srcParams["worldScale"];
+		}
+
+		if (dstParams.find("pitch") == dstParams.end() && srcParams.find("pitch") != srcParams.end()) {
+			dstParams["pitch"] = srcParams["pitch"];
+		}
+		
+		if (dstParams.find("yaw") == dstParams.end() && srcParams.find("yaw") != srcParams.end()) {
+			dstParams["yaw"] = srcParams["yaw"];
+		}
+
+		if (dstParams.find("roll") == dstParams.end() && srcParams.find("roll") != srcParams.end()) {
+			dstParams["roll"] = srcParams["roll"];
+		}
 	}
 }
 

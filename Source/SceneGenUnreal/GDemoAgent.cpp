@@ -76,6 +76,12 @@ void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 	check(PlayerInputComponent);
 	
 
+	// interaction 
+	PlayerInputComponent->BindAction("Pickup", IE_Pressed, this, &AGDemoAgent::pickUpObject);
+	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AGDemoAgent::dropObject);
+	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AGDemoAgent::throwObject);
+
+	// from third person
 	PlayerInputComponent->BindAxis("MoveForward", this, &AGDemoAgent::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AGDemoAgent::MoveRight);
 
@@ -93,28 +99,26 @@ void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AGDemoAgent::OnResetVR);
 }
 
-bool AGDemoAgent::pickUpObject()
+void AGDemoAgent::pickUpObject()
 {
 	if (isHoldingObject) {
-
+		return;
 	}
 	playAnimation("ThirdPersonPickup", false);
-	return false;
 }
 
-bool AGDemoAgent::dropObject()
+void AGDemoAgent::dropObject()
 {
 	if (!isHoldingObject) {
-		return false;
+		return;
 	}
 	playAnimation("ThirdPersonDrop", false);
-	return true;
 }
 
-bool AGDemoAgent::throwObject(float velocity)
+void AGDemoAgent::throwObject()
 {
 	if (!isHoldingObject) {
-		return false;
+		return;
 	}
 	// windup throw
 	playAnimation("ThirdPersonDrop", false);
@@ -127,7 +131,6 @@ bool AGDemoAgent::throwObject(float velocity)
 	playAnimation("ThirdPersonDrop", false);
 	playAnimation("ThirdPersonIdle", false);
 
-	return true;
 }
 
 

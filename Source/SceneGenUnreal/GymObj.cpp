@@ -172,6 +172,33 @@ static void AGymObj::getAssetsOfClass(TArray<T*>& OutArray, TArray<FString> path
 
 void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t params)
 {
+	if (!mesh) {
+		return;
+	}
+	if (params["worldScale"].is_number()) {
+		float scale = params["worldScale"].get<json::number_float_t>();
+		mesh->SetWorldScale3D(FVector(scale, scale, scale));
+
+	}
+	float pitch = 0;
+	float yaw = 0;
+	float roll = 0;
+
+	if (params["pitch"].is_number()) {
+		pitch = params["pitch"].get<json::number_float_t>();
+	}
+
+	if (params["yaw"].is_number()) {
+		pitch = params["yaw"].get<json::number_float_t>();
+	}
+
+	if (params["roll"].is_number()) {
+		pitch = params["roll"].get<json::number_float_t>();
+	}
+
+	mesh->SetWorldRotation(FRotator(pitch, yaw, roll));
+	
+
 	// setting random material
 	if (params["useRandomTextures"].is_boolean() && params["useRandomTextures"]) {
 		int32 numMats = mesh->GetNumMaterials();

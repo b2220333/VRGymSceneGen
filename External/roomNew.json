@@ -51,7 +51,11 @@
 							"y" : 0,
 							"z" : 0,
 							"actorParams": {
-								"shapenetSynset" : "04379243"
+								"shapenetSynset" : "04379243",
+								"worldScale" : 2,
+								"pitch" : 0,
+								"yaw" : 0,
+								"roll" : 0
 							}
 						}
 					],

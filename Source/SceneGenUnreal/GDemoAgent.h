@@ -24,13 +24,13 @@ public:
 	virtual void BeginPlay() override;
 
 	// tries to pickup a gym object e.g. pots, pans, ingredients
-	bool pickUpObject();
+	void pickUpObject();
 
 	// drops a object if it is holding one
-	bool dropObject();
+	void dropObject();
 
 	// releases an object with an initial velocity forward
-	bool throwObject(float velocity);
+	void throwObject();
 	
 	// must be public for animation to work for some reason
 	USkeletalMeshComponent* baseMesh;
