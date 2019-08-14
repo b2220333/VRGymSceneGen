@@ -117,6 +117,8 @@ private:
 	AGymAgent* primaryAgent;
 
 
+	int numResets;
+
 	
 
 

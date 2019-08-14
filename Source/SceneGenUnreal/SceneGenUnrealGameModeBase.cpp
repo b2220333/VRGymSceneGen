@@ -42,12 +42,14 @@ ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 void ASceneGenUnrealGameModeBase::BeginPlay() {
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Warning, TEXT("BeginPlay: starting game mode"));
+	numResets = 0;
 	spawnShapenetActors();
 
 	UWorld* World = GetWorld();
 	if (World) {
 		World->GetFirstPlayerController()->InputComponent->BindAction("resampleScene", IE_Pressed, this, &ASceneGenUnrealGameModeBase::spawnShapenetActors);
 	}
+	
 }
 
 void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
@@ -69,7 +71,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 			gymAgents[i]->Destroy();
 		}
 	}
-	gymObjects.Empty();
+	gymAgents.Empty();
 	if (primaryAgent) {
 		primaryAgent = nullptr;
 	}
@@ -136,10 +138,12 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	// spawn demo agent 
-	FVector agentSpawnLoc(310, -80, 0);
+	FVector agentSpawnLoc(310, -80, 1);
 	AGDemoAgent* demoAgent = GetWorld()->SpawnActor<AGDemoAgent>(agentSpawnLoc, FRotator::ZeroRotator, spawnParams);
 	if (demoAgent) {
-		demoAgent->playRandomAnimation();
+		if (numResets != 0) {
+			demoAgent->playRandomAnimation();
+		}
 		primaryAgent = demoAgent;
 		gymAgents.Add(demoAgent);
 	}
@@ -160,6 +164,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 
 	// resets damping after 5 seconds to allow models to settle
 	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &ASceneGenUnrealGameModeBase::resetDamping, 5);
+	numResets++;
 }
 
 void ASceneGenUnrealGameModeBase::autoSpawnWalls(bool autoSpawnSideWalls, bool autoSpawnCeiling)

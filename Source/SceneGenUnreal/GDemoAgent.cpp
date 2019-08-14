@@ -63,9 +63,11 @@ void AGDemoAgent::BeginPlay()
 	FString path = "AnimSequence'/Game/Mannequin/Animations/ThirdPersonRun.ThirdPersonRun'B";
 	//UAnimationAsset* animation = Cast<UAnimationAsset>(StaticLoadObject(UAnimationAsset::StaticClass(), nullptr, *path));
 	animation = LoadObject<UAnimationAsset>(nullptr, *path);
-	
-	baseMesh->PlayAnimation(animation, true);
 	*/
+	FString animName = "ThirdPersonIdle";
+	FString path = "AnimSequence'/Game/Mannequin/Animations/" + animName + "." + animName + "'B";
+	playAnimation(path, true);
+	
 }
 
 void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -93,17 +95,39 @@ void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 
 bool AGDemoAgent::pickUpObject()
 {
+	if (isHoldingObject) {
+
+	}
+	playAnimation("ThirdPersonPickup", false);
 	return false;
 }
 
 bool AGDemoAgent::dropObject()
 {
-	return false;
+	if (!isHoldingObject) {
+		return false;
+	}
+	playAnimation("ThirdPersonDrop", false);
+	return true;
 }
 
 bool AGDemoAgent::throwObject(float velocity)
 {
-	return false;
+	if (!isHoldingObject) {
+		return false;
+	}
+	// windup throw
+	playAnimation("ThirdPersonDrop", false);
+	playAnimation("ThirdPersonPickup", false);
+	
+	// release object
+
+
+	// back to holding nothing
+	playAnimation("ThirdPersonDrop", false);
+	playAnimation("ThirdPersonIdle", false);
+
+	return true;
 }
 
 
@@ -166,16 +190,17 @@ void AGDemoAgent::playRandomAnimation()
 	int32 i = FMath::RandRange(0, animations.Num() - 1);
 	UE_LOG(LogTemp, Warning, TEXT("Trying to play animation: %s"), *animations[i])
 	FString path = "AnimSequence'/Game/Mannequin/Animations/" + animations[i] + "." + animations[i] + "'B";
-	playAnimation(path);
+	playAnimation(path, true);
 
 
 }
 
 
-void AGDemoAgent::playAnimation(FString animationAssetPath)
+void AGDemoAgent::playAnimation(FString animationAssetPath, bool looping)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Trying to play animation : %s"), *animationAssetPath)
 	animation = LoadObject<UAnimationAsset>(nullptr, *animationAssetPath);
 	if (animation && baseMesh) {
-		baseMesh->PlayAnimation(animation, true);
+		baseMesh->PlayAnimation(animation, looping);
 	}
 }

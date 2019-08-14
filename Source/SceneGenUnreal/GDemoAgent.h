@@ -39,12 +39,14 @@ public:
 
 	void playRandomAnimation();
 
-	void playAnimation(FString animationAssetPath);
+	void playAnimation(FString animationAssetPath, bool looping);
 
 
 private:
+	// whether the agent is holding an object
 	bool isHoldingObject;
 
+	// the object that the agent is holding
 	AGymObject* heldObject;
 	
 
