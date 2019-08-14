@@ -189,12 +189,14 @@ void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t param
 	}
 
 	if (params["yaw"].is_number()) {
-		pitch = params["yaw"].get<json::number_float_t>();
+		yaw = params["yaw"].get<json::number_float_t>();
 	}
 
 	if (params["roll"].is_number()) {
-		pitch = params["roll"].get<json::number_float_t>();
+		roll = params["roll"].get<json::number_float_t>();
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Rotation: (%f, %f, %f)"), pitch, yaw, roll)
 
 	mesh->SetWorldRotation(FRotator(pitch, yaw, roll));
 	

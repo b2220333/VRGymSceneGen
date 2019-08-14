@@ -55,7 +55,7 @@
 								"worldScale" : 2,
 								"pitch" : 0,
 								"yaw" : 0,
-								"roll" : 0
+								"roll" : 123
 							}
 						}
 					],
@@ -74,7 +74,8 @@
 									"z" : 0,
 									"actorParams": {
 										"shapenetSynset" : "03636649",
-										"physicsEnabled" : true
+										"physicsEnabled" : true,
+										"spawnProbability" : 0
 									}
 								},
 								{
@@ -84,7 +85,8 @@
 									"y" : -75,
 									"z" : 0,
 									"actorParams": {
-										"shapenetSynset" : "02876657"
+										"shapenetSynset" : "02876657",
+										"spawnProbability" : 0
 									}
 								}
 							]
