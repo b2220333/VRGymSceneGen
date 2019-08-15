@@ -2,6 +2,7 @@
 
 #pragma once
 
+
 #include "CoreMinimal.h"
 #include "GymAgent.h"
 #include "GDemoAgent.generated.h"
@@ -33,6 +34,7 @@ public:
 	void throwObject();
 	
 	// must be public for animation to work for some reason
+	UPROPERTY(EditAnywhere)
 	USkeletalMeshComponent* baseMesh;
 	UAnimationAsset *animation;
 
@@ -41,6 +43,12 @@ public:
 
 	void playAnimation(FString animationAssetPath, bool looping);
 
+	virtual void Tick(float DeltaTime) override;
+
+
+	class UGDemoAgentMovementComponent* movementComponent;
+
+	virtual UPawnMovementComponent* GetMovementComponent() const override;
 
 private:
 	// whether the agent is holding an object
@@ -48,6 +56,7 @@ private:
 
 	// the object that the agent is holding
 	AGymObject* heldObject;
+	
 	
 
 	// from  third person starter content

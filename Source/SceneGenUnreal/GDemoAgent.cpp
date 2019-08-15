@@ -14,6 +14,8 @@
 #include "Runtime/Engine/Classes/Animation/AnimationAsset.h"
 #include "GymObj.h"
 #include "Runtime/Engine/Classes/Engine/EngineTypes.h"
+#include "Runtime/Engine/Classes/GameFramework/Controller.h"
+#include "GDemoAgentMovementComponent.h"
 
 AGDemoAgent::AGDemoAgent()
 {
@@ -28,6 +30,7 @@ AGDemoAgent::AGDemoAgent()
 	
 	RootComponent = baseMesh;
 	
+	RootComponent->SetMobility(EComponentMobility::Movable);
 	
 	
 	
@@ -79,7 +82,7 @@ void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	
-
+	UE_LOG(LogTemp, Warning, TEXT("Binding success"))
 	// interaction 
 	PlayerInputComponent->BindAction("Pickup", IE_Pressed, this, &AGDemoAgent::pickUpObject);
 	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AGDemoAgent::dropObject);
@@ -160,8 +163,19 @@ void AGDemoAgent::LookUpAtRate(float Rate)
 
 void AGDemoAgent::MoveForward(float Value)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Trying to move forward"))
+
+	if (Controller == NULL) {
+		UE_LOG(LogTemp, Warning, TEXT("Controller Null"))
+	}
+
+	if (Value == 0.0f) {
+		UE_LOG(LogTemp, Warning, TEXT("Value is 0.0"))
+	}
+
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("inside to move forward"))
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -210,4 +224,17 @@ void AGDemoAgent::playAnimation(FString animationAssetPath, bool looping)
 	if (animation && baseMesh) {
 		baseMesh->PlayAnimation(animation, looping);
 	}
+}
+
+void AGDemoAgent::Tick(float DeltaTime)
+{
+	/*
+	UE_LOG(LogTemp, Warning, TEXT("Ticking"))
+	MoveForward(1);
+	*/
+}
+
+UPawnMovementComponent* AGDemoAgent::GetMovementComponent() const
+{
+	return movementComponent;
 }
