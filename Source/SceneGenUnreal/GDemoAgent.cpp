@@ -70,7 +70,7 @@ AGDemoAgent::AGDemoAgent()
 	movementComponent = CreateDefaultSubobject<UGDemoAgentMovementComponent>(TEXT("MovementComponent"));
 	movementComponent->UpdatedComponent = RootComponent;
 	isHoldingObject = false;
-	
+	walking = false;
 }
 
 void AGDemoAgent::BeginPlay()
@@ -219,9 +219,17 @@ void AGDemoAgent::Tick(float DeltaTime)
 	UE_LOG(LogTemp, Warning, TEXT("Velocity : (%f, %f, %f)"), velocity.X, velocity.Y, velocity.Z)
 	if (velocity.Size() > 0) {
 		UE_LOG(LogTemp, Warning, TEXT("Moving"))
+			if (!walking) {
+				walking = true;
+				playAnimation("ThirdPersonWalk", true);
+			}
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("Not moving"))
+		if (walking) {
+			walking = false;
+			playAnimation("ThirdPersonIdle", true);
+		}
 	}
 }
 

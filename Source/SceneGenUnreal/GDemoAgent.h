@@ -56,6 +56,8 @@ private:
 
 	// the object that the agent is holding
 	AGymObject* heldObject;
+
+	bool walking;
 	
 	
 
