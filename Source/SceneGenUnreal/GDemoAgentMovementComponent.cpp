@@ -14,10 +14,12 @@ void UGDemoAgentMovementComponent::TickComponent(float DeltaTime, enum ELevelTic
 		return;
 	}
 
+	
 	// Get (and then clear) the movement vector that we set in ACollidingPawn::Tick
 	FVector DesiredMovementThisFrame = ConsumeInputVector().GetClampedToMaxSize(1.0f) * DeltaTime * 150.0f;
 	if (!DesiredMovementThisFrame.IsNearlyZero())
 	{
+		const FVector OldLocation = UpdatedComponent->GetComponentLocation();
 		FHitResult Hit;
 		SafeMoveUpdatedComponent(DesiredMovementThisFrame, UpdatedComponent->GetComponentRotation(), true, Hit);
 
@@ -26,5 +28,16 @@ void UGDemoAgentMovementComponent::TickComponent(float DeltaTime, enum ELevelTic
 		{
 			SlideAlongSurface(DesiredMovementThisFrame, 1.f - Hit.Time, Hit.Normal, Hit);
 		}
+
+		
+		
+		const FVector NewLocation = UpdatedComponent->GetComponentLocation();
+		Velocity = ((NewLocation - OldLocation) / DeltaTime);
+		
 	}
+	else {
+		Velocity = FVector::ZeroVector;
+	}
+	
+	UpdateComponentVelocity();
 };

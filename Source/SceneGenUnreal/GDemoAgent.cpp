@@ -215,10 +215,14 @@ void AGDemoAgent::playAnimation(FString animName, bool looping)
 
 void AGDemoAgent::Tick(float DeltaTime)
 {
-	/*
-	UE_LOG(LogTemp, Warning, TEXT("Ticking"))
-	MoveForward(1);
-	*/
+	FVector velocity = movementComponent->Velocity;
+	UE_LOG(LogTemp, Warning, TEXT("Velocity : (%f, %f, %f)"), velocity.X, velocity.Y, velocity.Z)
+	if (velocity.Size() > 0) {
+		UE_LOG(LogTemp, Warning, TEXT("Moving"))
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Not moving"))
+	}
 }
 
 UPawnMovementComponent* AGDemoAgent::GetMovementComponent() const
