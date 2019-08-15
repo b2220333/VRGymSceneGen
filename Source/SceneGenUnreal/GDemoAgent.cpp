@@ -69,6 +69,7 @@ AGDemoAgent::AGDemoAgent()
 
 	movementComponent = CreateDefaultSubobject<UGDemoAgentMovementComponent>(TEXT("MovementComponent"));
 	movementComponent->UpdatedComponent = RootComponent;
+	isHoldingObject = false;
 	
 }
 
@@ -81,9 +82,7 @@ void AGDemoAgent::BeginPlay()
 	//UAnimationAsset* animation = Cast<UAnimationAsset>(StaticLoadObject(UAnimationAsset::StaticClass(), nullptr, *path));
 	animation = LoadObject<UAnimationAsset>(nullptr, *path);
 	*/
-	FString animName = "ThirdPersonIdle";
-	FString path = "AnimSequence'/Game/Mannequin/Animations/" + animName + "." + animName + "'B";
-	playAnimation(path, true);
+	playAnimation("ThirdPersonIdle", true);
 	
 }
 
@@ -197,18 +196,18 @@ void AGDemoAgent::playRandomAnimation()
 	};
 
 	int32 i = FMath::RandRange(0, animations.Num() - 1);
-	UE_LOG(LogTemp, Warning, TEXT("Trying to play animation: %s"), *animations[i])
-	FString path = "AnimSequence'/Game/Mannequin/Animations/" + animations[i] + "." + animations[i] + "'B";
-	playAnimation(path, true);
+	playAnimation(animations[i], true);
 
 
 }
 
 
-void AGDemoAgent::playAnimation(FString animationAssetPath, bool looping)
+void AGDemoAgent::playAnimation(FString animName, bool looping)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Trying to play animation : %s"), *animationAssetPath)
-	animation = LoadObject<UAnimationAsset>(nullptr, *animationAssetPath);
+	UE_LOG(LogTemp, Warning, TEXT("Trying to play animation : %s"), *animName)
+	
+	FString path = "AnimSequence'/Game/Mannequin/Animations/" + animName + "." + animName + "'B";
+	animation = LoadObject<UAnimationAsset>(nullptr, *path);
 	if (animation && baseMesh) {
 		baseMesh->PlayAnimation(animation, looping);
 	}

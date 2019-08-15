@@ -41,7 +41,7 @@ public:
 
 	void playRandomAnimation();
 
-	void playAnimation(FString animationAssetPath, bool looping);
+	void playAnimation(FString animName, bool looping);
 
 	virtual void Tick(float DeltaTime) override;
 
