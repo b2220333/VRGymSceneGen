@@ -138,7 +138,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	// spawn demo agent 
-	FVector agentSpawnLoc(310, -80, 1);
+	FVector agentSpawnLoc(310, -80, 140);
 	AGDemoAgent* demoAgent = GetWorld()->SpawnActor<AGDemoAgent>(agentSpawnLoc, FRotator::ZeroRotator, spawnParams);
 	if (demoAgent) {
 		if (numResets != 0) {

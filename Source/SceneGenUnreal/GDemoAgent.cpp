@@ -16,23 +16,28 @@
 #include "Runtime/Engine/Classes/Engine/EngineTypes.h"
 #include "Runtime/Engine/Classes/GameFramework/Controller.h"
 #include "GDemoAgentMovementComponent.h"
+#include "Runtime/Engine/Classes/Components/CapsuleComponent.h"
 
 AGDemoAgent::AGDemoAgent()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
-	
+	UCapsuleComponent* capsule = CreateDefaultSubobject<UCapsuleComponent>("Capsule");
+	capsule->InitCapsuleSize(42.f, 96.0f);
+	RootComponent = capsule;
+
 	baseMesh = CreateDefaultSubobject <USkeletalMeshComponent>("baseMesh");
 	FString path = "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin";
 	USkeletalMesh* test2 = Cast<USkeletalMesh>(StaticLoadObject(USkeletalMesh::StaticClass(), nullptr, *path));
 
 	baseMesh->SetSkeletalMesh(test2);
-	
-	RootComponent = baseMesh;
-	
-	RootComponent->SetMobility(EComponentMobility::Movable);
-	
-	
+	baseMesh->SetMobility(EComponentMobility::Movable);
+
+
+	FVector agentLocation = GetActorLocation();
+	baseMesh->SetWorldLocation(agentLocation - FVector(0, 0, 140));
+	baseMesh->SetRelativeRotation(FVector(0, -90, 0).ToOrientationQuat());
+	baseMesh->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 	
 
 	// from third person starter content
@@ -48,10 +53,12 @@ AGDemoAgent::AGDemoAgent()
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	//CameraBoom->SetupAttachment(RootComponent);
-	FVector agentLocation = GetActorLocation();
+	CameraBoom->SetupAttachment(RootComponent);
+	
+	/*
 	CameraBoom->SetWorldLocation(agentLocation + FVector(0, 0, 140));
 	CameraBoom->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+	*/
 	CameraBoom->TargetArmLength = 300.0f; // The camera  follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
