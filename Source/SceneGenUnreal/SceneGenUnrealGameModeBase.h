@@ -110,7 +110,7 @@ public:
 	void setMode(FString newMode);
 
 	void toggleFire();
-
+	void dispenseSalt();
 
 	void attachToAgent(class AGDemoAgent* agent);
 

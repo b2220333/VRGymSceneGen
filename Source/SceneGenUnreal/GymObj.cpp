@@ -292,11 +292,6 @@ void AGymObj::cook()
 	// change meat texture
 }
 
-void AGymObj::dispenseSalt()
-{
-
-}
-
 void AGymObj::addFire(FString mode)
 {
 	FString path = "/Game/StarterContent/Particles/P_Fire.P_Fire";
@@ -329,4 +324,15 @@ void AGymObj::toggleFire()
 	else {
 		fire->SetVisibility(true);
 	}
+}
+
+void AGymObj::dispenseSalt()
+{
+	FString path = "/Game/Effects/Particles/Water/P_WaterSpill_Sm.P_WaterSpill_Sm";
+	UParticleSystem* particleSystem = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), nullptr, *path));
+	salt = NewObject<UParticleSystemComponent>(this, "salt");
+	salt->SetTemplate(particleSystem);
+	salt->SetupAttachment(RootComponent);
+	salt->RegisterComponent();
+	salt->SetRelativeLocation(FVector(0, -90, 0));
 }

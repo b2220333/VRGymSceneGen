@@ -50,6 +50,7 @@ void ASceneGenUnrealGameModeBase::BeginPlay() {
 	if (World) {
 		World->GetFirstPlayerController()->InputComponent->BindAction("resampleScene", IE_Pressed, this, &ASceneGenUnrealGameModeBase::spawnShapenetActors);
 		World->GetFirstPlayerController()->InputComponent->BindAction("toggleFire", IE_Pressed, this, &ASceneGenUnrealGameModeBase::toggleFire);
+		World->GetFirstPlayerController()->InputComponent->BindAction("salt", IE_Pressed, this, &ASceneGenUnrealGameModeBase::dispenseSalt);
 	}
 	
 }
@@ -72,21 +73,22 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 {
 	if (mode == "outdoor") {
 		UE_LOG(LogTemp, Warning, TEXT("Outdoor"))
-		FActorSpawnParameters spawnParams;
+			FActorSpawnParameters spawnParams;
 		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 		// spawn wood oven with fire 
 		FString path = "/Game/DemoAssets/Stoves/outdoor/model_normalized.model_normalized";
 		json::object_t actorParams;
-		FVector spawnLocation = FVector(745, -2740, 40);
+		FVector spawnLocation = FVector(745, -2740, 60);
 		actorParams["yaw"] = -90;
 		actorParams["physicsEnabled"] = false;
 		actorParams["autoHeight"] = false;
 		AGymObj* spawnedGymObj = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
-		spawnedGymObj->SetActorScale3D(FVector(3.0,2.5,2.5));
+		spawnedGymObj->SetActorScale3D(FVector(3.0, 2.5, 2.5));
 		spawnedGymObj->addFire("outdoor");
 		spawnedGymObj->SetActorLabel("heatSource");
 		heatSource = spawnedGymObj;
+		gymObjects.Add(spawnedGymObj);
 
 
 		actorParams["physicsEnabled"] = true;
@@ -99,6 +101,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
 		spawnedGymObj->SetActorLabel("lighter");
 		lighter = spawnedGymObj;
+		gymObjects.Add(spawnedGymObj);
 
 		// spawn salt
 		path = "/Game/Scenes/Small_Items/MinorObject/consistent/sugarpourer/SugarDespenseClassic.SugarDespenseClassic";
@@ -109,6 +112,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
 		spawnedGymObj->SetActorLabel("salt");
 		salt = spawnedGymObj;
+		gymObjects.Add(spawnedGymObj);
 
 		// spawn meat
 		path = "/Game/Assets/Meat/meat.meat";
@@ -119,121 +123,121 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
 		spawnedGymObj->SetActorLabel("meat");
 		meat = spawnedGymObj;
-		
-		return;
-		
-	}
+		gymObjects.Add(spawnedGymObj);
 
-	UE_LOG(LogTemp, Warning, TEXT("Outdoor"))
+	} else {
+
+		UE_LOG(LogTemp, Warning, TEXT("Outdoor"))
 
 
-	for (int32 i = 0; i < gymObjects.Num(); i++) {
-		if (gymObjects[i]) {
-			gymObjects[i]->Destroy();
-		}
-	}
-	gymObjects.Empty();
-	for (int32 i = 0; i < gymAgents.Num(); i++) {
-		if (gymAgents[i]) {
-			gymAgents[i]->Destroy();
-		}
-	}
-	gymAgents.Empty();
-	if (primaryAgent) {
-		primaryAgent = nullptr;
-	}
-
-	FString jsonPath = FPaths::ProjectDir() + "External/roomNew.json";
-
-	IFileManager& FileManager = IFileManager::Get();
-	FDateTime newDT = FileManager.GetTimeStamp(*jsonPath);
-
-	if (roomJsonTimeStamp.GetTicks() < newDT.GetTicks()) {
-		roomJsonTimeStamp = newDT;
-		FString jsonString;
-		FFileHelper::LoadFileToString(jsonString, *jsonPath);
-
-		std::string jsonStr = std::string(TCHAR_TO_UTF8(*jsonString));
-
-		parsed = json::parse(jsonStr);
-
-		std::string dump = parsed.dump(4);
-		FString dumpF = FString(dump.c_str());
-		UE_LOG(LogTemp, Warning, TEXT("Testing new parse %s"), *dumpF);
-
-		json::array_t& baseGroups = parsed["shapenetActorGroups"].get_ref<json::array_t&>();
-
-		for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
-			if (it->is_object()) {
-				json::object_t& baseGroup = it->get_ref<json::object_t&>();
-				listDescendants(baseGroup);
-				passDownParams(baseGroup);
+			for (int32 i = 0; i < gymObjects.Num(); i++) {
+				if (gymObjects[i]) {
+					gymObjects[i]->Destroy();
+				}
+			}
+		gymObjects.Empty();
+		for (int32 i = 0; i < gymAgents.Num(); i++) {
+			if (gymAgents[i]) {
+				gymAgents[i]->Destroy();
 			}
 		}
-
-		dump = parsed.dump(4);
-		dumpF = FString(dump.c_str());
-		UE_LOG(LogTemp, Warning, TEXT("Json with params passed down: %s"), *dumpF);
-
-		// spawn floor (default on xy plane i.e. z = 0)
-
-		float xWidth = 1000;
-		float yWidth = 1000;
-		float zWidth = 1000;
-		if (parsed["xWidth"].is_number()) {
-			xWidth = parsed["xWidth"].get<json::number_float_t>();
+		gymAgents.Empty();
+		if (primaryAgent) {
+			primaryAgent = nullptr;
 		}
 
-		if (parsed["yWidth"].is_number()) {
-			yWidth = parsed["yWidth"].get<json::number_float_t>();
+		FString jsonPath = FPaths::ProjectDir() + "External/roomNew.json";
+
+		IFileManager& FileManager = IFileManager::Get();
+		FDateTime newDT = FileManager.GetTimeStamp(*jsonPath);
+
+		if (roomJsonTimeStamp.GetTicks() < newDT.GetTicks()) {
+			roomJsonTimeStamp = newDT;
+			FString jsonString;
+			FFileHelper::LoadFileToString(jsonString, *jsonPath);
+
+			std::string jsonStr = std::string(TCHAR_TO_UTF8(*jsonString));
+
+			parsed = json::parse(jsonStr);
+
+			std::string dump = parsed.dump(4);
+			FString dumpF = FString(dump.c_str());
+			UE_LOG(LogTemp, Warning, TEXT("Testing new parse %s"), *dumpF);
+
+			json::array_t& baseGroups = parsed["shapenetActorGroups"].get_ref<json::array_t&>();
+
+			for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
+				if (it->is_object()) {
+					json::object_t& baseGroup = it->get_ref<json::object_t&>();
+					listDescendants(baseGroup);
+					passDownParams(baseGroup);
+				}
+			}
+
+			dump = parsed.dump(4);
+			dumpF = FString(dump.c_str());
+			UE_LOG(LogTemp, Warning, TEXT("Json with params passed down: %s"), *dumpF);
+
+			// spawn floor (default on xy plane i.e. z = 0)
+
+			float xWidth = 1000;
+			float yWidth = 1000;
+			float zWidth = 1000;
+			if (parsed["xWidth"].is_number()) {
+				xWidth = parsed["xWidth"].get<json::number_float_t>();
+			}
+
+			if (parsed["yWidth"].is_number()) {
+				yWidth = parsed["yWidth"].get<json::number_float_t>();
+			}
+
+			if (parsed["zWidth"].is_number()) {
+				zWidth = parsed["zWidth"].get<json::number_float_t>();
+			}
+			autoSpawnWalls(true, true);
 		}
 
-		if (parsed["zWidth"].is_number()) {
-			zWidth = parsed["zWidth"].get<json::number_float_t>();
+		json::array_t& baseGroups = parsed["shapenetActorGroups"].get_ref<json::array_t&>();
+		for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
+			importShapenetActorGroup(*it, FVector(0, 0, 0));
 		}
-		autoSpawnWalls(true, true);
-	}	
-	
-	json::array_t& baseGroups = parsed["shapenetActorGroups"].get_ref<json::array_t&>();
-	for (auto it = baseGroups.begin(); it != baseGroups.end(); it++) {
-		importShapenetActorGroup(*it, FVector(0, 0, 0));
+		objectsDamped = true;
+
+		/*
+		// spawn params for test objects
+		FActorSpawnParameters spawnParams;
+		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		// spawn demo agent
+		FVector agentSpawnLoc(310, -80, 140);
+		AGDemoAgent* demoAgent = GetWorld()->SpawnActor<AGDemoAgent>(agentSpawnLoc, FRotator::ZeroRotator, spawnParams);
+		if (demoAgent) {
+			if (numResets != 0) {
+				demoAgent->playRandomAnimation();
+			}
+
+			primaryAgent = demoAgent;
+			gymAgents.Add(demoAgent);
+		}
+
+		// testing partnet models
+		FVector spawnLocation = FVector(0, 0, 300);
+		AGymObj* test = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		json::object_t testparams;
+		//testparams["physicsEnabled"] = false;
+		test->assignMeshFromPath("/Game/partnetOBJ/Chair/36366/new-0.new-0", spawnLocation, testparams);
+		test->assignMeshesFromPath("/Game/partnetOBJ/Chair/36366", spawnLocation, testparams);
+		gymObjects.Add(test);
+
+		// lighting
+		AGLighting* light = GetWorld()->SpawnActor<AGLighting>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		light->spawnPointLight(FVector(0, 0, 400));
+		gymObjects.Add(light);
+
+		*/
+
+		// resets damping after 5 seconds to allow models to settle
 	}
-	objectsDamped = true;
-
-	/*
-	// spawn params for test objects
-	FActorSpawnParameters spawnParams;
-	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-	// spawn demo agent 
-	FVector agentSpawnLoc(310, -80, 140);
-	AGDemoAgent* demoAgent = GetWorld()->SpawnActor<AGDemoAgent>(agentSpawnLoc, FRotator::ZeroRotator, spawnParams);
-	if (demoAgent) {
-		if (numResets != 0) {
-			demoAgent->playRandomAnimation();
-		}
-		
-		primaryAgent = demoAgent;
-		gymAgents.Add(demoAgent);
-	}
-
-	// testing partnet models
-	FVector spawnLocation = FVector(0, 0, 300);
-	AGymObj* test = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
-	json::object_t testparams;
-	//testparams["physicsEnabled"] = false;
-	test->assignMeshFromPath("/Game/partnetOBJ/Chair/36366/new-0.new-0", spawnLocation, testparams);
-	test->assignMeshesFromPath("/Game/partnetOBJ/Chair/36366", spawnLocation, testparams);
-	gymObjects.Add(test);
-
-	// lighting
-	AGLighting* light = GetWorld()->SpawnActor<AGLighting>(spawnLocation, FRotator::ZeroRotator, spawnParams);
-	light->spawnPointLight(FVector(0, 0, 400));
-	gymObjects.Add(light);
-
-	*/
-
-	// resets damping after 5 seconds to allow models to settle
 	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &ASceneGenUnrealGameModeBase::resetDamping, 5);
 	numResets++;
 }
@@ -900,4 +904,12 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 		agent->setHeldObject(closest);
 	}
 
+}
+
+
+void ASceneGenUnrealGameModeBase::dispenseSalt()
+{
+	if (salt) {
+		salt->dispenseSalt();
+	}
 }

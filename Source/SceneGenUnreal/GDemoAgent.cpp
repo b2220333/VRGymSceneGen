@@ -39,8 +39,20 @@ AGDemoAgent::AGDemoAgent()
 	baseMesh->SetWorldLocation(agentLocation - FVector(0, 0, 140));
 	baseMesh->SetRelativeRotation(FVector(0, -90, 0).ToOrientationQuat());
 	baseMesh->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
-	
+	/*
+	baseMesh->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 
+	SetActorEnableCollision(true);
+	CollisionEnabledHasPhysics(ECollisionEnabled::PhysicsOnly);
+
+	baseMesh->SetCollisionProfileName("BlockAll");
+	*/
+
+	capsule->BodyInstance.SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	capsule->BodyInstance.SetCollisionProfileName("BlockAll");
+	
+	
 	// from third person starter content
 
 	// set our turn rates for input
@@ -220,18 +232,23 @@ void AGDemoAgent::playAnimation(FString animName, bool looping)
 void AGDemoAgent::Tick(float DeltaTime)
 {
 	FVector velocity = movementComponent->Velocity;
-		if (velocity.Size() > 0) {
-			if (!walking) {
-				walking = true;
-				playAnimation("ThirdPersonWalk", true);
-			}
+	if (velocity.Size() > 0) {
+		if (!walking) {
+			walking = true;
+			playAnimation("ThirdPersonWalk", true);
 		}
-		else {
-			if (walking) {
-				walking = false;
+	}
+	else {
+		if (walking) {
+			walking = false;
+			if (isHoldingObject) {
+				playAnimation("ThirdPersonPickup", false);
+			}
+			else {
 				playAnimation("ThirdPersonIdle", true);
 			}
 		}
+	}
 }
 
 UPawnMovementComponent* AGDemoAgent::GetMovementComponent() const
@@ -243,3 +260,4 @@ void AGDemoAgent::setHeldObject(AGymObj* obj)
 {
 	heldObject = obj;
 }
+

@@ -100,6 +100,7 @@ public:
 	
 	void toggleFire();
 
+
 private:
 	// name of object
 	FString name;
@@ -126,5 +127,9 @@ private:
 	bool interactsWithGymAgents;
 
 	class UParticleSystemComponent* fire;
+	
+
+	UPROPERTY(EditAnywhere)
+	UParticleSystemComponent* salt;
 
 };
