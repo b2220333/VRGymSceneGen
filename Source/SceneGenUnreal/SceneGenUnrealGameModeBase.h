@@ -131,6 +131,7 @@ private:
 	AGymObj* meat;
 	AGymObj* heatSource;
 	AGymObj* salt;
+	AGymObj* lighter;
 
 
 };

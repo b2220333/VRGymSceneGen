@@ -37,6 +37,7 @@ using json = nlohmann::json;
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 {
 	DefaultPawnClass = AGDemoAgent::StaticClass();
+	mode = "outdoor";
 }
 
 void ASceneGenUnrealGameModeBase::BeginPlay() {
@@ -69,6 +70,63 @@ void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
 
 void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 {
+	if (mode == "outdoor") {
+		UE_LOG(LogTemp, Warning, TEXT("Outdoor"))
+		FActorSpawnParameters spawnParams;
+		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		// spawn wood oven with fire 
+		FString path = "/Game/DemoAssets/Stoves/outdoor/model_normalized.model_normalized";
+		json::object_t actorParams;
+		FVector spawnLocation = FVector(745, -2740, 40);
+		actorParams["yaw"] = -90;
+		actorParams["physicsEnabled"] = false;
+		actorParams["autoHeight"] = false;
+		AGymObj* spawnedGymObj = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
+		spawnedGymObj->SetActorScale3D(FVector(3.0,2.5,2.5));
+		spawnedGymObj->addFire("outdoor");
+		spawnedGymObj->SetActorLabel("heatSource");
+		heatSource = spawnedGymObj;
+
+
+		
+		// spawn lighter
+		path = "/Game/DemoAssets/Lighter/Clipper.Clipper";
+		actorParams["yaw"] = 0;
+		actorParams["worldScale"] = 0.25;
+		spawnLocation = FVector(620, -2320, 15);
+		spawnedGymObj = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
+		spawnedGymObj->SetActorLabel("lighter");
+		lighter = spawnedGymObj;
+
+		// spawn salt
+		path = "/Game/Scenes/Small_Items/MinorObject/consistent/sugarpourer/SugarDespenseClassic.SugarDespenseClassic";
+		spawnLocation = FVector(610, -2270, 15);
+		actorParams["roll"] = 90;
+		actorParams["worldScale"] = 0.15;
+		spawnedGymObj = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
+		spawnedGymObj->SetActorLabel("salt");
+		salt = spawnedGymObj;
+
+		// spawn meat
+		path = "/Game/Assets/Meat/meat.meat";
+		spawnLocation = FVector(620, -2220, 15);
+		actorParams["roll"] = 90;
+		actorParams["worldScale"] = 2;
+		spawnedGymObj = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
+		spawnedGymObj->SetActorLabel("meat");
+		meat = spawnedGymObj;
+		
+		return;
+		
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Outdoor"))
+
+
 	for (int32 i = 0; i < gymObjects.Num(); i++) {
 		if (gymObjects[i]) {
 			gymObjects[i]->Destroy();

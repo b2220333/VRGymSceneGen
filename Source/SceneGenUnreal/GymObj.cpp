@@ -314,7 +314,8 @@ void AGymObj::addFire(FString mode)
 		fire->SetWorldScale3D(FVector(0.05, 0.05, 0.025));
 	}
 	else if (mode == "outdoor") {
-
+		fire->SetRelativeLocation(FVector(-4.66, -19.33, -8));
+		fire->SetRelativeScale3D(FVector(0.2, 0.5, 0.2));
 	}
 
 }
