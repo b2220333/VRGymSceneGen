@@ -467,6 +467,16 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 		if (actor["name"].is_string()) {
 			FString displayName = FString(actor["name"].get<json::string_t>().c_str());
 			spawnedObj->SetActorLabel(displayName);
+			if (displayName == "heatSource") {
+				heatSource = spawnedObj;
+				heatSource->addFire("indoor");
+			}
+			else if (displayName == "salt") {
+				salt = spawnedObj;
+			}
+			else if (displayName == "meat") {
+				meat = spawnedObj;
+			}
 		}
 		UE_LOG(LogTemp, Warning, TEXT("Spawn Success"))
 	}

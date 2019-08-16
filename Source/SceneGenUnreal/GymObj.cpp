@@ -8,7 +8,8 @@
 #include "Runtime/AssetRegistry/Public/AssetRegistryModule.h"
 #include "Runtime/Engine/Classes/PhysicsEngine/PhysicsConstraintComponent.h"
 #include "Runtime/Engine/Classes/PhysicsEngine/ConstraintInstance.h"
-
+#include "Runtime/Engine/Classes/Particles/ParticleSystemComponent.h"
+#include "Runtime/Engine/Classes/Particles/ParticleSystem.h"
 // Sets default values
 AGymObj::AGymObj()
 {
@@ -283,4 +284,34 @@ void AGymObj::setName(FString newName)
 FString AGymObj::getName()
 {
 	return name;
+}
+
+void AGymObj::cook()
+{
+	// change meat texture
+}
+
+void AGymObj::dispenseSalt()
+{
+
+}
+
+void AGymObj::addFire(FString mode)
+{
+	FString path = "/Game/StarterContent/Particles/P_Fire.P_Fire";
+	UParticleSystem* particleSystem = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), nullptr, *path));
+	UParticleSystemComponent* fire = NewObject<UParticleSystemComponent>(this, "fire");
+	if (!particleSystem || !fire) {
+		return;
+	}
+	fire->SetTemplate(particleSystem);
+	fire->SetupAttachment(RootComponent);
+	fire->RegisterComponent();
+	if (mode == "indoor") {
+		
+	}
+	else if (mode == "outdoor") {
+
+	}
+
 }

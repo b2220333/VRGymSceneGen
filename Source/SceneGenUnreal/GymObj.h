@@ -94,6 +94,12 @@ public:
 	void setName(FString newName);
 	FString getName();
 
+	void cook();
+	void dispenseSalt();
+	void addFire(FString mode);
+
+
+
 private:
 	// name of object
 	FString name;

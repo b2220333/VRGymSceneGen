@@ -121,6 +121,7 @@ void AGDemoAgent::pickUpObject()
 		return;
 	}
 	playAnimation("ThirdPersonPickup", false);
+	isHoldingObject = true;
 }
 
 void AGDemoAgent::dropObject()
@@ -129,6 +130,7 @@ void AGDemoAgent::dropObject()
 		return;
 	}
 	playAnimation("ThirdPersonDrop", false);
+	isHoldingObject = false;
 }
 
 void AGDemoAgent::throwObject()
