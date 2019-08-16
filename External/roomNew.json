@@ -58,6 +58,44 @@
 							}
 						}
 					]
+				},
+				{
+					"name" : "plates",
+					"xCenter" : 15,
+					"zCenter" : 85,
+					"actorParams" :{
+						"roll" : 90,
+						"worldScale" : 3,
+						"physicsEnabled" : false,
+						"autoHeight" : false,
+						"meshPath" : "/Game/Assets/plate/plate.plate"
+					},
+					"shapenetActors" : [
+						{
+							"name" : "plate1",
+							"xCenter": 0,
+							"yCenter" : 30,
+							"type" : "gymobj"
+						},
+						{
+							"name" : "plate2",
+							"xCenter": 0,
+							"yCenter" : -30,
+							"type" : "gymobj"
+						},
+						{
+							"name" : "plate3",
+							"xCenter": 30,
+							"yCenter" : 0,
+							"type" : "gymobj"
+						},
+						{
+							"name" : "plate3",
+							"xCenter": -30,
+							"yCenter" : 0,
+							"type" : "gymobj"
+						}
+					]
 				}
 			],
 			"shapenetActors" : [
@@ -105,7 +143,7 @@
 					"shapenetActors" : [
 						{
 							"name" : "heatSource",
-							"xCenter": 60,
+							"xCenter": 55,
 							"yCenter" : -100,
 							"zCenter" : 0,
 							"type" : "gymobj",
@@ -151,7 +189,7 @@
 				}
 
 			]
-		}
+		},
 		{
 			"name" : "miscBackground",
 			"xCenter": 0,
@@ -169,6 +207,20 @@
 						"physicsEnabled" : false,
 						"autoHeight" : false,
 						"roll" : -90
+					}
+				},
+				{
+					"name" : "fridge",
+					"type" : "gymobj",
+					"xCenter": -200,
+					"yCenter" : -120,
+					"zCenter" : 200,
+					"actorParams" : {
+						"meshPath" : "/Game/DemoAssets/Fridge/fridge.fridge",
+						"autoHeight" : false,
+						"physicsEnabled" : false,
+						"yaw" : 90,
+						"worldScale" : 1.5
 					}
 				}
 

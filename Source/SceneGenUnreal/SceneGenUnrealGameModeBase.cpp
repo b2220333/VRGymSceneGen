@@ -562,6 +562,10 @@ void ASceneGenUnrealGameModeBase::transferParamsBetween(json::object_t &srcObj, 
 			dstParams["roll"] = srcParams["roll"];
 		}
 
+		if (dstParams.find("meshPath") == dstParams.end() && srcParams.find("meshPath") != srcParams.end()) {
+			dstParams["meshPath"] = srcParams["meshPath"];
+		}
+
 
 		if (dstParams.find("autoHeight") == dstParams.end() && srcParams.find("autoHeight") != srcParams.end()) {
 			dstParams["autoHeight"] = srcParams["autoHeight"];
@@ -761,4 +765,14 @@ TArray<AGymAgent*> ASceneGenUnrealGameModeBase::getGymAgents()
 void ASceneGenUnrealGameModeBase::distributeReward(AGymAgent* agent)
 {
 	return;
+}
+
+FString ASceneGenUnrealGameModeBase::getMode()
+{
+	return mode;
+}
+
+void ASceneGenUnrealGameModeBase::setMode(FString newMode)
+{
+	mode = newMode;
 }

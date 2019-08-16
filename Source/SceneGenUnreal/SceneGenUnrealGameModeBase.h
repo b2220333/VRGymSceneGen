@@ -106,6 +106,9 @@ public:
 	// gets reward for current time step for agent
 	void distributeReward(AGymAgent* agent);
 
+	FString getMode();
+	void setMode(FString newMode);
+
 private:
 	// objects in game
 	TArray<AGymObj*> gymObjects;
@@ -119,7 +122,13 @@ private:
 
 	int numResets;
 
+	FString mode = "indoor";
+
 	
+
+	AGymObj* meat;
+	AGymObj* heatSource;
+	AGymObj* salt;
 
 
 };
