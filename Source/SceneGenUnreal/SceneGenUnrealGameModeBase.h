@@ -111,6 +111,9 @@ public:
 
 	void toggleFire();
 
+
+	void attachToAgent(class AGDemoAgent* agent);
+
 private:
 	// objects in game
 	TArray<AGymObj*> gymObjects;

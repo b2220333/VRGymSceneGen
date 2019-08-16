@@ -17,6 +17,7 @@
 #include "Runtime/Engine/Classes/GameFramework/Controller.h"
 #include "GDemoAgentMovementComponent.h"
 #include "Runtime/Engine/Classes/Components/CapsuleComponent.h"
+#include "SceneGenUnrealGameModeBase.h"
 
 AGDemoAgent::AGDemoAgent()
 {
@@ -83,7 +84,11 @@ void AGDemoAgent::BeginPlay()
 	animation = LoadObject<UAnimationAsset>(nullptr, *path);
 	*/
 	playAnimation("ThirdPersonIdle", true);
-	
+
+	ASceneGenUnrealGameModeBase* mode = (ASceneGenUnrealGameModeBase*) GetWorld()->GetAuthGameMode();
+	mode->attachToAgent(this);
+
+
 }
 
 void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

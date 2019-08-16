@@ -854,3 +854,46 @@ void ASceneGenUnrealGameModeBase::setMode(FString newMode)
 {
 	mode = newMode;
 }
+
+void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
+{
+	FVector agentLocation = agent->GetActorLocation();
+
+	float distances[3] = {-1,-1,-1 };
+
+	if (meat) {
+		distances[0] = FVector::Dist(agentLocation, meat->GetActorLocation());
+	}
+
+	if (salt) {
+		distances[1] = FVector::Dist(agentLocation, salt->GetActorLocation());
+	}
+
+	if (lighter) {
+		distances[2] = FVector::Dist(agentLocation, lighter->GetActorLocation());
+	}
+
+	float min = 0;
+	int index = 0;
+	for (int32 i = 0; i < 3; i++) {
+		if (i == 0 || distances[i] < min) {
+			min = distances[i];
+			index = i;
+		}
+	}
+
+	AGymObj* closest = nullptr;
+	switch (index) {
+		case 0: closest = meat; break;
+		case 1: closest = salt; break;
+		case 2: closest = lighter; break;
+	}
+	if (closest) {
+		closest->SetActorEnableCollision(false);
+		closest->AttachToComponent(agent->baseMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, true), FName("index_02_rSocket"));
+	}
+
+
+
+
+}
