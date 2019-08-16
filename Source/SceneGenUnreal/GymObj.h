@@ -91,6 +91,9 @@ public:
 	bool getInteractsWithGymObjs();
 	bool getInteractsWithGymAgents();
 
+	void setName(FString newName);
+	FString getName();
+
 private:
 	// name of object
 	FString name;

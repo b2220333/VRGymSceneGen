@@ -216,21 +216,18 @@ void AGDemoAgent::playAnimation(FString animName, bool looping)
 void AGDemoAgent::Tick(float DeltaTime)
 {
 	FVector velocity = movementComponent->Velocity;
-	UE_LOG(LogTemp, Warning, TEXT("Velocity : (%f, %f, %f)"), velocity.X, velocity.Y, velocity.Z)
-	if (velocity.Size() > 0) {
-		UE_LOG(LogTemp, Warning, TEXT("Moving"))
+		if (velocity.Size() > 0) {
 			if (!walking) {
 				walking = true;
 				playAnimation("ThirdPersonWalk", true);
 			}
-	}
-	else {
-		UE_LOG(LogTemp, Warning, TEXT("Not moving"))
-		if (walking) {
-			walking = false;
-			playAnimation("ThirdPersonIdle", true);
 		}
-	}
+		else {
+			if (walking) {
+				walking = false;
+				playAnimation("ThirdPersonIdle", true);
+			}
+		}
 }
 
 UPawnMovementComponent* AGDemoAgent::GetMovementComponent() const

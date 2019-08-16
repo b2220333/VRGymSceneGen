@@ -1,0 +1,115 @@
+{
+	"name": "bedroom",
+	"xWidth" : 1000,
+	"yWidth": 1000,
+	"zWidth": 500,
+	"autoGenWalls" : true,
+	"shapenetActorGroups" : [
+		{
+			"name" : "deskArea",
+			"xDist": {
+				"gaussian" : {
+					"mean" : -100,
+					"std" : 50
+				}
+			},
+			"yDist": {
+				"gaussian" : {
+					"mean" : 200,
+					"std" : 50
+				}
+			},
+			"xCenter": -100,
+			"yCenter" : 200,
+			"zCenter" : 0,
+			"actorParams" : {
+				"useRandomTextures" : true
+			},
+			"shapenetActors": [
+				{
+					"name" : "chairForDesk",
+					"type" : "gshapenet",
+					"x" : 50,
+					"y" : 0,
+					"z" : 0,
+					"actorParams": {
+						"shapenetSynset" : "03001627"
+					}
+				}
+			],
+			"childShapenetActorGroups" : [
+				{
+					"name" : "desk",
+					"xCenter": -100,
+					"yCenter" : 0,
+					"zCenter" : 0,
+					"shapenetActors": [
+						{
+							"name" : "bedroomDesk",
+							"type" : "gshapenet",
+							"x" : 0,
+							"y" : 0,
+							"z" : 0,
+							"actorParams": {
+								"shapenetSynset" : "04379243",
+								"worldScale" : 2.5,
+								"yaw" : 90
+							}
+						}
+					],
+					"childShapenetActorGroups" : [
+						{
+							"name" : "itemsOnDesk",
+							"xCenter": 0,
+							"yCenter" : 0,
+							"zCenter" : 0,
+							"shapenetActors" : [
+								{
+									"name" : "lamp",
+									"type" : "gshapenet",
+									"x" : -50,
+									"y" : 75,
+									"z" : 0,
+									"actorParams": {
+										"shapenetSynset" : "03636649",
+										"physicsEnabled" : true,
+										"worldScale" : 0.5
+									}
+								},
+								{
+									"name" : "bottle",
+									"type" : "gshapenet",
+									"x" : -50,
+									"y" : -75,
+									"z" : 0,
+									"actorParams": {
+										"shapenetSynset" : "02876657",
+										"worldScale" : 0.5
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name" : "bedArea",
+			"xCenter": 150,
+			"yCenter" : -50,
+			"zCenter" : 0,
+			"shapenetActors": [
+				{
+					"name" : "bed",
+					"type" : "gshapenet",
+					"x" : 0,
+					"y" : 0,
+					"z" : 0,
+					"actorParams": {
+						"shapenetSynset" : "02818832"
+					}
+				}
+			]
+		}
+	]
+}

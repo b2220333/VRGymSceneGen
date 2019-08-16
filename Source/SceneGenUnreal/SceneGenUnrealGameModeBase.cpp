@@ -133,6 +133,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	}
 	objectsDamped = true;
 
+	/*
 	// spawn params for test objects
 	FActorSpawnParameters spawnParams;
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
@@ -144,12 +145,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		if (numResets != 0) {
 			demoAgent->playRandomAnimation();
 		}
-		/*
-		AController* playerController;
-		playerController->Possess(demoAgent);
-		*/
-
-
+		
 		primaryAgent = demoAgent;
 		gymAgents.Add(demoAgent);
 	}
@@ -167,6 +163,8 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 	AGLighting* light = GetWorld()->SpawnActor<AGLighting>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 	light->spawnPointLight(FVector(0, 0, 400));
 	gymObjects.Add(light);
+
+	*/
 
 	// resets damping after 5 seconds to allow models to settle
 	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &ASceneGenUnrealGameModeBase::resetDamping, 5);
@@ -372,15 +370,15 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 	float relY = 0;
 	float relZ = 0;
 
-	json::value_type x = actor["x"];
+	json::value_type x = actor["xCenter"];
 	if (x.is_number()) {
 		relX = x;
 	}
-	json::value_type y = actor["y"];
+	json::value_type y = actor["yCenter"];
 	if (y.is_number()) {
 		relY = y;
 	}
-	json::value_type z = actor["z"];
+	json::value_type z = actor["zCenter"];
 	if (z.is_number()) {
 		relZ = z;
 	}

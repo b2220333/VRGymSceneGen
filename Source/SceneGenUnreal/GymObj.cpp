@@ -267,3 +267,13 @@ void AGymObj::setBaseMesh(UStaticMeshComponent* newBaseMesh)
 {
 	baseMesh = newBaseMesh;
 }
+
+void AGymObj::setName(FString newName)
+{
+	name = newName;
+}
+
+FString AGymObj::getName()
+{
+	return name;
+}

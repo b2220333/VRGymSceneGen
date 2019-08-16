@@ -2,27 +2,34 @@
 	"name" : "muriDemo",
 	"xWidth" : 1000,
 	"yWidth": 1000,
-	"zWidth": 1000,
+	"zWidth": 500,
 	"autoGenWalls" : true,
 	"shapenetActorGroups" : [
 		{
 			"name" : "tableArea",
+			"xCenter": -100,
+			"yCenter" : 200,
+			"zCenter" : 0,
 			"childShapenetActorGroups" :[
 				{
 					"name" : "itemsOnTable",
 					"shapenetActors" : [
 
 						{
-							"name" : "plate1"
+							"name" : "plate1",
+							"type" : "gymobj"
 						},
 						{
-							"name" : "plate2"
+							"name" : "plate2",
+							"type" : "gymobj"
 						},
 						{
-							"name" : "plate3"
+							"name" : "plate3",
+							"type" : "gymobj"
 						},
 						{
-							"name" : "plate4"
+							"name" : "plate4",
+							"type" : "gymobj"
 						}
 					]
 				},
@@ -30,31 +37,72 @@
 					"name" : "chairs",
 					"shapenetActors" : [
 						{
-							"name" : "chair1"
+							"name" : "chair1",
+							"xCenter": 0,
+							"yCenter" : 100,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Chairs/model_normalized.model_normalized"
+							}
 						},
 						{
-							"name" : "chair2"
+							"name" : "chair2",
+							"xCenter": 0,
+							"yCenter" : -100,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Chairs/model_normalized.model_normalized"
+							}
 						},
 						{
-							"name" : "chair3"
+							"name" : "chair3",
+							"xCenter": 100,
+							"yCenter" : 0,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Chairs/model_normalized.model_normalized"
+							}
 						},
 						{
-							"name" : "chair4"
+							"name" : "chair4",
+							"xCenter": -100,
+							"yCenter" : 0,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Chairs/model_normalized.model_normalized"
+							}
 						}
 					]
 				}
 			],
 			"shapenetActors" : [
 				{
-					"name" : "table"
+					"name" : "table",
+					"xCenter": 0,
+					"yCenter" : 0,
+					"zCenter" : 0,
+					"type" : "gymobj",
+					"actorParams" : {
+						"meshPath" : "/Game/DemoAssets/Tables/indoor/model_normalized.model_normalized"
+					}
 				}
 			]
 		},
 		{
 			"name" : "cookingArea",
+			"xCenter": 150,
+			"yCenter" : -50,
+			"zCenter" : 0,
 			"childShapenetActorGroups" : [
 				{
 					"name" : "counterArea",
+					"xCenter": 100,
+					"yCenter" : 0,
+					"zCenter" : 0,
 					"childShapenetActorGroups" : [
 						{
 							"name" : "ingredients",
@@ -73,7 +121,14 @@
 					],
 					"shapenetActors" : [
 						{
-							"name" : "counterTop"
+							"name" : "counterTop",
+							"xCenter": 0,
+							"yCenter" : 0,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Counters/indoor/model_normalized.model_normalized"
+							}
 						}
 					]
 				},
@@ -82,7 +137,13 @@
 					"shapenetActors" : [
 						{
 							"name" : "heatSource",
-							"type" : "gsnstove"
+							"xCenter": -100,
+							"yCenter" : 0,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Stoves/indoor/model_normalized.model_normalized"
+							}
 						}
 					],
 				}
@@ -97,10 +158,6 @@
 				},
 				{
 					"name" : "sink",
-					"type" : "gshapenet"
-				}
-				{
-					"name" : "counter",
 					"type" : "gshapenet"
 				}
 

@@ -1,114 +1,155 @@
 {
-	"name": "bedroom",
-	"xWidth" : 1000,
+	"name" : "muriDemo",
+	"xWidth" : 600,
 	"yWidth": 1000,
 	"zWidth": 500,
 	"autoGenWalls" : true,
 	"shapenetActorGroups" : [
 		{
-			"name" : "deskArea",
-			"xDist": {
-				"gaussian" : {
-					"mean" : -100,
-					"std" : 50
-				}
-			},
-			"yDist": {
-				"gaussian" : {
-					"mean" : 200,
-					"std" : 50
-				}
-			},
-			"xCenter": -100,
-			"yCenter" : 200,
+			"name" : "tableArea",
+			"xCenter": 150,
+			"yCenter" : 150,
 			"zCenter" : 0,
-			"actorParams" : {
-				"useRandomTextures" : true
-			},
-			"shapenetActors": [
+			"childShapenetActorGroups" :[
 				{
-					"name" : "chairForDesk",
-					"type" : "gshapenet",
-					"x" : 50,
-					"y" : 0,
-					"z" : 0,
-					"actorParams": {
-						"shapenetSynset" : "03001627"
-					}
-				}
-			],
-			"childShapenetActorGroups" : [
-				{
-					"name" : "desk",
-					"xCenter": -100,
-					"yCenter" : 0,
-					"zCenter" : 0,
-					"shapenetActors": [
+					"name" : "chairs",	
+					"shapenetActors" : [
 						{
-							"name" : "bedroomDesk",
-							"type" : "gshapenet",
-							"x" : 0,
-							"y" : 0,
-							"z" : 0,
-							"actorParams": {
-								"shapenetSynset" : "04379243",
-								"worldScale" : 2.5,
+							"name" : "chair1",
+							"xCenter": 0,
+							"yCenter" : 80,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Chairs/model_normalized.model_normalized"
+							}
+						},
+						{
+							"name" : "chair2",
+							"xCenter": 0,
+							"yCenter" : -80,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Chairs/model_normalized.model_normalized",
+								"yaw" : 180
+							}
+						},
+						{
+							"name" : "chair3",
+							"xCenter": 80,
+							"yCenter" : 0,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Chairs/model_normalized.model_normalized",
 								"yaw" : 90
 							}
-						}
-					],
-					"childShapenetActorGroups" : [
+						},
 						{
-							"name" : "itemsOnDesk",
+							"name" : "chair4",
+							"xCenter": -80,
+							"yCenter" : 0,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Chairs/model_normalized.model_normalized",
+								"yaw" : -90
+							}
+						}
+					]
+				}
+			],
+			"shapenetActors" : [
+				{
+					"name" : "table",
+					"xCenter": 0,
+					"yCenter" : 0,
+					"zCenter" : 0,
+					"type" : "gymobj",
+					"actorParams" : {
+						"meshPath" : "/Game/DemoAssets/Tables/indoor/model_normalized.model_normalized",
+						"worldScale" : 1.5
+					}
+				}
+			]
+		},
+		{
+			"name" : "cookingArea",
+			"xCenter": 0,
+			"yCenter" : -100,
+			"zCenter" : 0,
+			"childShapenetActorGroups" : [
+				{
+					"name" : "counterArea",
+					"xCenter": 200,
+					"yCenter" : -120,
+					"zCenter" : 0,
+					"shapenetActors" : [
+						{
+							"name" : "counterTop",
 							"xCenter": 0,
 							"yCenter" : 0,
 							"zCenter" : 0,
-							"shapenetActors" : [
-								{
-									"name" : "lamp",
-									"type" : "gshapenet",
-									"x" : -50,
-									"y" : 75,
-									"z" : 0,
-									"actorParams": {
-										"shapenetSynset" : "03636649",
-										"physicsEnabled" : true,
-										"worldScale" : 0.5
-									}
-								},
-								{
-									"name" : "bottle",
-									"type" : "gshapenet",
-									"x" : -50,
-									"y" : -75,
-									"z" : 0,
-									"actorParams": {
-										"shapenetSynset" : "02876657",
-										"worldScale" : 0.5
-									}
-								}
-							]
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Counters/indoor/model_normalized.model_normalized",
+								"worldScale" : 2.5,
+								"yaw" : 180
+							}
+						}
+					]
+				},
+				{
+					"name" : "heatingArea",
+					"shapenetActors" : [
+						{
+							"name" : "heatSource",
+							"xCenter": 60,
+							"yCenter" : -100,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Stoves/indoor/model_normalized.model_normalized",
+								"worldScale" : 1.75,
+								"yaw" : 180
+							}
 						}
 					]
 				}
 			]
 		},
 		{
-			"name" : "bedArea",
-			"xCenter": 150,
-			"yCenter" : -50,
+			"name" : "backGroundObjects",
+			"xCenter": -190,
+			"yCenter" : -150,
 			"zCenter" : 0,
-			"shapenetActors": [
+			"shapenetActors" : [
 				{
-					"name" : "bed",
-					"type" : "gshapenet",
-					"x" : 0,
-					"y" : 0,
-					"z" : 0,
-					"actorParams": {
-						"shapenetSynset" : "02818832"
+					"name" : "dishawasher",
+					"xCenter": 0,
+					"yCenter" : -100,
+					"zCenter" : 0,
+					"type" : "gymobj",
+					"actorParams" : {
+						"meshPath" : "/Game/DemoAssets/Dishwasher/model_normalized.model_normalized",
+						"yaw" : -90,
+						"worldScale" : 1.5
+					}
+				},
+				{
+					"name" : "sink",
+					"xCenter": 0,
+					"yCenter" : -70,
+					"zCenter" : 0,
+					"type" : "gymobj",
+					"actorParams" : {
+						"meshPath" : "/Game/DemoAssets/Sinks/Indoor/sink.sink",
+						"yaw" : 90,
+						"worldScale" : 1.25
 					}
 				}
+
 			]
 		}
 	]
