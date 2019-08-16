@@ -394,16 +394,17 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 	}
 
 	//FVector spawnLocation = FVector(origin.X + relX, origin.Y + relY, origin.Z + relZ) * FVector(-1.0, 1.0, 1.0);
-	FVector spawnLocation = FVector(origin.X + relX, origin.Y + relY, 500) * FVector(-1.0, 1.0, 1.0);
+	FVector spawnLocation = FVector(origin.X + relX, origin.Y + relY, origin.Z + relZ) * FVector(-1.0, 1.0, 1.0);
+	if (!actor["type"].is_string()) {
+		return;
+	}
 
 	if (actor["name"].is_string()) {
 		FString displayName = FString(actor["name"].get<json::string_t>().c_str());
 		UE_LOG(LogTemp, Warning, TEXT("Spawning %s at (%f %f, %f)"), *displayName, spawnLocation.X, spawnLocation.Y, spawnLocation.Z);
 	}
 
-	if (!actor["type"].is_string()) {
-		return;
-	}
+	
 	FActorSpawnParameters spawnParams;
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	FString type = FString(actor["type"].get<json::string_t>().c_str());
@@ -559,6 +560,11 @@ void ASceneGenUnrealGameModeBase::transferParamsBetween(json::object_t &srcObj, 
 
 		if (dstParams.find("roll") == dstParams.end() && srcParams.find("roll") != srcParams.end()) {
 			dstParams["roll"] = srcParams["roll"];
+		}
+
+
+		if (dstParams.find("autoHeight") == dstParams.end() && srcParams.find("autoHeight") != srcParams.end()) {
+			dstParams["autoHeight"] = srcParams["autoHeight"];
 		}
 	}
 }

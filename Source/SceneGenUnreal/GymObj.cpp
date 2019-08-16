@@ -240,13 +240,20 @@ void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t param
 
 void AGymObj::locationSetup(FVector location, json::object_t params)
 {
-	
-	FVector origin;
-	FVector extents;
-	GetActorBounds(false, origin, extents);
-	
-	// spawn object directly above floor (assuming automatic heigh adjustment for now
-	location.Z = extents.Z + 1;
+	bool autoHeight = true;
+	if (params["autoHeight"].is_boolean()) {
+		autoHeight = params["autoHeight"].get<json::boolean_t>();
+	}
+	if (autoHeight) {
+		FVector origin;
+		FVector extents;
+		GetActorBounds(false, origin, extents);
+		UE_LOG(LogTemp, Warning, TEXT("Autoheight"))
+		// spawn object directly above floor (assuming automatic heigh adjustment for now
+		location.Z = extents.Z + 1;
+	}
+
+
 	originalSpawnLocation = location;
 	RootComponent->SetWorldLocation(location);
 	

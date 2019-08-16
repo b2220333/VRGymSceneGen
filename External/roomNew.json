@@ -120,7 +120,7 @@
 			]
 		},
 		{
-			"name" : "backGroundObjects",
+			"name" : "waterObjects",
 			"xCenter": -190,
 			"yCenter" : -150,
 			"zCenter" : 0,
@@ -147,6 +147,28 @@
 						"meshPath" : "/Game/DemoAssets/Sinks/Indoor/sink.sink",
 						"yaw" : 90,
 						"worldScale" : 1.25
+					}
+				}
+
+			]
+		}
+		{
+			"name" : "miscBackground",
+			"xCenter": 0,
+			"yCenter" : 0,
+			"zCenter" : 0,
+			"shapenetActors" : [
+				{
+					"name" : "door",
+					"xCenter": -100,
+					"yCenter" : 230,
+					"zCenter" : 260,
+					"type" : "gymobj",
+					"actorParams" : {
+						"meshPath" : "/Game/Assets/sunCG/cabin/405/405Door1.405Door1",
+						"physicsEnabled" : false,
+						"autoHeight" : false,
+						"roll" : -90
 					}
 				}
 
