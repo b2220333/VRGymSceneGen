@@ -50,6 +50,8 @@ public:
 
 	virtual UPawnMovementComponent* GetMovementComponent() const override;
 
+	void setHeldObject(class AGymObj* obj);
+
 private:
 	// whether the agent is holding an object
 	bool isHoldingObject;

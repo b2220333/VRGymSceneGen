@@ -85,9 +85,6 @@ void AGDemoAgent::BeginPlay()
 	*/
 	playAnimation("ThirdPersonIdle", true);
 
-	ASceneGenUnrealGameModeBase* mode = (ASceneGenUnrealGameModeBase*) GetWorld()->GetAuthGameMode();
-	mode->attachToAgent(this);
-
 
 }
 
@@ -126,6 +123,8 @@ void AGDemoAgent::pickUpObject()
 		return;
 	}
 	playAnimation("ThirdPersonPickup", false);
+	ASceneGenUnrealGameModeBase* mode = (ASceneGenUnrealGameModeBase*)GetWorld()->GetAuthGameMode();
+	mode->attachToAgent(this);
 	isHoldingObject = true;
 }
 
@@ -135,6 +134,10 @@ void AGDemoAgent::dropObject()
 		return;
 	}
 	playAnimation("ThirdPersonDrop", false);
+	heldObject->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
+	heldObject->getBaseMesh()->SetSimulatePhysics(true);
+	heldObject->SetActorEnableCollision(true);
+
 	isHoldingObject = false;
 }
 
@@ -234,4 +237,9 @@ void AGDemoAgent::Tick(float DeltaTime)
 UPawnMovementComponent* AGDemoAgent::GetMovementComponent() const
 {
 	return movementComponent;
+}
+
+void AGDemoAgent::setHeldObject(AGymObj* obj)
+{
+	heldObject = obj;
 }

@@ -89,7 +89,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		heatSource = spawnedGymObj;
 
 
-		
+		actorParams["physicsEnabled"] = true;
 		// spawn lighter
 		path = "/Game/DemoAssets/Lighter/Clipper.Clipper";
 		actorParams["yaw"] = 0;
@@ -857,20 +857,20 @@ void ASceneGenUnrealGameModeBase::setMode(FString newMode)
 
 void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 {
-	FVector agentLocation = agent->GetActorLocation();
+	FVector socketLocation = agent->baseMesh->GetSocketLocation("hand_rSocket");
 
 	float distances[3] = {-1,-1,-1 };
 
 	if (meat) {
-		distances[0] = FVector::Dist(agentLocation, meat->GetActorLocation());
+		distances[0] = FVector::Dist(socketLocation, meat->GetActorLocation());
 	}
 
 	if (salt) {
-		distances[1] = FVector::Dist(agentLocation, salt->GetActorLocation());
+		distances[1] = FVector::Dist(socketLocation, salt->GetActorLocation());
 	}
 
 	if (lighter) {
-		distances[2] = FVector::Dist(agentLocation, lighter->GetActorLocation());
+		distances[2] = FVector::Dist(socketLocation, lighter->GetActorLocation());
 	}
 
 	float min = 0;
@@ -890,11 +890,14 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 	}
 	if (closest) {
 		closest->SetActorEnableCollision(false);
+		closest->getBaseMesh()->SetSimulatePhysics(false);
 		closest->AttachToComponent(agent->baseMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true), FName("hand_rSocket"));
-		closest->SetActorRelativeLocation(FVector(-10, 5, -10));
+		switch (index) {
+			case 0: closest->SetActorRelativeLocation(FVector(-15, 5, 0)); closest->SetActorRelativeRotation(FRotator(45,-20,0)); break;
+			case 1: closest->SetActorRelativeLocation(FVector(-12, 9, -5)); closest->SetActorRelativeRotation(FRotator(0,0,90)); break;
+			case 2: closest->SetActorRelativeLocation(FVector(-10, 5, -10)); break;
+		}
+		agent->setHeldObject(closest);
 	}
-
-
-
 
 }
