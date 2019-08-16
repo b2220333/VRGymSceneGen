@@ -97,8 +97,8 @@ public:
 	void cook();
 	void dispenseSalt();
 	void addFire(FString mode);
-
-
+	
+	void toggleFire();
 
 private:
 	// name of object
@@ -124,4 +124,7 @@ private:
 	// whether this gym object interacts with other gym objects and gym agetns
 	bool interactsWithGymObjs;
 	bool interactsWithGymAgents;
+
+	class UParticleSystemComponent* fire;
+
 };

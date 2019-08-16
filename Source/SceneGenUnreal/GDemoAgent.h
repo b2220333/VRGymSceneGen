@@ -31,7 +31,7 @@ public:
 	void dropObject();
 
 	// releases an object with an initial velocity forward
-	void throwObject();
+	void shakeSalt();
 	
 	// must be public for animation to work for some reason
 	UPROPERTY(EditAnywhere)
@@ -55,7 +55,7 @@ private:
 	bool isHoldingObject;
 
 	// the object that the agent is holding
-	AGymObject* heldObject;
+	class AGymObj* heldObject;
 
 	bool walking;
 	

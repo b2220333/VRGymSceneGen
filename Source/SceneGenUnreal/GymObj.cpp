@@ -39,7 +39,6 @@ UStaticMeshComponent* AGymObj::getBaseMesh()
 
 bool AGymObj::assignMeshFromPath(FString path, FVector location, json::object_t params)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Here again"))
 	if (params["spawnProbability"].is_number()) {
 		float rng = FMath::RandRange(0.0f, 1.0f);
 		if (rng > params["spawnProbability"] && params["spawnProbability"] >= 0.0f) {
@@ -49,6 +48,7 @@ bool AGymObj::assignMeshFromPath(FString path, FVector location, json::object_t 
 
 	UStaticMesh* staticMeshReference = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), nullptr, *path));
 	if (!staticMeshReference) {
+		UE_LOG(LogTemp, Warning, TEXT("Could not find mesh"))
 		return false;
 	}
 	baseMesh = NewObject<UStaticMeshComponent>(this, "baseMesh");
@@ -65,6 +65,7 @@ bool AGymObj::assignMeshFromPath(FString path, FVector location, json::object_t 
 	importParams = params;
 	baseMesh->RegisterComponent();
 	locationSetup(location, params);
+	UE_LOG(LogTemp, Warning, TEXT("Mesh assigned"))
 	return true;
 }
 
@@ -300,18 +301,31 @@ void AGymObj::addFire(FString mode)
 {
 	FString path = "/Game/StarterContent/Particles/P_Fire.P_Fire";
 	UParticleSystem* particleSystem = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), nullptr, *path));
-	UParticleSystemComponent* fire = NewObject<UParticleSystemComponent>(this, "fire");
+	fire = NewObject<UParticleSystemComponent>(this, "fire");
 	if (!particleSystem || !fire) {
 		return;
 	}
 	fire->SetTemplate(particleSystem);
 	fire->SetupAttachment(RootComponent);
 	fire->RegisterComponent();
+	fire->SetVisibility(false);
 	if (mode == "indoor") {
-		
+		fire->SetRelativeLocation(FVector(0, 0, 10));
+		fire->SetWorldScale3D(FVector(0.05, 0.05, 0.025));
 	}
 	else if (mode == "outdoor") {
 
 	}
 
+}
+
+void AGymObj::toggleFire()
+{
+	if (fire->IsVisible()) {
+		fire->SetVisibility(false);
+
+	}
+	else {
+		fire->SetVisibility(true);
+	}
 }

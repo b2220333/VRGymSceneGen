@@ -109,6 +109,8 @@ public:
 	FString getMode();
 	void setMode(FString newMode);
 
+	void toggleFire();
+
 private:
 	// objects in game
 	TArray<AGymObj*> gymObjects;

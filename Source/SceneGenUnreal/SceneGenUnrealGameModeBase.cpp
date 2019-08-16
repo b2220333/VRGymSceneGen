@@ -48,9 +48,18 @@ void ASceneGenUnrealGameModeBase::BeginPlay() {
 	UWorld* World = GetWorld();
 	if (World) {
 		World->GetFirstPlayerController()->InputComponent->BindAction("resampleScene", IE_Pressed, this, &ASceneGenUnrealGameModeBase::spawnShapenetActors);
+		World->GetFirstPlayerController()->InputComponent->BindAction("toggleFire", IE_Pressed, this, &ASceneGenUnrealGameModeBase::toggleFire);
 	}
 	
 }
+
+void ASceneGenUnrealGameModeBase::toggleFire()
+{
+	if (heatSource) {
+		heatSource->toggleFire();
+	}
+}
+
 
 void ASceneGenUnrealGameModeBase::Tick(float DeltaSeconds) {
 	Super::Tick(DeltaSeconds);
@@ -419,6 +428,7 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 				success = spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
 			}
 			spawnedObj = spawnedGymObj;
+			UE_LOG(LogTemp, Warning, TEXT("Tried GymObj"))
 		}
 		else if (type.ToLower() == "GShapenet") {
 			AGShapenet* spawnedGymShapenetObj = GetWorld()->SpawnActor<AGShapenet>(spawnLocation, FRotator::ZeroRotator, spawnParams);

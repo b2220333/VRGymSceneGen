@@ -95,7 +95,7 @@ void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 	// interaction 
 	PlayerInputComponent->BindAction("Pickup", IE_Pressed, this, &AGDemoAgent::pickUpObject);
 	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AGDemoAgent::dropObject);
-	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AGDemoAgent::throwObject);
+	PlayerInputComponent->BindAction("Shake", IE_Pressed, this, &AGDemoAgent::shakeSalt);
 
 	// from third person
 	PlayerInputComponent->BindAxis("MoveForward", this, &AGDemoAgent::MoveForward);
@@ -133,21 +133,15 @@ void AGDemoAgent::dropObject()
 	isHoldingObject = false;
 }
 
-void AGDemoAgent::throwObject()
+void AGDemoAgent::shakeSalt()
 {
-	if (!isHoldingObject) {
+	/*
+	if (!heldObject || !isHoldingObject || heldObject->getName() != "salt") {
 		return;
 	}
-	// windup throw
-	playAnimation("ThirdPersonDrop", false);
-	playAnimation("ThirdPersonPickup", false);
+	*/
 	
-	// release object
-
-
-	// back to holding nothing
-	playAnimation("ThirdPersonDrop", false);
-	playAnimation("ThirdPersonIdle", false);
+	playAnimation("shake", false);
 
 }
 

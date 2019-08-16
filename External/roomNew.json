@@ -132,9 +132,39 @@
 							"type" : "gymobj",
 							"actorParams" : {
 								"meshPath" : "/Game/DemoAssets/Counters/indoor/model_normalized.model_normalized",
-								"worldScale" : 2.5,
+								"worldScale" : 2.4,
 								"yaw" : 180
 							}
+						}
+					],
+					"childShapenetActorGroups" : [
+						{
+							"name" : "ingredients",
+							"zCenter" : 100,
+							"shapenetActors" : [
+								{
+									"name" : "meat",
+									"type" : "gymobj",
+									"xCenter" : 40,
+									"actorParams" : {
+										"meshPath" : "/Game/Assets/Meat/meat.meat",
+										"autoHeight" : false,
+										"worldScale" : 2,
+										"roll" : 90
+									}
+								},
+								{
+									"name" : "salt",
+									"type" : "gymobj",
+									"xCenter" : -75,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/MinorObject/consistent/sugarpourer/SugarDespenseClassic.SugarDespenseClassic",
+										"autoHeight" : false,
+										"worldScale" : 0.25,
+										"roll" : 90
+									}
+								}
+							]
 						}
 					]
 				},
@@ -153,6 +183,29 @@
 								"yaw" : 180
 							}
 						}
+					],
+					"childShapenetActorGroups" : [
+						{
+							"name" : "itemsOnStove",
+							"xCenter" : 35,
+							"yCenter" : -110,
+							"zCenter" : 120,
+							"shapenetActors" : [
+								{
+									"name" : "pan",
+									"type" : "gymobj",
+									"xCenter" : 25,
+									"yCenter" : 15,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/pan/pan1_2.pan1_2",
+										"autoHeight" : false,
+										"worldScale" : 0.4,
+										"roll" : 90							
+									}
+								}
+							]
+						}
+
 					]
 				}
 			]
