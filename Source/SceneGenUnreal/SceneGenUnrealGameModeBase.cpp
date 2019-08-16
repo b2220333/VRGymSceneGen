@@ -890,7 +890,8 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 	}
 	if (closest) {
 		closest->SetActorEnableCollision(false);
-		closest->AttachToComponent(agent->baseMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, true), FName("index_02_rSocket"));
+		closest->AttachToComponent(agent->baseMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true), FName("hand_rSocket"));
+		closest->SetActorRelativeLocation(FVector(-10, 5, -10));
 	}
 
 
