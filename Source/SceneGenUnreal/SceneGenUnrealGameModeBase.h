@@ -114,6 +114,8 @@ public:
 
 	void attachToAgent(class AGDemoAgent* agent);
 
+	void cook();
+
 private:
 	// objects in game
 	TArray<AGymObj*> gymObjects;

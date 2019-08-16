@@ -51,6 +51,7 @@ void ASceneGenUnrealGameModeBase::BeginPlay() {
 		World->GetFirstPlayerController()->InputComponent->BindAction("resampleScene", IE_Pressed, this, &ASceneGenUnrealGameModeBase::spawnShapenetActors);
 		World->GetFirstPlayerController()->InputComponent->BindAction("toggleFire", IE_Pressed, this, &ASceneGenUnrealGameModeBase::toggleFire);
 		World->GetFirstPlayerController()->InputComponent->BindAction("salt", IE_Pressed, this, &ASceneGenUnrealGameModeBase::dispenseSalt);
+		World->GetFirstPlayerController()->InputComponent->BindAction("cook", IE_Pressed, this, &ASceneGenUnrealGameModeBase::cook);
 	}
 	
 }
@@ -904,6 +905,7 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 		agent->setHeldObject(closest);
 	}
 
+
 }
 
 
@@ -911,5 +913,12 @@ void ASceneGenUnrealGameModeBase::dispenseSalt()
 {
 	if (salt) {
 		salt->dispenseSalt();
+	}
+}
+
+void ASceneGenUnrealGameModeBase::cook()
+{
+	if (meat) {
+		meat->setMaterial("/Game/Assets/Meat/cookedMat.cookedMat");
 	}
 }
