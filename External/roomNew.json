@@ -25,17 +25,6 @@
 							}
 						},
 						{
-							"name" : "chair2",
-							"xCenter": 0,
-							"yCenter" : -45,
-							"zCenter" : 0,
-							"type" : "gymobj",
-							"actorParams" : {
-								"meshPath" : "/Game/DemoAssets/Chairs/model_normalized.model_normalized",
-								"yaw" : 180
-							}
-						},
-						{
 							"name" : "chair3",
 							"xCenter": 80,
 							"yCenter" : 0,
@@ -62,10 +51,10 @@
 				{
 					"name" : "plates",
 					"xCenter" : 15,
-					"zCenter" : 85,
+					"zCenter" : 72,
 					"actorParams" :{
 						"roll" : 90,
-						"worldScale" : 3,
+						"worldScale" : 3.5,
 						"physicsEnabled" : true,
 						"autoHeight" : false,
 						"meshPath" : "/Game/Assets/plate/plate.plate"
@@ -140,7 +129,7 @@
 					"childShapenetActorGroups" : [
 						{
 							"name" : "ingredients",
-							"yCenter" : 20,
+							"yCenter" : 30,
 							"zCenter" : 100,
 							"shapenetActors" : [
 								{
@@ -180,7 +169,7 @@
 							"type" : "gymobj",
 							"actorParams" : {
 								"meshPath" : "/Game/DemoAssets/Stoves/indoor/model_normalized.model_normalized",
-								"worldScale" : 1.75,
+								"worldScale" : 1.5,
 								"yaw" : 180
 							}
 						}
@@ -190,7 +179,7 @@
 							"name" : "itemsOnStove",
 							"xCenter" : 35,
 							"yCenter" : -110,
-							"zCenter" : 120,
+							"zCenter" : 100,
 							"shapenetActors" : [
 								{
 									"name" : "pan",

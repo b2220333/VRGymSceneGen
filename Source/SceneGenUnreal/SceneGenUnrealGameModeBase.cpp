@@ -60,7 +60,7 @@ void ASceneGenUnrealGameModeBase::toggleFire()
 		heatSource->toggleFire();
 	}
 	if (wood) {
-		wood->toggleFire();
+		//wood->toggleFire();
 	}
 }
 
@@ -911,20 +911,31 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 		case 2: closest = lighter; break;
 	}
 	if (closest) {
-		closest->SetActorEnableCollision(false);
-		closest->getBaseMesh()->SetSimulatePhysics(false);
-		closest->AttachToComponent(agent->baseMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true), FName("hand_rSocket"));
-		switch (index) {
-			case 0: closest->SetActorRelativeLocation(FVector(-15, 5, 0)); closest->SetActorRelativeRotation(FRotator(45,-20,0)); break;
-			case 1: closest->SetActorRelativeLocation(FVector(-12, 9, -5)); closest->SetActorRelativeRotation(FRotator(0,0,90)); break;
-			case 2: closest->SetActorRelativeLocation(FVector(-10, 5, -10)); break;
-		}
-		agent->setHeldObject(closest);
+		FTimerDelegate TimerDel;
+		FTimerHandle TimerHandle;
+
+
+		TimerDel.BindUFunction(this, FName("asyncAttach"), agent, closest, index);
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 0.760f, false);
 	}
-
-
 }
 
+void ASceneGenUnrealGameModeBase::asyncAttach(AGDemoAgent* agent, AGymObj* closest, int index)
+{
+	closest->SetActorEnableCollision(false);
+	closest->getBaseMesh()->SetSimulatePhysics(false);
+	closest->AttachToComponent(agent->baseMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::KeepWorld, true), FName("hand_rSocket"));
+	switch (index) {
+		/*
+		case 0: closest->SetActorRelativeLocation(FVector(-15, 5, 0)); closest->SetActorRelativeRotation(FRotator(45,-20,0)); break;
+		case 1: closest->SetActorRelativeLocation(FVector(-12, 9, -5)); closest->SetActorRelativeRotation(FRotator(0,0,90)); break;
+		case 2: closest->SetActorRelativeLocation(FVector(-10, 5, -10)); break;*/
+	case 0: closest->SetActorRelativeLocation(FVector(0, 8, 0)); closest->SetActorRelativeRotation(FRotator(-30, 0, -100)); break;
+	case 1: closest->SetActorRelativeLocation(FVector(5, 0, 0)); closest->SetActorRelativeRotation(FRotator(0, -120, 35)); break;
+	case 2: closest->SetActorRelativeLocation(FVector(3, -5, -4)); closest->SetActorRelativeRotation(FRotator(45, 0, 45)); break;
+	}
+	agent->setHeldObject(closest);
+}
 
 void ASceneGenUnrealGameModeBase::dispenseSalt()
 {

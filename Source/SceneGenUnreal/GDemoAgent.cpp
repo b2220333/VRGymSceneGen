@@ -23,12 +23,13 @@ AGDemoAgent::AGDemoAgent()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
-	UCapsuleComponent* capsule = CreateDefaultSubobject<UCapsuleComponent>("Capsule");
-	capsule->InitCapsuleSize(32.f, 96.0f);
+	capsule = CreateDefaultSubobject<UCapsuleComponent>("Capsule");
+	capsule->InitCapsuleSize(32.f, 90.0f);
 	RootComponent = capsule;
 
 	baseMesh = CreateDefaultSubobject <USkeletalMeshComponent>("baseMesh");
-	FString path = "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin";
+	//FString path = "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin";
+	FString path = "/Game/Characters/female1/female1.female1";
 	USkeletalMesh* test2 = Cast<USkeletalMesh>(StaticLoadObject(USkeletalMesh::StaticClass(), nullptr, *path));
 
 	baseMesh->SetSkeletalMesh(test2);
@@ -36,7 +37,7 @@ AGDemoAgent::AGDemoAgent()
 
 
 	FVector agentLocation = GetActorLocation();
-	baseMesh->SetWorldLocation(agentLocation - FVector(0, 0, 96));
+	baseMesh->SetWorldLocation(agentLocation - FVector(0, 0, 94));
 	baseMesh->SetRelativeRotation(FVector(0, -90, 0).ToOrientationQuat());
 	baseMesh->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 	/*
@@ -150,7 +151,7 @@ void AGDemoAgent::dropObject()
 	heldObject->getBaseMesh()->SetSimulatePhysics(true);
 	heldObject->SetActorEnableCollision(true);
 	if (heldObject->GetName() != "meat") {
-		heldObject->resetOrientationIn(1);
+		heldObject->resetOrientationIn(0.4);
 	}
 	isHoldingObject = false;
 	
@@ -210,8 +211,7 @@ void AGDemoAgent::MoveRight(float AxisValue)
 void AGDemoAgent::playRandomAnimation()
 {
 	TArray<FString> animations = {
-		"ThirdPerson_Jump", "ThirdPersonDrop", "ThirdPersonIdle", "ThirdPersonJump_End","ThirdPersonJump_Loop", 
-		"ThirdPersonJump_Start", "ThirdPersonPickup", "ThirdPersonRun", "ThirdPersonWalk"
+		"ThirdPerson_Jump", "ThirdPersonDrop", "ThirdPersonIdle", "ThirdPersonPickup", "ThirdPersonRun", "ThirdPersonWalk"
 	};
 
 	int32 i = FMath::RandRange(0, animations.Num() - 1);
@@ -224,8 +224,8 @@ void AGDemoAgent::playRandomAnimation()
 void AGDemoAgent::playAnimation(FString animName, bool looping)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Trying to play animation : %s"), *animName)
-	
-	FString path = "AnimSequence'/Game/Mannequin/Animations/" + animName + "." + animName + "'B";
+	FString path = "AnimSequence'/Game/Characters/female1/" + animName + "." + animName + "'B";
+	//FString path = "AnimSequence'/Game/Mannequin/Animations/" + animName + "." + animName + "'B";
 	animation = LoadObject<UAnimationAsset>(nullptr, *path);
 	if (animation && baseMesh) {
 		baseMesh->PlayAnimation(animation, looping);

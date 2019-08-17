@@ -114,7 +114,13 @@ public:
 
 	void attachToAgent(class AGDemoAgent* agent);
 
+	UFUNCTION()
+	void asyncAttach(AGDemoAgent* agent, AGymObj* closest, int index);
+
 	void cook();
+
+
+	
 
 private:
 	// objects in game
@@ -129,7 +135,7 @@ private:
 
 	int numResets;
 
-	FString mode = "indoor";
+	FString mode = "outdoor";
 
 	
 

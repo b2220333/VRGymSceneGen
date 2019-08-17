@@ -50,6 +50,10 @@ public:
 
 	virtual UPawnMovementComponent* GetMovementComponent() const override;
 
+
+	UPROPERTY(EditAnywhere)
+	class UCapsuleComponent* capsule;
+
 	void setHeldObject(class AGymObj* obj);
 
 private:
