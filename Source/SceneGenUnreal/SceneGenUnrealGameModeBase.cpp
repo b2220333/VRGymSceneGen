@@ -37,7 +37,6 @@ using json = nlohmann::json;
 ASceneGenUnrealGameModeBase::ASceneGenUnrealGameModeBase()
 {
 	DefaultPawnClass = AGDemoAgent::StaticClass();
-	mode = "outdoor";
 }
 
 void ASceneGenUnrealGameModeBase::BeginPlay() {
@@ -45,7 +44,6 @@ void ASceneGenUnrealGameModeBase::BeginPlay() {
 	UE_LOG(LogTemp, Warning, TEXT("BeginPlay: starting game mode"));
 	numResets = 0;
 	spawnShapenetActors();
-
 	UWorld* World = GetWorld();
 	if (World) {
 		World->GetFirstPlayerController()->InputComponent->BindAction("resampleScene", IE_Pressed, this, &ASceneGenUnrealGameModeBase::spawnShapenetActors);
@@ -60,6 +58,9 @@ void ASceneGenUnrealGameModeBase::toggleFire()
 {
 	if (heatSource) {
 		heatSource->toggleFire();
+	}
+	if (wood) {
+		wood->toggleFire();
 	}
 }
 
@@ -99,6 +100,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		actorParams["worldScale"] = 0.25;
 		spawnLocation = FVector(620, -2320, 15);
 		spawnedGymObj = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		spawnedGymObj->originalRotation = FRotator(0, 0, 0);
 		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
 		spawnedGymObj->SetActorLabel("lighter");
 		lighter = spawnedGymObj;
@@ -110,6 +112,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		actorParams["roll"] = 90;
 		actorParams["worldScale"] = 0.15;
 		spawnedGymObj = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		spawnedGymObj->originalRotation = FRotator(0, 0, 90);
 		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
 		spawnedGymObj->SetActorLabel("salt");
 		salt = spawnedGymObj;
@@ -121,9 +124,23 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		actorParams["roll"] = 90;
 		actorParams["worldScale"] = 2;
 		spawnedGymObj = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		spawnedGymObj->originalRotation = FRotator(0, 0, 90);
 		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
 		spawnedGymObj->SetActorLabel("meat");
 		meat = spawnedGymObj;
+		gymObjects.Add(spawnedGymObj);
+
+		path = "/Game/DemoAssets/Wood/12303_Firewood_Stack_v1_l3.12303_Firewood_Stack_v1_l3";
+		spawnLocation = FVector(-160, -3170, -70);
+		actorParams["roll"] = 0;
+		actorParams["yaw"] = -90;
+		actorParams["worldScale"] = 2;
+		spawnedGymObj = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		spawnedGymObj->originalRotation = FRotator(0, 0, 90);
+		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
+		spawnedGymObj->SetActorLabel("wood");
+		wood = spawnedGymObj;
+		wood->addFire("");
 		gymObjects.Add(spawnedGymObj);
 
 	} else {
@@ -881,7 +898,7 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 	float min = 0;
 	int index = 0;
 	for (int32 i = 0; i < 3; i++) {
-		if (i == 0 || distances[i] < min) {
+		if (i == 0 || (distances[i] < min && distances[i] != -1)) {
 			min = distances[i];
 			index = i;
 		}

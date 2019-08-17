@@ -137,6 +137,6 @@ private:
 	AGymObj* heatSource;
 	AGymObj* salt;
 	AGymObj* lighter;
-
+	AGymObj* wood;
 
 };

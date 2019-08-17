@@ -100,6 +100,11 @@ public:
 	
 	void toggleFire();
 
+	void resetOrientationIn(float seconds);
+	void resetOrientation();
+	FRotator originalRotation;
+	FTimerHandle FuzeTimerHandle;
+
 
 private:
 	// name of object
@@ -131,5 +136,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	UParticleSystemComponent* salt;
+
+
+	
+
 
 };

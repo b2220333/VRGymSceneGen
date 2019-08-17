@@ -61,7 +61,7 @@ private:
 
 	bool walking;
 	
-	
+
 
 	// from  third person starter content
 private:

@@ -63,8 +63,20 @@ bool AGymObj::assignMeshFromPath(FString path, FVector location, json::object_t 
 	// set private memebers after successful setup
 	baseMeshPath = path;
 	importParams = params;
+	
 	baseMesh->RegisterComponent();
 	locationSetup(location, params);
+	/*
+	baseMesh->BodyInstance.SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	baseMesh->BodyInstance.SetCollisionProfileName("BlockAll");
+	*/
+	/*
+	FBodyInstance* BodyInst = baseMesh->GetBodyInstance();
+	// New Scale 
+	BodyInst->MassScale = 99999999;
+	// Trigger Update! 
+	BodyInst->UpdateMassProperties();
+	*/
 	UE_LOG(LogTemp, Warning, TEXT("Mesh assigned"))
 	return true;
 }
@@ -306,7 +318,7 @@ void AGymObj::addFire(FString mode)
 	fire->SetVisibility(false);
 	if (mode == "indoor") {
 		fire->SetRelativeLocation(FVector(0, 0, 10));
-		fire->SetWorldScale3D(FVector(0.05, 0.05, 0.025));
+		fire->SetWorldScale3D(FVector(0.02, 0.02, 0.02));
 	}
 	else if (mode == "outdoor") {
 		fire->SetRelativeLocation(FVector(-4.66, -19.33, -8));
@@ -335,4 +347,15 @@ void AGymObj::dispenseSalt()
 	salt->SetupAttachment(RootComponent);
 	salt->RegisterComponent();
 	salt->SetRelativeLocation(FVector(0, -90, 0));
+}
+
+
+void AGymObj::resetOrientation()
+{
+	SetActorRotation(originalRotation);
+}
+
+void AGymObj::resetOrientationIn(float seconds)
+{
+	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &AGymObj::resetOrientation, seconds);
 }

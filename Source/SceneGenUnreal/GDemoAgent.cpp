@@ -24,7 +24,7 @@ AGDemoAgent::AGDemoAgent()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	UCapsuleComponent* capsule = CreateDefaultSubobject<UCapsuleComponent>("Capsule");
-	capsule->InitCapsuleSize(42.f, 96.0f);
+	capsule->InitCapsuleSize(32.f, 96.0f);
 	RootComponent = capsule;
 
 	baseMesh = CreateDefaultSubobject <USkeletalMeshComponent>("baseMesh");
@@ -36,7 +36,7 @@ AGDemoAgent::AGDemoAgent()
 
 
 	FVector agentLocation = GetActorLocation();
-	baseMesh->SetWorldLocation(agentLocation - FVector(0, 0, 140));
+	baseMesh->SetWorldLocation(agentLocation - FVector(0, 0, 96));
 	baseMesh->SetRelativeRotation(FVector(0, -90, 0).ToOrientationQuat());
 	baseMesh->AttachToComponent(RootComponent, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
 	/*
@@ -149,8 +149,11 @@ void AGDemoAgent::dropObject()
 	heldObject->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
 	heldObject->getBaseMesh()->SetSimulatePhysics(true);
 	heldObject->SetActorEnableCollision(true);
-
+	if (heldObject->GetName() != "meat") {
+		heldObject->resetOrientationIn(1);
+	}
 	isHoldingObject = false;
+	
 }
 
 void AGDemoAgent::shakeSalt()
@@ -161,7 +164,7 @@ void AGDemoAgent::shakeSalt()
 	}
 	*/
 	
-	playAnimation("shake", false);
+	playAnimation("newShake", false);
 
 }
 

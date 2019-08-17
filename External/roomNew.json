@@ -27,7 +27,7 @@
 						{
 							"name" : "chair2",
 							"xCenter": 0,
-							"yCenter" : -80,
+							"yCenter" : -45,
 							"zCenter" : 0,
 							"type" : "gymobj",
 							"actorParams" : {
@@ -66,7 +66,7 @@
 					"actorParams" :{
 						"roll" : 90,
 						"worldScale" : 3,
-						"physicsEnabled" : false,
+						"physicsEnabled" : true,
 						"autoHeight" : false,
 						"meshPath" : "/Game/Assets/plate/plate.plate"
 					},
@@ -140,6 +140,7 @@
 					"childShapenetActorGroups" : [
 						{
 							"name" : "ingredients",
+							"yCenter" : 20,
 							"zCenter" : 100,
 							"shapenetActors" : [
 								{
@@ -160,7 +161,7 @@
 									"actorParams" : {
 										"meshPath" : "/Game/Scenes/Small_Items/MinorObject/consistent/sugarpourer/SugarDespenseClassic.SugarDespenseClassic",
 										"autoHeight" : false,
-										"worldScale" : 0.25,
+										"worldScale" : 0.15,
 										"roll" : 90
 									}
 								}
@@ -195,11 +196,11 @@
 									"name" : "pan",
 									"type" : "gymobj",
 									"xCenter" : 25,
-									"yCenter" : 15,
+									"yCenter" : 20,
 									"actorParams" : {
 										"meshPath" : "/Game/Scenes/Small_Items/Distractor/pan/pan1_2.pan1_2",
 										"autoHeight" : false,
-										"worldScale" : 0.4,
+										"worldScale" : 0.5,
 										"roll" : 90							
 									}
 								}
@@ -225,7 +226,8 @@
 					"actorParams" : {
 						"meshPath" : "/Game/DemoAssets/Dishwasher/model_normalized.model_normalized",
 						"yaw" : -90,
-						"worldScale" : 1.5
+						"worldScale" : 1.5,
+						"autoHeight" : true
 					}
 				},
 				{
@@ -237,7 +239,8 @@
 					"actorParams" : {
 						"meshPath" : "/Game/DemoAssets/Sinks/Indoor/sink.sink",
 						"yaw" : 90,
-						"worldScale" : 1.25
+						"worldScale" : 1.25,
+						"autoHeight" : true
 					}
 				}
 
@@ -257,9 +260,9 @@
 					"type" : "gymobj",
 					"actorParams" : {
 						"meshPath" : "/Game/Assets/sunCG/cabin/405/405Door1.405Door1",
-						"physicsEnabled" : false,
 						"autoHeight" : false,
-						"roll" : -90
+						"roll" : -90,
+						"physicsEnabled" : false
 					}
 				},
 				{
@@ -271,7 +274,6 @@
 					"actorParams" : {
 						"meshPath" : "/Game/DemoAssets/Fridge/fridge.fridge",
 						"autoHeight" : false,
-						"physicsEnabled" : false,
 						"yaw" : 90,
 						"worldScale" : 1.5
 					}
