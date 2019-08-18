@@ -50,11 +50,11 @@
 				},
 				{
 					"name" : "plates",
-					"xCenter" : 15,
+					"xCenter" : 20,
 					"zCenter" : 72,
 					"actorParams" :{
 						"roll" : 90,
-						"worldScale" : 3.5,
+						"worldScale" : 4,
 						"physicsEnabled" : true,
 						"autoHeight" : false,
 						"meshPath" : "/Game/Assets/plate/plate.plate"

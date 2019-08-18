@@ -567,6 +567,9 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 			else if (displayName == "meat") {
 				meat = spawnedObj;
 			}
+			else if (displayName == "pan") {
+				pan = spawnedObj;
+			}
 		}
 		UE_LOG(LogTemp, Warning, TEXT("Spawn Success"))
 	}
@@ -881,7 +884,7 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 {
 	FVector socketLocation = agent->baseMesh->GetSocketLocation("hand_rSocket");
 
-	float distances[3] = {-1,-1,-1 };
+	float distances[4] = {-1,-1,-1,-1};
 
 	if (meat) {
 		distances[0] = FVector::Dist(socketLocation, meat->GetActorLocation());
@@ -895,9 +898,13 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 		distances[2] = FVector::Dist(socketLocation, lighter->GetActorLocation());
 	}
 
+	if (pan) {
+		distances[3] = FVector::Dist(socketLocation, pan->GetActorLocation());
+	}
+
 	float min = 0;
 	int index = 0;
-	for (int32 i = 0; i < 3; i++) {
+	for (int32 i = 0; i < 4; i++) {
 		if (i == 0 || (distances[i] < min && distances[i] != -1)) {
 			min = distances[i];
 			index = i;
@@ -909,6 +916,7 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 		case 0: closest = meat; break;
 		case 1: closest = salt; break;
 		case 2: closest = lighter; break;
+		case 3: closest = pan; break;
 	}
 	if (closest) {
 		FTimerDelegate TimerDel;
@@ -933,6 +941,7 @@ void ASceneGenUnrealGameModeBase::asyncAttach(AGDemoAgent* agent, AGymObj* close
 	case 0: closest->SetActorRelativeLocation(FVector(0, 8, 0)); closest->SetActorRelativeRotation(FRotator(-30, 0, -100)); break;
 	case 1: closest->SetActorRelativeLocation(FVector(5, 0, 0)); closest->SetActorRelativeRotation(FRotator(0, -120, 35)); break;
 	case 2: closest->SetActorRelativeLocation(FVector(3, -5, -4)); closest->SetActorRelativeRotation(FRotator(45, 0, 45)); break;
+	case 3: closest->SetActorRelativeLocation(FVector(-5, 4, 5)); closest->SetActorRelativeRotation(FRotator(-36.08, -42.12, -43.12)); break;
 	}
 	agent->setHeldObject(closest);
 }

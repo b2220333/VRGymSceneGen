@@ -56,6 +56,9 @@ public:
 
 	void setHeldObject(class AGymObj* obj);
 
+
+	void switchCamera();
+
 private:
 	// whether the agent is holding an object
 	bool isHoldingObject;
@@ -65,6 +68,9 @@ private:
 
 	bool walking;
 	
+	UPROPERTY(EditAnywhere)
+	class UCameraComponent* firstPersonCamera;
+
 
 
 	// from  third person starter content

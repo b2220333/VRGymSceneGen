@@ -19,6 +19,8 @@
 #include "Runtime/Engine/Classes/Components/CapsuleComponent.h"
 #include "SceneGenUnrealGameModeBase.h"
 
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+
 AGDemoAgent::AGDemoAgent()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -29,7 +31,8 @@ AGDemoAgent::AGDemoAgent()
 
 	baseMesh = CreateDefaultSubobject <USkeletalMeshComponent>("baseMesh");
 	//FString path = "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin";
-	FString path = "/Game/Characters/female1/female1.female1";
+	//FString path = "/Game/Characters/female1/female1.female1";
+	FString path = "/Game/Characters/male1/male1.male1";
 	USkeletalMesh* test2 = Cast<USkeletalMesh>(StaticLoadObject(USkeletalMesh::StaticClass(), nullptr, *path));
 
 	baseMesh->SetSkeletalMesh(test2);
@@ -81,6 +84,14 @@ AGDemoAgent::AGDemoAgent()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+
+
+	firstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	firstPersonCamera->SetupAttachment(capsule);
+	firstPersonCamera->SetRelativeLocation(FVector(35, 5, 70));
+	firstPersonCamera->SetRelativeRotation(FRotator(-45,0,0));
+
+
 	movementComponent = CreateDefaultSubobject<UGDemoAgentMovementComponent>(TEXT("MovementComponent"));
 	movementComponent->UpdatedComponent = RootComponent;
 	isHoldingObject = false;
@@ -111,6 +122,7 @@ void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Pickup", IE_Pressed, this, &AGDemoAgent::pickUpObject);
 	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AGDemoAgent::dropObject);
 	PlayerInputComponent->BindAction("Shake", IE_Pressed, this, &AGDemoAgent::shakeSalt);
+	PlayerInputComponent->BindAction("SwitchCamera", IE_Pressed, this, &AGDemoAgent::switchCamera);
 
 	// from third person
 	PlayerInputComponent->BindAxis("MoveForward", this, &AGDemoAgent::MoveForward);
@@ -150,7 +162,7 @@ void AGDemoAgent::dropObject()
 	heldObject->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
 	heldObject->getBaseMesh()->SetSimulatePhysics(true);
 	heldObject->SetActorEnableCollision(true);
-	if (heldObject->GetName() != "meat") {
+	if (heldObject->GetName() != "meat" && heldObject->GetName() != "pan") {
 		heldObject->resetOrientationIn(0.4);
 	}
 	isHoldingObject = false;
@@ -224,7 +236,8 @@ void AGDemoAgent::playRandomAnimation()
 void AGDemoAgent::playAnimation(FString animName, bool looping)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Trying to play animation : %s"), *animName)
-	FString path = "AnimSequence'/Game/Characters/female1/" + animName + "." + animName + "'B";
+	//FString path = "AnimSequence'/Game/Characters/female1/" + animName + "." + animName + "'B";
+	FString path = "AnimSequence'/Game/Characters/male1/" + animName + "." + animName + "'B";
 	//FString path = "AnimSequence'/Game/Mannequin/Animations/" + animName + "." + animName + "'B";
 	animation = LoadObject<UAnimationAsset>(nullptr, *path);
 	if (animation && baseMesh) {
@@ -262,5 +275,19 @@ UPawnMovementComponent* AGDemoAgent::GetMovementComponent() const
 void AGDemoAgent::setHeldObject(AGymObj* obj)
 {
 	heldObject = obj;
+}
+
+
+void AGDemoAgent::switchCamera()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Switching Camera"));
+	if (firstPersonCamera->IsActive()) {
+		FollowCamera->SetActive(true);
+		firstPersonCamera->SetActive(false);
+	}
+	else {
+		firstPersonCamera->SetActive(true);
+		FollowCamera->SetActive(false);
+	}
 }
 

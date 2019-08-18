@@ -135,7 +135,7 @@ private:
 
 	int numResets;
 
-	FString mode = "outdoor";
+	FString mode = "indoor";
 
 	
 
@@ -144,5 +144,6 @@ private:
 	AGymObj* salt;
 	AGymObj* lighter;
 	AGymObj* wood;
+	AGymObj* pan;
 
 };
