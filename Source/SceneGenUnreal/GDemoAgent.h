@@ -59,6 +59,9 @@ public:
 
 	void switchCamera();
 
+
+	void interact();
+
 private:
 	// whether the agent is holding an object
 	bool isHoldingObject;

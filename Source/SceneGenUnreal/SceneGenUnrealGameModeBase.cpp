@@ -143,6 +143,24 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		wood->addFire("");
 		gymObjects.Add(spawnedGymObj);
 
+
+		path = "/Game/Assets/sunCG/kitchenUtilities/cutboard/245Knife.245Knife";
+		spawnLocation = FVector(640, -2470, 15);
+		actorParams["pitch"] = 0;
+		actorParams["yaw"] = 50;
+		actorParams["roll"] = 90;
+		actorParams["worldScale"] = 1;
+		spawnedGymObj = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
+		spawnedGymObj->originalRotation = FRotator(0, 50, 90);
+		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
+		spawnedGymObj->SetActorLabel("knife");
+		knife = spawnedGymObj;
+		gymObjects.Add(spawnedGymObj);
+
+
+
+
+
 	} else {
 
 		UE_LOG(LogTemp, Warning, TEXT("Outdoor"))
@@ -884,7 +902,7 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 {
 	FVector socketLocation = agent->baseMesh->GetSocketLocation("hand_rSocket");
 
-	float distances[4] = {-1,-1,-1,-1};
+	float distances[5] = {-1,-1,-1,-1,-1};
 
 	if (meat) {
 		distances[0] = FVector::Dist(socketLocation, meat->GetActorLocation());
@@ -902,9 +920,13 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 		distances[3] = FVector::Dist(socketLocation, pan->GetActorLocation());
 	}
 
+	if (knife) {
+		distances[4] = FVector::Dist(socketLocation, knife->GetActorLocation());
+	}
+
 	float min = 0;
 	int index = 0;
-	for (int32 i = 0; i < 4; i++) {
+	for (int32 i = 0; i < 5; i++) {
 		if (i == 0 || (distances[i] < min && distances[i] != -1)) {
 			min = distances[i];
 			index = i;
@@ -917,6 +939,7 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 		case 1: closest = salt; break;
 		case 2: closest = lighter; break;
 		case 3: closest = pan; break;
+		case 4: closest = knife; break;
 	}
 	if (closest) {
 		FTimerDelegate TimerDel;
@@ -942,6 +965,7 @@ void ASceneGenUnrealGameModeBase::asyncAttach(AGDemoAgent* agent, AGymObj* close
 	case 1: closest->SetActorRelativeLocation(FVector(5, 0, 0)); closest->SetActorRelativeRotation(FRotator(0, -120, 35)); break;
 	case 2: closest->SetActorRelativeLocation(FVector(3, -5, -4)); closest->SetActorRelativeRotation(FRotator(45, 0, 45)); break;
 	case 3: closest->SetActorRelativeLocation(FVector(-5, 4, 5)); closest->SetActorRelativeRotation(FRotator(-36.08, -42.12, -43.12)); break;
+	case 4: closest->SetActorRelativeLocation(FVector(2, 25, 8)); closest->SetActorRelativeRotation(FRotator(30.64, 81.62, -92.7)); break;
 	}
 	agent->setHeldObject(closest);
 }

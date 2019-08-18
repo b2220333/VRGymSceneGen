@@ -123,6 +123,7 @@ void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AGDemoAgent::dropObject);
 	PlayerInputComponent->BindAction("Shake", IE_Pressed, this, &AGDemoAgent::shakeSalt);
 	PlayerInputComponent->BindAction("SwitchCamera", IE_Pressed, this, &AGDemoAgent::switchCamera);
+	PlayerInputComponent->BindAction("interact", IE_Pressed, this, &AGDemoAgent::interact);
 
 	// from third person
 	PlayerInputComponent->BindAxis("MoveForward", this, &AGDemoAgent::MoveForward);
@@ -162,7 +163,7 @@ void AGDemoAgent::dropObject()
 	heldObject->DetachFromActor(FDetachmentTransformRules(EDetachmentRule::KeepWorld, false));
 	heldObject->getBaseMesh()->SetSimulatePhysics(true);
 	heldObject->SetActorEnableCollision(true);
-	if (heldObject->GetName() != "meat" && heldObject->GetName() != "pan") {
+	if (heldObject->GetName() != "meat" && heldObject->GetName() != "pan" && heldObject->GetName() != "knife") {
 		heldObject->resetOrientationIn(0.4);
 	}
 	isHoldingObject = false;
@@ -291,3 +292,9 @@ void AGDemoAgent::switchCamera()
 	}
 }
 
+
+
+void AGDemoAgent::interact()
+{
+	playAnimation("ThirdPersonPickup", false);
+}
