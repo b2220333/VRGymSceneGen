@@ -119,7 +119,9 @@ public:
 
 	void cook();
 
+	void disablePan();
 
+	void toggleLighter();
 	
 
 private:
@@ -135,7 +137,7 @@ private:
 
 	int numResets;
 
-	FString mode = "outdoor";
+	FString mode = "indoor";
 
 	
 

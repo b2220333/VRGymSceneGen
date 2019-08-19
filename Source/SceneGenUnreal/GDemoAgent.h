@@ -59,7 +59,7 @@ public:
 
 	void switchCamera();
 
-
+	
 	void interact();
 
 private:
@@ -73,6 +73,9 @@ private:
 	
 	UPROPERTY(EditAnywhere)
 	class UCameraComponent* firstPersonCamera;
+
+	UPROPERTY(EditAnywhere)
+	class UCameraComponent* spectatorCamera;
 
 
 

@@ -104,7 +104,7 @@ public:
 	void resetOrientation();
 	FRotator originalRotation;
 	FTimerHandle FuzeTimerHandle;
-
+	void toggleLighter();
 
 private:
 	// name of object
@@ -131,6 +131,7 @@ private:
 	bool interactsWithGymObjs;
 	bool interactsWithGymAgents;
 
+	UPROPERTY(EditAnywhere)
 	class UParticleSystemComponent* fire;
 	
 

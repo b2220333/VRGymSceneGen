@@ -91,6 +91,10 @@ AGDemoAgent::AGDemoAgent()
 	firstPersonCamera->SetRelativeLocation(FVector(35, 5, 70));
 	firstPersonCamera->SetRelativeRotation(FRotator(-45,0,0));
 
+	spectatorCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("spectatorCamera"));
+	spectatorCamera->SetWorldLocation(FVector(155, 10, 150));
+	spectatorCamera->SetWorldRotation(FRotator(0,190,0));
+
 
 	movementComponent = CreateDefaultSubobject<UGDemoAgentMovementComponent>(TEXT("MovementComponent"));
 	movementComponent->UpdatedComponent = RootComponent;
@@ -282,14 +286,21 @@ void AGDemoAgent::setHeldObject(AGymObj* obj)
 void AGDemoAgent::switchCamera()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Switching Camera"));
-	if (firstPersonCamera->IsActive()) {
-		FollowCamera->SetActive(true);
+	if (FollowCamera->IsActive()) {
+		firstPersonCamera->SetActive(true);
+		FollowCamera->SetActive(false);
+		spectatorCamera->SetActive(false);
+	}else if (firstPersonCamera->IsActive()) {
+		spectatorCamera->SetActive(true);
+		FollowCamera->SetActive(false);
 		firstPersonCamera->SetActive(false);
 	}
 	else {
-		firstPersonCamera->SetActive(true);
-		FollowCamera->SetActive(false);
+		FollowCamera->SetActive(true);
+		spectatorCamera->SetActive(false);
+		firstPersonCamera->SetActive(false);
 	}
+	
 }
 
 

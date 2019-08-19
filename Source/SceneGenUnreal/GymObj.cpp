@@ -306,7 +306,13 @@ void AGymObj::cook()
 
 void AGymObj::addFire(FString mode)
 {
-	FString path = "/Game/StarterContent/Particles/P_Fire.P_Fire";
+	FString path;
+	if (mode == "lighter") {
+		path = "/Game/M5VFXVOL2/Particles/Reference/Candlefire/0_CandleFire_pt.0_CandleFire_pt";
+	}
+	else {
+		path = "/Game/StarterContent/Particles/P_Fire.P_Fire";
+	}
 	UParticleSystem* particleSystem = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), nullptr, *path));
 	fire = NewObject<UParticleSystemComponent>(this, "fire");
 	if (!particleSystem || !fire) {
@@ -321,8 +327,12 @@ void AGymObj::addFire(FString mode)
 		fire->SetWorldScale3D(FVector(0.02, 0.02, 0.02));
 	}
 	else if (mode == "outdoor") {
-		fire->SetRelativeLocation(FVector(-4.66, -19.33, -8));
-		fire->SetRelativeScale3D(FVector(0.2, 0.5, 0.2));
+		fire->SetRelativeLocation(FVector(-4.66, -19.33, -20));
+		fire->SetRelativeScale3D(FVector(0.05, 0.12, 0.05));
+	}
+	else if (mode == "lighter") {
+		fire->SetRelativeLocation(FVector(0, 0, 75));
+		fire->SetRelativeScale3D(FVector(2, 2, 2));
 	}
 
 }
@@ -335,6 +345,20 @@ void AGymObj::toggleFire()
 	}
 	else {
 		fire->SetVisibility(true);
+	}
+}
+
+void AGymObj::toggleLighter()
+{
+	if (fire->IsVisible()) {
+		fire->SetVisibility(false);
+		fire->SetRelativeLocation(FVector(0, 0, 75));
+		fire->SetRelativeScale3D(FVector(2, 2, 2));
+	}
+	else {
+		fire->SetVisibility(true);
+		fire->SetRelativeLocation(FVector(0, 0, 75));
+		fire->SetRelativeScale3D(FVector(2, 2, 2));
 	}
 }
 
@@ -359,3 +383,4 @@ void AGymObj::resetOrientationIn(float seconds)
 {
 	GetWorld()->GetTimerManager().SetTimer(FuzeTimerHandle, this, &AGymObj::resetOrientation, seconds);
 }
+

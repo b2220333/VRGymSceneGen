@@ -133,9 +133,24 @@
 							"zCenter" : 100,
 							"shapenetActors" : [
 								{
-									"name" : "meat",
+									"name" : "cuttingBoard",
 									"type" : "gymobj",
 									"xCenter" : 40,
+									"zCenter" : -22,
+									"actorParams" : {
+										"meshPath" : "/Game/Assets/sunCG/kitchenUtilities/cutboard/245cutBoard.245cutBoard",
+										"autoHeight" : false,
+										"worldScale" : 0.75,
+										"roll" : -90,
+										"yaw" : 180
+									}
+								},
+								{
+									"name" : "meat",
+									"type" : "gymobj",
+									"xCenter" : 30,
+									"ycenter" : -25,
+									"zCenter" : 10,
 									"actorParams" : {
 										"meshPath" : "/Game/Assets/Meat/meat.meat",
 										"autoHeight" : false,
@@ -146,12 +161,24 @@
 								{
 									"name" : "salt",
 									"type" : "gymobj",
-									"xCenter" : -75,
+									"xCenter" : 0,
 									"actorParams" : {
 										"meshPath" : "/Game/Scenes/Small_Items/MinorObject/consistent/sugarpourer/SugarDespenseClassic.SugarDespenseClassic",
 										"autoHeight" : false,
 										"worldScale" : 0.15,
 										"roll" : 90
+									}
+								},
+								{
+									"name" : "pan",
+									"type" : "gymobj",
+									"xCenter" : -80,
+									"yCenter" : -20,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/pan/pan1_2.pan1_2",
+										"autoHeight" : false,
+										"worldScale" : 0.5,
+										"roll" : 90							
 									}
 								}
 							]
@@ -173,29 +200,6 @@
 								"yaw" : 180
 							}
 						}
-					],
-					"childShapenetActorGroups" : [
-						{
-							"name" : "itemsOnStove",
-							"xCenter" : 35,
-							"yCenter" : -110,
-							"zCenter" : 100,
-							"shapenetActors" : [
-								{
-									"name" : "pan",
-									"type" : "gymobj",
-									"xCenter" : 25,
-									"yCenter" : 20,
-									"actorParams" : {
-										"meshPath" : "/Game/Scenes/Small_Items/Distractor/pan/pan1_2.pan1_2",
-										"autoHeight" : false,
-										"worldScale" : 0.5,
-										"roll" : 90							
-									}
-								}
-							]
-						}
-
 					]
 				}
 			]

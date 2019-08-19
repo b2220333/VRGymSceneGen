@@ -50,9 +50,19 @@ void ASceneGenUnrealGameModeBase::BeginPlay() {
 		World->GetFirstPlayerController()->InputComponent->BindAction("toggleFire", IE_Pressed, this, &ASceneGenUnrealGameModeBase::toggleFire);
 		World->GetFirstPlayerController()->InputComponent->BindAction("salt", IE_Pressed, this, &ASceneGenUnrealGameModeBase::dispenseSalt);
 		World->GetFirstPlayerController()->InputComponent->BindAction("cook", IE_Pressed, this, &ASceneGenUnrealGameModeBase::cook);
+		World->GetFirstPlayerController()->InputComponent->BindAction("disablePan", IE_Pressed, this, &ASceneGenUnrealGameModeBase::disablePan);
+		World->GetFirstPlayerController()->InputComponent->BindAction("toggleLighter", IE_Pressed, this, &ASceneGenUnrealGameModeBase::toggleLighter);
+
 	}
+
 	
 }
+
+void ASceneGenUnrealGameModeBase::disablePan()
+{
+	pan = nullptr;
+}
+
 
 void ASceneGenUnrealGameModeBase::toggleFire()
 {
@@ -60,7 +70,16 @@ void ASceneGenUnrealGameModeBase::toggleFire()
 		heatSource->toggleFire();
 	}
 	if (wood) {
-		//wood->toggleFire();
+		wood->toggleFire();
+	}
+
+	
+}
+
+void ASceneGenUnrealGameModeBase::toggleLighter()
+{
+	if (lighter) {
+		lighter->toggleLighter();
 	}
 }
 
@@ -103,6 +122,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		spawnedGymObj->originalRotation = FRotator(0, 0, 0);
 		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
 		spawnedGymObj->SetActorLabel("lighter");
+		spawnedGymObj->addFire("lighter");
 		lighter = spawnedGymObj;
 		gymObjects.Add(spawnedGymObj);
 
@@ -134,7 +154,7 @@ void ASceneGenUnrealGameModeBase::spawnShapenetActors()
 		spawnLocation = FVector(-160, -3170, -70);
 		actorParams["roll"] = 0;
 		actorParams["yaw"] = -90;
-		actorParams["worldScale"] = 2;
+		actorParams["worldScale"] = 1;
 		spawnedGymObj = GetWorld()->SpawnActor<AGymObj>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 		spawnedGymObj->originalRotation = FRotator(0, 0, 90);
 		spawnedGymObj->assignMeshFromPath(path, spawnLocation, actorParams);
@@ -292,7 +312,7 @@ void ASceneGenUnrealGameModeBase::autoSpawnWalls(bool autoSpawnSideWalls, bool a
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	AGWall* floor = GetWorld()->SpawnActor<AGWall>(spawnLocation, FRotator::ZeroRotator, spawnParams);
 	floor->spawnFloor(xWidth, yWidth);
-	floor->applyDemoWallParams();
+	//floor->applyDemoWallParams();
 
 	float height = 0;
 	if (autoSpawnSideWalls || autoSpawnCeiling) {
