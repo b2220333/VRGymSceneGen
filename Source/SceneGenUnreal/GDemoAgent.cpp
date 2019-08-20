@@ -160,7 +160,7 @@ void AGDemoAgent::pickUpObject()
 
 void AGDemoAgent::dropObject()
 {
-	if (!isHoldingObject) {
+	if (!isHoldingObject || ! heldObject) {
 		return;
 	}
 	playAnimation("ThirdPersonDrop", false);

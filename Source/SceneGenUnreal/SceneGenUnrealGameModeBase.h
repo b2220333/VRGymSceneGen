@@ -123,6 +123,7 @@ public:
 
 	void toggleLighter();
 	
+	void crack();
 
 private:
 	// objects in game
@@ -139,6 +140,8 @@ private:
 
 	FString mode = "indoor";
 
+	int32 crackMode = 0;
+
 	
 
 	AGymObj* meat;
@@ -148,5 +151,9 @@ private:
 	AGymObj* wood;
 	AGymObj* pan;
 	AGymObj* knife;
+
+	AGymObj* walnut;
+	AGymObj* hammer;
+	AGymObj* brick;
 
 };

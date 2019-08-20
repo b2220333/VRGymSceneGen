@@ -608,6 +608,16 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 			else if (displayName == "pan") {
 				pan = spawnedObj;
 			}
+			else if (displayName == "walnut") {
+				walnut = spawnedObj;
+				spawnedObj->setMaterial("/Game/DemoAssets/Walnut/newwalnutmat.newwalnutmat");
+			}
+			else if (displayName == "brick") {
+				brick = spawnedObj;
+			}
+			else if (displayName == "hammer") {
+				hammer = spawnedObj;
+			}
 		}
 		UE_LOG(LogTemp, Warning, TEXT("Spawn Success"))
 	}
@@ -922,7 +932,7 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 {
 	FVector socketLocation = agent->baseMesh->GetSocketLocation("hand_rSocket");
 
-	float distances[5] = {-1,-1,-1,-1,-1};
+	float distances[7] = {-1,-1,-1,-1,-1,-1,-1};
 
 	if (meat) {
 		distances[0] = FVector::Dist(socketLocation, meat->GetActorLocation());
@@ -944,10 +954,21 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 		distances[4] = FVector::Dist(socketLocation, knife->GetActorLocation());
 	}
 
-	float min = 0;
+	if (hammer) {
+		distances[5] = FVector::Dist(socketLocation, hammer->GetActorLocation());
+		UE_LOG(LogTemp, Warning, TEXT("hammer check"))
+	}
+
+	if (brick) {
+		distances[6] = FVector::Dist(socketLocation, brick->GetActorLocation());
+		UE_LOG(LogTemp, Warning, TEXT("brick check"))
+
+	}
+
+	float min = -1;
 	int index = 0;
-	for (int32 i = 0; i < 5; i++) {
-		if (i == 0 || (distances[i] < min && distances[i] != -1)) {
+	for (int32 i = 0; i < 7; i++) {
+		if (min == -1 || (distances[i] < min && distances[i] != -1)) {
 			min = distances[i];
 			index = i;
 		}
@@ -960,11 +981,14 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 		case 2: closest = lighter; break;
 		case 3: closest = pan; break;
 		case 4: closest = knife; break;
+		case 5: closest = hammer; break;
+		case 6: closest = brick; break;
 	}
+	
 	if (closest) {
 		FTimerDelegate TimerDel;
 		FTimerHandle TimerHandle;
-
+		UE_LOG(LogTemp, Warning, TEXT("Closeset: %s "), *closest->GetName())
 
 		TimerDel.BindUFunction(this, FName("asyncAttach"), agent, closest, index);
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 0.760f, false);
@@ -980,12 +1004,15 @@ void ASceneGenUnrealGameModeBase::asyncAttach(AGDemoAgent* agent, AGymObj* close
 		/*
 		case 0: closest->SetActorRelativeLocation(FVector(-15, 5, 0)); closest->SetActorRelativeRotation(FRotator(45,-20,0)); break;
 		case 1: closest->SetActorRelativeLocation(FVector(-12, 9, -5)); closest->SetActorRelativeRotation(FRotator(0,0,90)); break;
-		case 2: closest->SetActorRelativeLocation(FVector(-10, 5, -10)); break;*/
-	case 0: closest->SetActorRelativeLocation(FVector(0, 8, 0)); closest->SetActorRelativeRotation(FRotator(-30, 0, -100)); break;
-	case 1: closest->SetActorRelativeLocation(FVector(5, 0, 0)); closest->SetActorRelativeRotation(FRotator(0, -120, 35)); break;
-	case 2: closest->SetActorRelativeLocation(FVector(3, -5, -4)); closest->SetActorRelativeRotation(FRotator(45, 0, 45)); break;
-	case 3: closest->SetActorRelativeLocation(FVector(-5, 4, 5)); closest->SetActorRelativeRotation(FRotator(-36.08, -42.12, -43.12)); break;
-	case 4: closest->SetActorRelativeLocation(FVector(2, 25, 8)); closest->SetActorRelativeRotation(FRotator(30.64, 81.62, -92.7)); break;
+		case 2: closest->SetActorRelativeLocation(FVector(-10, 5, -10)); break;
+		*/
+		case 0: closest->SetActorRelativeLocation(FVector(0, 8, 0)); closest->SetActorRelativeRotation(FRotator(-30, 0, -100)); break;
+		case 1: closest->SetActorRelativeLocation(FVector(5, 0, 0)); closest->SetActorRelativeRotation(FRotator(0, -120, 35)); break;
+		case 2: closest->SetActorRelativeLocation(FVector(3, -5, -4)); closest->SetActorRelativeRotation(FRotator(45, 0, 45)); break;
+		case 3: closest->SetActorRelativeLocation(FVector(-5, 4, 5)); closest->SetActorRelativeRotation(FRotator(-36.08, -42.12, -43.12)); break;
+		case 4: closest->SetActorRelativeLocation(FVector(2, 25, 8)); closest->SetActorRelativeRotation(FRotator(30.64, 81.62, -92.7)); break;
+		case 5: break;
+		case 6: break;
 	}
 	agent->setHeldObject(closest);
 }
@@ -1001,5 +1028,12 @@ void ASceneGenUnrealGameModeBase::cook()
 {
 	if (meat) {
 		meat->setMaterial("/Game/Assets/Meat/cookedMat.cookedMat");
+	}
+}
+
+void ASceneGenUnrealGameModeBase::crack()
+{
+	if (walnut) {
+		walnut->setMaterial("/Game/Assets/Meat/cookedMat.cookedMat");
 	}
 }

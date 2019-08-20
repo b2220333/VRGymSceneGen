@@ -25,16 +25,16 @@
 					"zCenter" : 90,
 					"shapenetActors": [
 						{
-							"name" : "brick",
+							"name" : "hammer",
 							"xCenter" : 30,
 							"yCenter" : -20,
 							"type" : "gymobj",
 							"actorParams" : {
-								"meshPath" : "StaticMesh'/Game/DemoAssets/brick/brick.brick'",
+								"meshPath" : "/Game/DemoAssets/Hammer/Hammer.Hammer",
 								"autoHeight" : false,
-								"worldScale" : 2,
-								"pitch" : 90,
-								"yaw" : 90
+								"worldScale" : 2.5,
+								"roll" : 90,
+								"yaw" : 180
 							}
 						},
 						{
@@ -55,38 +55,37 @@
 							"yCenter" : 30,
 							"shapenetActors" : [
 								{
-									"name" : "books",
+									"name" : "scissors",
 									"type" : "gymobj",
 									"xCenter" : -30,
-									"yCenter" : 40,
+									"yCenter" : -10,
 									"actorParams" :{
-										"meshPath" : "StaticMesh'/Game/DemoAssets/book/books.books'",
+										"meshPath" : "/Game/DemoAssets/scissors/scissors.scissors",
 										"autoHeight" : false,
-										"roll" : -90
+										"worldScale" : 0.2,
+										"yaw" : 90
 									}
 
 								},
 								{
-									"name" : "can",
+									"name" : "waterBottle",
 									"type" : "gymobj",
-									"xCenter" : 40, 
-									"yCenter" : 15,
+									"xCenter" : 30, 
+									"yCenter" : 0,
 									"actorParams" :{
-										"meshPath" : "StaticMesh'/Game/DemoAssets/can/can.can'",
+										"meshPath" : "/Game/DemoAssets/watterBottle/water_bottle.water_bottle",
 										"autoHeight" : false,
-										"worldScale" : 4
+										"worldScale" : 0.05
 									}
 								},
 								{
-									"name" : "magGlass",
+									"name" : "wrench",
 									"type" : "gymobj",
 									"yCenter" : -25,
 									"actorParams" : {
-										"meshPath" : "StaticMesh'/Game/DemoAssets/magGlass/Magnify_glass_OBJ.Magnify_glass_OBJ'",
+										"meshPath" : "/Game/DemoAssets/wrench/wrench.wrench",
 										"autoHeight" : false,
-										"worldScale" : 0.25,
-										"roll" : 90,
-										"yaw" : -45
+										"yaw" : 90
 									}
 								}
 							]
