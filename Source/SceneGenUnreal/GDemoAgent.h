@@ -62,6 +62,8 @@ public:
 	
 	void interact();
 
+	void swing();
+
 private:
 	// whether the agent is holding an object
 	bool isHoldingObject;

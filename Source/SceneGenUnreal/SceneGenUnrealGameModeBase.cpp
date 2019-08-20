@@ -1012,7 +1012,7 @@ void ASceneGenUnrealGameModeBase::asyncAttach(AGDemoAgent* agent, AGymObj* close
 		case 3: closest->SetActorRelativeLocation(FVector(-5, 4, 5)); closest->SetActorRelativeRotation(FRotator(-36.08, -42.12, -43.12)); break;
 		case 4: closest->SetActorRelativeLocation(FVector(2, 25, 8)); closest->SetActorRelativeRotation(FRotator(30.64, 81.62, -92.7)); break;
 		case 5: closest->SetActorRelativeLocation(FVector(-9.1, 6, 2)); closest->SetActorRelativeRotation(FRotator(20.66, -124, 99.2)); break;
-		case 6: closest->SetActorRelativeLocation(FVector(3, 5, 0)); closest->SetActorRelativeRotation(FRotator(51.6, 7.25, 22.5)); break;
+		case 6: closest->SetActorRelativeLocation(FVector(3, 5, 2)); closest->SetActorRelativeRotation(FRotator(51.6, 7.25, 22.5)); break;
 	}
 	agent->setHeldObject(closest);
 }

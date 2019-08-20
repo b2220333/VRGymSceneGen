@@ -15,7 +15,8 @@
 					"type" : "gymobj",
 					"actorParams" : {
 						"meshPath" : "/Game/DemoAssets/Tables/indoor/model_normalized.model_normalized",
-						"worldScale" : 1.75
+						"worldScale" : 1.75,
+						"physicsEnabled" : false
 					}
 				}
 			],
@@ -26,7 +27,7 @@
 					"shapenetActors": [
 						{
 							"name" : "hammer",
-							"xCenter" : 30,
+							"xCenter" : 20,
 							"yCenter" : -20,
 							"type" : "gymobj",
 							"actorParams" : {
@@ -35,17 +36,6 @@
 								"worldScale" : 2.5,
 								"roll" : 90,
 								"yaw" : 180
-							}
-						},
-						{
-							"name" : "walnut",
-							"xCenter" : -30,
-							"yCenter" : -20,
-							"type" : "gymobj",
-							"actorParams" : {
-								"meshPath" : "/Game/DemoAssets/Walnut/Walnut.Walnut",
-								"autoHeight" : false,
-								"worldScale"  : 0.2
 							}
 						}
 					],

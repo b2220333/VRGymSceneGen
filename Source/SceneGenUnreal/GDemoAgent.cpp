@@ -128,6 +128,7 @@ void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Shake", IE_Pressed, this, &AGDemoAgent::shakeSalt);
 	PlayerInputComponent->BindAction("SwitchCamera", IE_Pressed, this, &AGDemoAgent::switchCamera);
 	PlayerInputComponent->BindAction("interact", IE_Pressed, this, &AGDemoAgent::interact);
+	PlayerInputComponent->BindAction("swing", IE_Pressed, this, &AGDemoAgent::swing);
 
 	// from third person
 	PlayerInputComponent->BindAxis("MoveForward", this, &AGDemoAgent::MoveForward);
@@ -308,4 +309,9 @@ void AGDemoAgent::switchCamera()
 void AGDemoAgent::interact()
 {
 	playAnimation("ThirdPersonPickup", false);
+}
+
+void AGDemoAgent::swing()
+{
+	playAnimation("swing", false);
 }

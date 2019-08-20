@@ -15,7 +15,8 @@
 					"type" : "gymobj",
 					"actorParams" : {
 						"meshPath" : "/Game/DemoAssets/Tables/indoor/model_normalized.model_normalized",
-						"worldScale" : 1.75
+						"worldScale" : 1.75,
+						"physicsEnabled" : false
 					}
 				}
 			],
@@ -25,27 +26,16 @@
 					"zCenter" : 90,
 					"shapenetActors": [
 						{
-							"name" : "hammer",
-							"xCenter" : 30,
+							"name" : "brick",
+							"xCenter" : 20,
 							"yCenter" : -20,
 							"type" : "gymobj",
 							"actorParams" : {
-								"meshPath" : "/Game/DemoAssets/Hammer/Hammer.Hammer",
+								"meshPath" : "/Game/DemoAssets/brick/brick.brick",
 								"autoHeight" : false,
 								"worldScale" : 2.5,
 								"roll" : 90,
 								"yaw" : 180
-							}
-						},
-						{
-							"name" : "walnut",
-							"xCenter" : -30,
-							"yCenter" : -20,
-							"type" : "gymobj",
-							"actorParams" : {
-								"meshPath" : "/Game/DemoAssets/Walnut/Walnut.Walnut",
-								"autoHeight" : false,
-								"worldScale"  : 0.2
 							}
 						}
 					],
@@ -55,37 +45,38 @@
 							"yCenter" : 30,
 							"shapenetActors" : [
 								{
-									"name" : "scissors",
+									"name" : "book",
 									"type" : "gymobj",
 									"xCenter" : -30,
-									"yCenter" : -10,
+									"yCenter" : 20,
 									"actorParams" :{
-										"meshPath" : "/Game/DemoAssets/scissors/scissors.scissors",
+										"meshPath" : "/Game/DemoAssets/book/books.books",
 										"autoHeight" : false,
-										"worldScale" : 0.2,
-										"yaw" : 90
+										"roll" : -90
 									}
 
 								},
 								{
-									"name" : "waterBottle",
+									"name" : "can",
 									"type" : "gymobj",
 									"xCenter" : 30, 
 									"yCenter" : 0,
 									"actorParams" :{
-										"meshPath" : "/Game/DemoAssets/watterBottle/water_bottle.water_bottle",
+										"meshPath" : "/Game/DemoAssets/can/can.can",
 										"autoHeight" : false,
-										"worldScale" : 0.05
+										"worldScale" : 2
 									}
 								},
 								{
-									"name" : "wrench",
+									"name" : "magGlass",
 									"type" : "gymobj",
-									"yCenter" : -25,
+									"yCenter" : 0,
 									"actorParams" : {
-										"meshPath" : "/Game/DemoAssets/wrench/wrench.wrench",
+										"meshPath" : "/Game/DemoAssets/magGlass/Magnify_glass_OBJ.Magnify_glass_OBJ",
 										"autoHeight" : false,
-										"yaw" : 90
+										"roll" : 90,
+										"worldScale" : 0.2,
+										"yaw" : 45
 									}
 								}
 							]
