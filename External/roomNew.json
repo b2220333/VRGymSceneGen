@@ -28,14 +28,14 @@
 						{
 							"name" : "brick",
 							"xCenter" : 20,
-							"yCenter" : -20,
+							"yCenter" : -30,
 							"type" : "gymobj",
 							"actorParams" : {
 								"meshPath" : "/Game/DemoAssets/brick/brick.brick",
 								"autoHeight" : false,
 								"worldScale" : 2.5,
 								"roll" : 90,
-								"yaw" : 180
+								"yaw" : 135
 							}
 						}
 					],
@@ -47,20 +47,21 @@
 								{
 									"name" : "book",
 									"type" : "gymobj",
-									"xCenter" : -30,
-									"yCenter" : 20,
+									"xCenter" : -60,
+									"yCenter" : 0,
 									"actorParams" :{
 										"meshPath" : "/Game/DemoAssets/book/books.books",
 										"autoHeight" : false,
-										"roll" : -90
+										"roll" : -90,
+										"yaw" : -40
 									}
 
 								},
 								{
 									"name" : "can",
 									"type" : "gymobj",
-									"xCenter" : 30, 
-									"yCenter" : 0,
+									"xCenter" :45, 
+									"yCenter" : -45,
 									"actorParams" :{
 										"meshPath" : "/Game/DemoAssets/can/can.can",
 										"autoHeight" : false,
@@ -77,6 +78,66 @@
 										"roll" : 90,
 										"worldScale" : 0.2,
 										"yaw" : 45
+									}
+								},
+								{
+									"name" : "banana",
+									"type" : "gymobj",
+									"xCenter" : 30,
+									"yCenter" : -30,
+									"actorParams" : {
+										"meshPath" : "/Game/DemoAssets/banana/banana.banana",
+										"autoHeight" : false,
+										"worldScale" : 0.02,
+										"yaw" : 55
+									}
+								},
+								{
+									"name" : "cereal",
+									"type" : "gymobj",
+									"xCenter" : 70,
+									"yCenter" : -20,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/cereal/cereales_Mesh4_Group4_Model.cereales_Mesh4_Group4_Model",
+										"autoHeight" : false,
+										"roll" : 90,
+										"yaw" : 30
+									}
+								},
+								{
+									"name" : "toaster",
+									"type" : "gymobj",
+									"xCenter" : -30,
+									"yCenter" : 10,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/toaster/Appliances_Countertop-Toaster.Appliances_Countertop-Toaster",
+										"autoHeight" : false,
+										"roll" : 90,
+										"worldScale" : 2,
+										"yaw" : -60
+									}
+								},
+								{
+									"name" : "napkins",
+									"type" : "gymobj",
+									"xCenter" : 15,
+									"yCenter" : -20,
+									"zCenter" : 20,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/napkin/napkin1.napkin1",
+										"autoHeight" : false,
+										"roll" : 90
+									}
+								},
+								{
+									"name" : "candyBar",
+									"type" : "gymobj",
+									"xCenter" : -30,
+									"yCenter" : -60,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/marz/Mars+Bar.Mars+Bar",
+										"autoHeight" : false,
+										"roll" : -90
 									}
 								}
 							]
