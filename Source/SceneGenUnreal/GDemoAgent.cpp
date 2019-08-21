@@ -31,8 +31,8 @@ AGDemoAgent::AGDemoAgent()
 
 	baseMesh = CreateDefaultSubobject <USkeletalMeshComponent>("baseMesh");
 	//FString path = "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin";
-	FString path = "/Game/Characters/female1/female1.female1";
-	//FString path = "/Game/Characters/male1/male1.male1";
+	//FString path = "/Game/Characters/female1/female1.female1";
+	FString path = "/Game/Characters/male1/male1.male1";
 	USkeletalMesh* test2 = Cast<USkeletalMesh>(StaticLoadObject(USkeletalMesh::StaticClass(), nullptr, *path));
 
 	baseMesh->SetSkeletalMesh(test2);
@@ -242,8 +242,8 @@ void AGDemoAgent::playRandomAnimation()
 void AGDemoAgent::playAnimation(FString animName, bool looping)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Trying to play animation : %s"), *animName)
-	FString path = "AnimSequence'/Game/Characters/female1/" + animName + "." + animName + "'B";
-	//FString path = "AnimSequence'/Game/Characters/male1/" + animName + "." + animName + "'B";
+	//FString path = "AnimSequence'/Game/Characters/female1/" + animName + "." + animName + "'B";
+	FString path = "AnimSequence'/Game/Characters/male1/" + animName + "." + animName + "'B";
 	//FString path = "AnimSequence'/Game/Mannequin/Animations/" + animName + "." + animName + "'B";
 	animation = LoadObject<UAnimationAsset>(nullptr, *path);
 	if (animation && baseMesh) {

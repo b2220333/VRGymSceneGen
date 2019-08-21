@@ -36,7 +36,7 @@
 								"autoHeight" : false,
 								"worldScale" : 2.5,
 								"roll" : 90,
-								"yaw" : 180
+								"yaw" : 135
 							}
 						}
 					],
@@ -49,7 +49,7 @@
 									"name" : "scissors",
 									"type" : "gymobj",
 									"xCenter" : -30,
-									"yCenter" : -10,
+									"yCenter" : -60,
 									"actorParams" :{
 										"meshPath" : "/Game/DemoAssets/scissors/scissors.scissors",
 										"autoHeight" : false,
@@ -62,7 +62,7 @@
 									"name" : "waterBottle",
 									"type" : "gymobj",
 									"xCenter" : 30, 
-									"yCenter" : 0,
+									"yCenter" : -40,
 									"actorParams" :{
 										"meshPath" : "/Game/DemoAssets/watterBottle/water_bottle.water_bottle",
 										"autoHeight" : false,
@@ -72,11 +72,72 @@
 								{
 									"name" : "wrench",
 									"type" : "gymobj",
+									"xCenter" : -20,
 									"yCenter" : -25,
 									"actorParams" : {
 										"meshPath" : "/Game/DemoAssets/wrench/wrench.wrench",
 										"autoHeight" : false,
-										"yaw" : 90
+										"yaw" : 45
+									}
+								},
+								{
+									"name" : "blender",
+									"type" : "gymobj",
+									"xCenter" : 0,
+									"yCenter" : 10,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/blender/blender.blender",
+										"autoHeight" : false,
+										"worldScale" : 0.15,
+										"roll" : 90
+									}
+								},
+								{
+									"name" : "sponge",
+									"type" : "gymobj",
+									"xCenter" : 20,
+									"yCenter" : -30,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/sponge/KITCHEN+SPONGE.KITCHEN+SPONGE",
+										"autoHeight" : false,
+										"roll" : 90,
+										"yaw" : 90,
+										"worldScale" : 3
+									}
+								},
+								{
+									"name" : "sode",
+									"type" : "gymobj",
+									"xCenter" : -20,
+									"yCenter" : -45,
+									"actorParams" : {
+										"meshPath" : "StaticMesh'/Game/Scenes/Small_Items/Distractor/coke/latinha+coca+cola2.latinha+coca+cola2'",
+										"autoHeight" : false,
+										"roll" : 90
+									}
+								},
+								{
+									"name" : "mug",
+									"type" : "gymobj",
+									"xCenter" : 10,
+									"yCenter" : -15,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/jug2/jug2.jug2",
+										"autoHeight" : false,
+										"roll" : 90
+									}
+								},
+								{
+									"name" : "ladle",
+									"type" : "gymobj",
+									"xCenter" : -35,
+									"yCenter" : 0,
+									"zCenter" : 0,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/ladle/ladle.ladle",
+										"autoHeight" : false,
+										"worldScale" : 2,
+										"roll" : 90
 									}
 								}
 							]
