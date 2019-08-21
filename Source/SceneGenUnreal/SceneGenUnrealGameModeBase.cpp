@@ -613,14 +613,32 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 				spawnedObj->setMaterial("/Game/DemoAssets/Walnut/newwalnutmat.newwalnutmat");
 			}
 			else if (displayName == "brick") {
-				brick = spawnedObj;
+				//brick = spawnedObj;
+				spawnedObj->setMaterial("/Game/Kitchen/Material/Wood_Cherry_Original.Wood_Cherry_Original");
 			}
 			else if (displayName == "hammer") {
-				hammer = spawnedObj;
-			}
+				//hammer = spawnedObj;
+			} 
 			else if (displayName == "banana") {
+				banana = spawnedObj;
 				spawnedObj->setMaterial("/Game/Scenes/Small_Items/Distractor/sponge/Yellow.Yellow");
 			}
+			else if (displayName == "candyBar") {
+				candyBar = spawnedObj;
+			}
+			else if (displayName == "wrench") {
+				wrench = spawnedObj;
+			}
+			else if (displayName == "waterBottle") {
+				waterBottle = spawnedObj;
+			}
+			else if (displayName == "cereal") {
+				cereal = spawnedObj;
+			}
+			else if (displayName == "outside") {
+				spawnedObj->SetActorScale3D(FVector(0.6, 0.6, 0.9));
+			}
+			
 		}
 		UE_LOG(LogTemp, Warning, TEXT("Spawn Success"))
 	}
@@ -935,7 +953,7 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 {
 	FVector socketLocation = agent->baseMesh->GetSocketLocation("hand_rSocket");
 
-	float distances[7] = {-1,-1,-1,-1,-1,-1,-1};
+	float distances[12] = {-1, -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
 	if (meat) {
 		distances[0] = FVector::Dist(socketLocation, meat->GetActorLocation());
@@ -968,14 +986,45 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 
 	}
 
+	// new stuff
+	if (wrench) {
+		distances[7] = FVector::Dist(socketLocation, wrench->GetActorLocation());
+		UE_LOG(LogTemp, Warning, TEXT("WRENCH check"))
+	}
+
+	if (waterBottle) {
+		distances[8] = FVector::Dist(socketLocation, waterBottle->GetActorLocation());
+		UE_LOG(LogTemp, Warning, TEXT("WbOTTLE check"))
+
+	}
+
+	if (banana) {
+		distances[9] = FVector::Dist(socketLocation, banana->GetActorLocation());
+	}
+
+	if (candyBar) {
+		distances[10] = FVector::Dist(socketLocation, candyBar->GetActorLocation());
+	}
+
+	if (cereal) {
+		distances[11] = FVector::Dist(socketLocation, cereal->GetActorLocation());
+	}
+
+	
+
+
+
+
 	float min = -1;
 	int index = 0;
-	for (int32 i = 0; i < 7; i++) {
+	for (int32 i = 0; i < 12; i++) {
 		if (min == -1 || (distances[i] < min && distances[i] != -1)) {
 			min = distances[i];
 			index = i;
 		}
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Min index : %d"), index)
 
 	AGymObj* closest = nullptr;
 	switch (index) {
@@ -986,6 +1035,11 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 		case 4: closest = knife; break;
 		case 5: closest = hammer; break;
 		case 6: closest = brick; break;
+		case 7: closest = wrench; break;
+		case 8: closest = waterBottle; break;
+		case 9: closest = banana; break;
+		case 10: closest = candyBar; break;
+		case 11: closest = cereal; break;
 	}
 	
 	if (closest) {
@@ -1016,8 +1070,14 @@ void ASceneGenUnrealGameModeBase::asyncAttach(AGDemoAgent* agent, AGymObj* close
 		case 4: closest->SetActorRelativeLocation(FVector(2, 25, 8)); closest->SetActorRelativeRotation(FRotator(30.64, 81.62, -92.7)); break;
 		case 5: closest->SetActorRelativeLocation(FVector(-9.1, 6, 2)); closest->SetActorRelativeRotation(FRotator(20.66, -124, 99.2)); break;
 		case 6: closest->SetActorRelativeLocation(FVector(7, 2, -2)); closest->SetActorRelativeRotation(FRotator(45.6, 25.1, 43.7)); break;
+		case 7: break;
+		case 8: closest->SetActorRelativeLocation(FVector(5, 0, 0)); closest->SetActorRelativeRotation(FRotator(28.8, 25.3, 28.0)); break;
+		case 9: closest->SetActorRelativeLocation(FVector(4, 1, -2)); closest->SetActorRelativeRotation(FRotator(-6.7, -115.4, 22.6)); break;
+		case 10: closest->SetActorRelativeLocation(FVector(3, -7, -8)); closest->SetActorRelativeRotation(FRotator(-32, -36.5, 88.5)); break;
+		case 11: closest->SetActorRelativeLocation(FVector(33.7, 30.0, -24.2)); closest->SetActorRelativeRotation(FRotator(27.5, -119.8, 30.3)); break;
 	}
 	agent->setHeldObject(closest);
+	UE_LOG(LogTemp, Warning, TEXT("Attached"))
 }
 
 void ASceneGenUnrealGameModeBase::dispenseSalt()

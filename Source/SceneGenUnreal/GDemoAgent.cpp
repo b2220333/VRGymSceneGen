@@ -87,9 +87,12 @@ AGDemoAgent::AGDemoAgent()
 
 
 	firstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	firstPersonCamera->SetupAttachment(capsule);
-	firstPersonCamera->SetRelativeLocation(FVector(35, 5, 70));
-	firstPersonCamera->SetRelativeRotation(FRotator(-45,0,0));
+	firstPersonCamera->SetupAttachment(baseMesh, FName("headSocket"));
+	firstPersonCamera->SetRelativeLocation(FVector(0, 0, 0));
+	firstPersonCamera->SetRelativeRotation(FRotator(-70,0,0));
+	//firstPersonCamera->SetupAttachment(capsule);
+	//firstPersonCamera->SetRelativeLocation(FVector(35, 5, 70));
+	//firstPersonCamera->SetRelativeRotation(FRotator(-45,0,0));
 
 	spectatorCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("spectatorCamera"));
 	spectatorCamera->SetWorldLocation(FVector(155, 10, 150));

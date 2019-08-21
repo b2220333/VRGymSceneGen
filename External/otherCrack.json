@@ -1,5 +1,5 @@
 {
-	"name" : "crackDemo",
+	"name" : "otherCrackDemo",
 	"xWidth" : 500,
 	"yWidth": 500,
 	"zWidth": 500,
@@ -27,8 +27,8 @@
 					"shapenetActors": [
 						{
 							"name" : "brick",
-							"xCenter" : 20,
-							"yCenter" : -30,
+							"xCenter" : 30,
+							"yCenter" : 0,
 							"type" : "gymobj",
 							"actorParams" : {
 								"meshPath" : "/Game/DemoAssets/brick/brick.brick",
@@ -83,8 +83,8 @@
 								{
 									"name" : "banana",
 									"type" : "gymobj",
-									"xCenter" : 30,
-									"yCenter" : -30,
+									"xCenter" : 20,
+									"yCenter" : -60,
 									"actorParams" : {
 										"meshPath" : "/Game/DemoAssets/banana/banana.banana",
 										"autoHeight" : false,

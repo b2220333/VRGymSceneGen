@@ -156,4 +156,15 @@ private:
 	AGymObj* hammer;
 	AGymObj* brick;
 
+
+
+	// other hammer objs
+	AGymObj* wrench;
+	AGymObj* waterBottle;
+
+	// other brick objs
+	AGymObj* banana;
+	AGymObj* candyBar;
+	AGymObj* cereal;
+
 };

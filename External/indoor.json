@@ -121,13 +121,15 @@
 						{
 							"name" : "counterTop",
 							"xCenter": 0,
-							"yCenter" : 0,
-							"zCenter" : 0,
+							"yCenter" : 20,
+							"zCenter" : 60,
 							"type" : "gymobj",
 							"actorParams" : {
 								"meshPath" : "/Game/DemoAssets/Counters/indoor/model_normalized.model_normalized",
 								"worldScale" : 2.4,
-								"yaw" : 180
+								"yaw" : 180,
+								"physicsEnabled": false,
+								"autoHeight" : false
 							}
 						}
 					],
@@ -323,6 +325,32 @@
 						"autoHeight" : false,
 						"physicsEnabled" : false,
 						"yaw" :90
+					}
+				},
+				{
+					"name" : "bowl",
+					"type" : "gymobj",
+					"xCenter": 130,
+					"yCenter" : -280,
+					"zCenter" : 80,
+					"actorParams" : {
+						"meshPath" : "/Game/Assets/bowl/bowlgreen1.bowlgreen1",
+						"worldScale" : 0.5,
+						"autoHeight" : false,
+						"physicsEnabled" : false
+					}
+				},
+				{
+					"name" : "smallPlant",
+					"type" : "gymobj",
+					"xCenter": 300,
+					"yCenter" : -230,
+					"zCenter" : 80,
+					"actorParams" : {
+						"meshPath" : "/Game/Scenes/Small_Items/Distractor/plants/Potted+Plants.Potted+Plants",
+						"autoHeight" : false,
+						"physicsEnabled" : false,
+						"roll" : 90
 					}
 				}
 			]

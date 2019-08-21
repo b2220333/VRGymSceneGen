@@ -1,147 +1,378 @@
 {
-	"name" : "crackDemo",
-	"xWidth" : 500,
-	"yWidth": 500,
+	"name" : "muriDemo",
+	"xWidth" : 600,
+	"yWidth": 1000,
 	"zWidth": 500,
 	"autoGenWalls" : true,
 	"shapenetActorGroups" : [
 		{
 			"name" : "tableArea",
-			"yCenter" : 25,
-			"xCenter" : 30,
+			"xCenter": 150,
+			"yCenter" : 150,
+			"zCenter" : 0,
+			"childShapenetActorGroups" :[
+				{
+					"name" : "chairs",	
+					"shapenetActors" : [
+						{
+							"name" : "chair1",
+							"xCenter": 0,
+							"yCenter" : 80,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Chairs/model_normalized.model_normalized"
+							}
+						},
+						{
+							"name" : "chair3",
+							"xCenter": 80,
+							"yCenter" : 0,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Chairs/model_normalized.model_normalized",
+								"yaw" : 90
+							}
+						},
+						{
+							"name" : "chair4",
+							"xCenter": -80,
+							"yCenter" : 0,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Chairs/model_normalized.model_normalized",
+								"yaw" : -90
+							}
+						}
+					]
+				},
+				{
+					"name" : "plates",
+					"xCenter" : 20,
+					"zCenter" : 72,
+					"actorParams" :{
+						"roll" : 90,
+						"worldScale" : 4,
+						"physicsEnabled" : true,
+						"autoHeight" : false,
+						"meshPath" : "/Game/Assets/plate/plate.plate"
+					},
+					"shapenetActors" : [
+						{
+							"name" : "plate1",
+							"xCenter": 0,
+							"yCenter" : 30,
+							"type" : "gymobj"
+						},
+						{
+							"name" : "plate2",
+							"xCenter": 0,
+							"yCenter" : -30,
+							"type" : "gymobj"
+						},
+						{
+							"name" : "plate3",
+							"xCenter": 30,
+							"yCenter" : 0,
+							"type" : "gymobj"
+						},
+						{
+							"name" : "plate3",
+							"xCenter": -30,
+							"yCenter" : 0,
+							"type" : "gymobj"
+						}
+					]
+				}
+			],
 			"shapenetActors" : [
 				{
 					"name" : "table",
+					"xCenter": 0,
+					"yCenter" : 0,
+					"zCenter" : 0,
 					"type" : "gymobj",
 					"actorParams" : {
 						"meshPath" : "/Game/DemoAssets/Tables/indoor/model_normalized.model_normalized",
-						"worldScale" : 1.75,
-						"physicsEnabled" : false
+						"worldScale" : 1.5
 					}
 				}
-			],
+			]
+		},
+		{
+			"name" : "cookingArea",
+			"xCenter": 0,
+			"yCenter" : -100,
+			"zCenter" : 0,
 			"childShapenetActorGroups" : [
 				{
-					"name" : "itemsOnTable",
-					"zCenter" : 90,
-					"shapenetActors": [
+					"name" : "counterArea",
+					"xCenter": 200,
+					"yCenter" : -120,
+					"zCenter" : 0,
+					"shapenetActors" : [
 						{
-							"name" : "hammer",
-							"xCenter" : 20,
-							"yCenter" : -20,
+							"name" : "counterTop",
+							"xCenter": 0,
+							"yCenter" : 20,
+							"zCenter" : 60,
 							"type" : "gymobj",
 							"actorParams" : {
-								"meshPath" : "/Game/DemoAssets/Hammer/Hammer.Hammer",
-								"autoHeight" : false,
-								"worldScale" : 2.5,
-								"roll" : 90,
-								"yaw" : 135
+								"meshPath" : "/Game/DemoAssets/Counters/indoor/model_normalized.model_normalized",
+								"worldScale" : 2.4,
+								"yaw" : 180,
+								"physicsEnabled": false,
+								"autoHeight" : false
 							}
 						}
 					],
 					"childShapenetActorGroups" : [
 						{
-							"name" : "staticBackground",
+							"name" : "ingredients",
 							"yCenter" : 30,
+							"zCenter" : 100,
 							"shapenetActors" : [
 								{
-									"name" : "scissors",
+									"name" : "cuttingBoard",
 									"type" : "gymobj",
-									"xCenter" : -30,
-									"yCenter" : -60,
-									"actorParams" :{
-										"meshPath" : "/Game/DemoAssets/scissors/scissors.scissors",
-										"autoHeight" : false,
-										"worldScale" : 0.2,
-										"yaw" : 90
-									}
-
-								},
-								{
-									"name" : "waterBottle",
-									"type" : "gymobj",
-									"xCenter" : 30, 
-									"yCenter" : -40,
-									"actorParams" :{
-										"meshPath" : "/Game/DemoAssets/watterBottle/water_bottle.water_bottle",
-										"autoHeight" : false,
-										"worldScale" : 0.05
-									}
-								},
-								{
-									"name" : "wrench",
-									"type" : "gymobj",
-									"xCenter" : -20,
-									"yCenter" : -25,
+									"xCenter" : 40,
+									"zCenter" : -22,
 									"actorParams" : {
-										"meshPath" : "/Game/DemoAssets/wrench/wrench.wrench",
+										"meshPath" : "/Game/Assets/sunCG/kitchenUtilities/cutboard/245cutBoard.245cutBoard",
 										"autoHeight" : false,
-										"yaw" : 45
+										"worldScale" : 0.75,
+										"roll" : -90,
+										"yaw" : 180
 									}
 								},
 								{
-									"name" : "blender",
+									"name" : "meat",
+									"type" : "gymobj",
+									"xCenter" : 30,
+									"ycenter" : -25,
+									"zCenter" : 10,
+									"actorParams" : {
+										"meshPath" : "/Game/Assets/Meat/meat.meat",
+										"autoHeight" : false,
+										"worldScale" : 2,
+										"roll" : 90
+									}
+								},
+								{
+									"name" : "salt",
 									"type" : "gymobj",
 									"xCenter" : 0,
-									"yCenter" : 10,
 									"actorParams" : {
-										"meshPath" : "/Game/Scenes/Small_Items/Distractor/blender/blender.blender",
+										"meshPath" : "/Game/Scenes/Small_Items/MinorObject/consistent/sugarpourer/SugarDespenseClassic.SugarDespenseClassic",
 										"autoHeight" : false,
 										"worldScale" : 0.15,
 										"roll" : 90
 									}
 								},
 								{
-									"name" : "sponge",
+									"name" : "pan",
 									"type" : "gymobj",
-									"xCenter" : 20,
-									"yCenter" : -30,
+									"xCenter" : -80,
+									"yCenter" : -20,
 									"actorParams" : {
-										"meshPath" : "/Game/Scenes/Small_Items/Distractor/sponge/KITCHEN+SPONGE.KITCHEN+SPONGE",
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/pan/pan1_2.pan1_2",
 										"autoHeight" : false,
-										"roll" : 90,
-										"yaw" : 90,
-										"worldScale" : 3
-									}
-								},
-								{
-									"name" : "sode",
-									"type" : "gymobj",
-									"xCenter" : -20,
-									"yCenter" : -45,
-									"actorParams" : {
-										"meshPath" : "StaticMesh'/Game/Scenes/Small_Items/Distractor/coke/latinha+coca+cola2.latinha+coca+cola2'",
-										"autoHeight" : false,
-										"roll" : 90
-									}
-								},
-								{
-									"name" : "mug",
-									"type" : "gymobj",
-									"xCenter" : 10,
-									"yCenter" : -15,
-									"actorParams" : {
-										"meshPath" : "/Game/Scenes/Small_Items/Distractor/jug2/jug2.jug2",
-										"autoHeight" : false,
-										"roll" : 90
-									}
-								},
-								{
-									"name" : "ladle",
-									"type" : "gymobj",
-									"xCenter" : -35,
-									"yCenter" : 0,
-									"zCenter" : 0,
-									"actorParams" : {
-										"meshPath" : "/Game/Scenes/Small_Items/Distractor/ladle/ladle.ladle",
-										"autoHeight" : false,
-										"worldScale" : 2,
-										"roll" : 90
+										"worldScale" : 0.5,
+										"roll" : 90							
 									}
 								}
 							]
 						}
 					]
+				},
+				{
+					"name" : "heatingArea",
+					"shapenetActors" : [
+						{
+							"name" : "heatSource",
+							"xCenter": 55,
+							"yCenter" : -100,
+							"zCenter" : 0,
+							"type" : "gymobj",
+							"actorParams" : {
+								"meshPath" : "/Game/DemoAssets/Stoves/indoor/model_normalized.model_normalized",
+								"worldScale" : 1.5,
+								"yaw" : 180
+							}
+						}
+					],
+					"childShapenetActorGroups" : [
+						{
+							"name" : "itemsOnStove",
+							"xCenter" : 35,
+							"yCenter" : -110,
+							"zCenter" : 100,
+							"shapenetActors" : [
+								{
+									"name" : "kettle",
+									"type" : "gymobj",
+									"xCenter" : 0,
+									"yCenter" : 10,
+									"actorParams" : {
+										"meshPath" : "/Game/Assets/kettle/kettle.kettle",
+										"autoHeight" : false,
+										"worldScale" : 0.5,
+										"roll" : 90
+									}
+								}
+							]
+						}
+
+					]
+				}
+			]
+		},
+		{
+			"name" : "waterObjects",
+			"xCenter": -190,
+			"yCenter" : -150,
+			"zCenter" : 0,
+			"shapenetActors" : [
+				{
+					"name" : "dishawasher",
+					"xCenter": 0,
+					"yCenter" : -100,
+					"zCenter" : 0,
+					"type" : "gymobj",
+					"actorParams" : {
+						"meshPath" : "/Game/DemoAssets/Dishwasher/model_normalized.model_normalized",
+						"yaw" : -90,
+						"worldScale" : 1.5,
+						"autoHeight" : true
+					}
+				},
+				{
+					"name" : "sink",
+					"xCenter": 0,
+					"yCenter" : -70,
+					"zCenter" : 0,
+					"type" : "gymobj",
+					"actorParams" : {
+						"meshPath" : "/Game/DemoAssets/Sinks/Indoor/sink.sink",
+						"yaw" : 90,
+						"worldScale" : 1.25,
+						"autoHeight" : true
+					}
+				}
+
+			]
+		},
+		{
+			"name" : "miscBackground",
+			"xCenter": 0,
+			"yCenter" : 0,
+			"zCenter" : 0,
+			"shapenetActors" : [
+				{
+					"name" : "door",
+					"xCenter": -100,
+					"yCenter" : 230,
+					"zCenter" : 260,
+					"type" : "gymobj",
+					"actorParams" : {
+						"meshPath" : "/Game/Assets/sunCG/cabin/405/405Door1.405Door1",
+						"autoHeight" : false,
+						"roll" : -90,
+						"physicsEnabled" : false
+					}
+				},
+				{
+					"name" : "fridge",
+					"type" : "gymobj",
+					"xCenter": -200,
+					"yCenter" : -120,
+					"zCenter" : 200,
+					"actorParams" : {
+						"meshPath" : "/Game/DemoAssets/Fridge/fridge.fridge",
+						"autoHeight" : false,
+						"yaw" : 90,
+						"worldScale" : 1.5
+					}
+				},
+				{
+					"name" : "plant",
+					"type" : "gymobj",
+					"xCenter": 230,
+					"yCenter" : 250,
+					"zCenter" : 0,
+					"actorParams" : {
+						"meshPath" : "/Game/Kitchen/Mesh/SM_Plant.SM_Plant",
+						"worldScale" : 2,
+						"autoHeight" : false
+					}
+				},
+				{
+					"name" : "TV",
+					"type" : "gymobj",
+					"xCenter": 300,
+					"yCenter" : 0,
+					"zCenter" : 170,
+					"actorParams" : {
+						"meshPath" : "/Game/Kitchen/Mesh/SM_TV.SM_TV",
+						"worldScale" : 2,
+						"autoHeight" : false,
+						"physicsEnabled" : false,
+						"yaw" :90
+					}
+				},
+				{
+					"name" : "bowl",
+					"type" : "gymobj",
+					"xCenter": 130,
+					"yCenter" : -280,
+					"zCenter" : 80,
+					"actorParams" : {
+						"meshPath" : "/Game/Assets/bowl/bowlgreen1.bowlgreen1",
+						"worldScale" : 0.5,
+						"autoHeight" : false,
+						"physicsEnabled" : false
+					}
+				},
+				{
+					"name" : "smallPlant",
+					"type" : "gymobj",
+					"xCenter": 300,
+					"yCenter" : -230,
+					"zCenter" : 80,
+					"actorParams" : {
+						"meshPath" : "/Game/Scenes/Small_Items/Distractor/plants/Potted+Plants.Potted+Plants",
+						"autoHeight" : false,
+						"physicsEnabled" : false,
+						"roll" : 90
+					}
+				},
+				{
+					"name" : "window",
+					"type" : "gymobj",
+					"xCenter": -390,
+					"yCenter" : 140,
+					"zCenter" : 30,
+					"actorParams" : {
+						"meshPath" : "/Game/DemoAssets/window/wooden_window.wooden_window",
+						"autoHeight" : false,
+						"physicsEnabled" : false,
+						"worldScale" : 15,
+						"yaw" : 90
+					}
+				},
+				{
+					"name" : "outside",
+					"type" : "gymobj",
+					"xCenter": -299,
+					"yCenter" : 140,
+					"zCenter" : 220,
+					"actorParams" : {
+						"meshPath" : "/Game/outside.outside",
+						"autoHeight" : false,
+						"physicsEnabled" : false
+					}
 				}
 			]
 		}
