@@ -243,7 +243,8 @@ void AGymObj::applyParamsToMesh(UStaticMeshComponent* mesh, json::object_t param
 	else {
 		mesh->SetEnableGravity(true);
 		// damping for stable setup, to be removed after all actors have spawned and settled in position
-		mesh->SetLinearDamping(20);
+		mesh->SetLinearDamping(50);
+		mesh->SetAngularDamping(50);
 	}
 
 	// setting mass density

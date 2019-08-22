@@ -1,4 +1,5 @@
 // female (-20,160,-5) yaw:170
+// crossed  (70,120,90) yaw: 160
 // walnut (-25,-5,83.5) scale : 0.1
 {
 	"name" : "crackDemo",
@@ -60,17 +61,6 @@
 
 								},
 								{
-									"name" : "waterBottle",
-									"type" : "gymobj",
-									"xCenter" : 30, 
-									"yCenter" : -40,
-									"actorParams" :{
-										"meshPath" : "/Game/DemoAssets/watterBottle/water_bottle.water_bottle",
-										"autoHeight" : false,
-										"worldScale" : 0.05
-									}
-								},
-								{
 									"name" : "wrench",
 									"type" : "gymobj",
 									"xCenter" : -20,
@@ -121,7 +111,7 @@
 									"name" : "mug",
 									"type" : "gymobj",
 									"xCenter" : 10,
-									"yCenter" : -15,
+									"yCenter" : -45,
 									"actorParams" : {
 										"meshPath" : "/Game/Scenes/Small_Items/Distractor/jug2/jug2.jug2",
 										"autoHeight" : false,
@@ -131,7 +121,7 @@
 								{
 									"name" : "ladle",
 									"type" : "gymobj",
-									"xCenter" : -35,
+									"xCenter" : 40,
 									"yCenter" : 0,
 									"zCenter" : 0,
 									"actorParams" : {
@@ -140,6 +130,20 @@
 										"worldScale" : 2,
 										"roll" : 90
 									}
+								},
+								{
+									"name" : "ketchup",
+									"type" : "gymobj",
+									"xCenter" : 25,
+									"yCenter" : -20,
+									"zCenter" : 20,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/catchup/Heinz20ozFridgeBottle.Heinz20ozFridgeBottle",
+										"autoHeight" : false,
+										"worldScale" : 0.25,
+										"yaw" : 90
+									}
+
 								}
 							]
 						}

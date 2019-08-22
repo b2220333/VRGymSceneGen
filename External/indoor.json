@@ -7,7 +7,7 @@
 	"name" : "muriDemo",
 	"xWidth" : 600,
 	"yWidth": 1000,
-	"zWidth": 500,
+	"zWidth": 350,
 	"autoGenWalls" : true,
 	"shapenetActorGroups" : [
 		{
@@ -136,7 +136,7 @@
 					"childShapenetActorGroups" : [
 						{
 							"name" : "ingredients",
-							"yCenter" : 30,
+							"yCenter" : 40,
 							"zCenter" : 100,
 							"shapenetActors" : [
 								{
@@ -156,7 +156,7 @@
 									"name" : "meat",
 									"type" : "gymobj",
 									"xCenter" : 30,
-									"ycenter" : -25,
+									"yCenter" : -10,
 									"zCenter" : 10,
 									"actorParams" : {
 										"meshPath" : "/Game/Assets/Meat/meat.meat",
@@ -203,7 +203,7 @@
 							"type" : "gymobj",
 							"actorParams" : {
 								"meshPath" : "/Game/DemoAssets/Stoves/indoor/model_normalized.model_normalized",
-								"worldScale" : 1.5,
+								"worldScale" : 1.7,
 								"yaw" : 180
 							}
 						}
@@ -330,7 +330,7 @@
 				{
 					"name" : "bowl",
 					"type" : "gymobj",
-					"xCenter": 130,
+					"xCenter": 250,
 					"yCenter" : -280,
 					"zCenter" : 80,
 					"actorParams" : {
@@ -341,22 +341,23 @@
 					}
 				},
 				{
-					"name" : "smallPlant",
+					"name" : "dishRack",
 					"type" : "gymobj",
-					"xCenter": 300,
-					"yCenter" : -230,
+					"xCenter": 175,
+					"yCenter" : -225,
 					"zCenter" : 80,
 					"actorParams" : {
-						"meshPath" : "/Game/Scenes/Small_Items/Distractor/plants/Potted+Plants.Potted+Plants",
+						"meshPath" : "/Game/DemoAssets/succulent/model_dae.model_dae",
 						"autoHeight" : false,
 						"physicsEnabled" : false,
-						"roll" : 90
+						"roll" : 90,
+						"worldScale" : 1.5
 					}
 				},
 				{
 					"name" : "window",
 					"type" : "gymobj",
-					"xCenter": -80,
+					"xCenter": -90,
 					"yCenter" : -395,
 					"zCenter" : 20,
 					"actorParams" : {
@@ -395,7 +396,7 @@
 				{
 					"name" : "outside2",
 					"type" : "gymobj",
-					"xCenter": -80,
+					"xCenter": -90,
 					"yCenter" : -298,
 					"zCenter" : 210,
 					"actorParams" : {
@@ -404,6 +405,21 @@
 						"physicsEnabled" : false,
 						"yaw" : -90
 					}
+				},
+				{
+					"name" : "stoveFan",
+					"type" : "gymobj",
+					"xCenter": 50,
+					"yCenter" : -260,
+					"zCenter" : 200,
+					"actorParams" : {
+						"meshPath" : "/Game/Assets/sunCG/kitchenFan/241/241.241",
+						"autoHeight" : false,
+						"physicsEnabled" : false,
+						"roll" : 90,
+						"worldScale" : 0.9
+					}
+
 				}
 			]
 		}

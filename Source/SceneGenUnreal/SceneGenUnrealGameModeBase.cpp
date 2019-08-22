@@ -613,27 +613,27 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 				spawnedObj->setMaterial("/Game/DemoAssets/Walnut/newwalnutmat.newwalnutmat");
 			}
 			else if (displayName == "brick") {
-				//brick = spawnedObj;
-				spawnedObj->setMaterial("/Game/Kitchen/Material/Wood_Cherry_Original.Wood_Cherry_Original");
+				brick = spawnedObj;
+				//spawnedObj->setMaterial("/Game/Kitchen/Material/Wood_Cherry_Original.Wood_Cherry_Original");
 			}
 			else if (displayName == "hammer") {
 				//hammer = spawnedObj;
 			} 
 			else if (displayName == "banana") {
-				banana = spawnedObj;
+				//banana = spawnedObj;
 				spawnedObj->setMaterial("/Game/Scenes/Small_Items/Distractor/sponge/Yellow.Yellow");
 			}
 			else if (displayName == "candyBar") {
-				candyBar = spawnedObj;
+				//candyBar = spawnedObj;
 			}
 			else if (displayName == "wrench") {
-				wrench = spawnedObj;
+				//wrench = spawnedObj;
 			}
 			else if (displayName == "waterBottle") {
-				waterBottle = spawnedObj;
+				//waterBottle = spawnedObj;
 			}
 			else if (displayName == "cereal") {
-				cereal = spawnedObj;
+				//cereal = spawnedObj;
 			}
 			else if (displayName == "outside" || displayName == "outside2") {
 				spawnedObj->SetActorScale3D(FVector(0.6, 0.6, 0.9));
@@ -658,6 +658,7 @@ void ASceneGenUnrealGameModeBase::resetDamping()
 		if (gymObjects[i]) {
 			if (gymObjects[i]->getBaseMesh()) {
 				gymObjects[i]->getBaseMesh()->SetLinearDamping(0.01);
+				gymObjects[i]->getBaseMesh()->SetAngularDamping(0.01);
 			}
 		}
 	}
@@ -1071,7 +1072,7 @@ void ASceneGenUnrealGameModeBase::asyncAttach(AGDemoAgent* agent, AGymObj* close
 		case 5: closest->SetActorRelativeLocation(FVector(-9.1, 6, 2)); closest->SetActorRelativeRotation(FRotator(20.66, -124, 99.2)); break;
 		case 6: closest->SetActorRelativeLocation(FVector(7, 2, -2)); closest->SetActorRelativeRotation(FRotator(45.6, 25.1, 43.7)); break;
 		case 7: break;
-		case 8: closest->SetActorRelativeLocation(FVector(5, 0, 0)); closest->SetActorRelativeRotation(FRotator(28.8, 25.3, 28.0)); break;
+		case 8: closest->SetActorRelativeLocation(FVector(15, -4.4, -6.2)); closest->SetActorRelativeRotation(FRotator(-46.6, 97.2, 39.9)); break;
 		case 9: closest->SetActorRelativeLocation(FVector(4, 1, -2)); closest->SetActorRelativeRotation(FRotator(-6.7, -115.4, 22.6)); break;
 		case 10: closest->SetActorRelativeLocation(FVector(3, -7, -8)); closest->SetActorRelativeRotation(FRotator(-32, -36.5, 88.5)); break;
 		case 11: closest->SetActorRelativeLocation(FVector(33.7, 30.0, -24.2)); closest->SetActorRelativeRotation(FRotator(27.5, -119.8, 30.3)); break;
