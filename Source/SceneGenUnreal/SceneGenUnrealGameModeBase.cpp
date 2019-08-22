@@ -635,7 +635,7 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 			else if (displayName == "cereal") {
 				cereal = spawnedObj;
 			}
-			else if (displayName == "outside") {
+			else if (displayName == "outside" || displayName == "outside2") {
 				spawnedObj->SetActorScale3D(FVector(0.6, 0.6, 0.9));
 			}
 			

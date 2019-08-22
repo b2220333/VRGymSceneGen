@@ -352,6 +352,58 @@
 						"physicsEnabled" : false,
 						"roll" : 90
 					}
+				},
+				{
+					"name" : "window",
+					"type" : "gymobj",
+					"xCenter": -80,
+					"yCenter" : -395,
+					"zCenter" : 20,
+					"actorParams" : {
+						"meshPath" : "/Game/DemoAssets/window/wooden_window.wooden_window",
+						"autoHeight" : false,
+						"physicsEnabled" : false,
+						"worldScale" : 15
+					}
+				},
+				{
+					"name" : "window2",
+					"type" : "gymobj",
+					"xCenter": -390,
+					"yCenter" : 140,
+					"zCenter" : 30,
+					"actorParams" : {
+						"meshPath" : "/Game/DemoAssets/window/wooden_window.wooden_window",
+						"autoHeight" : false,
+						"physicsEnabled" : false,
+						"worldScale" : 15,
+						"yaw" : 90
+					}
+				},
+				{
+					"name" : "outside",
+					"type" : "gymobj",
+					"xCenter": -299,
+					"yCenter" : 140,
+					"zCenter" : 220,
+					"actorParams" : {
+						"meshPath" : "/Game/outside.outside",
+						"autoHeight" : false,
+						"physicsEnabled" : false
+					}
+				},
+				{
+					"name" : "outside2",
+					"type" : "gymobj",
+					"xCenter": -80,
+					"yCenter" : -298,
+					"zCenter" : 210,
+					"actorParams" : {
+						"meshPath" : "/Game/outside.outside",
+						"autoHeight" : false,
+						"physicsEnabled" : false,
+						"yaw" : -90
+					}
 				}
 			]
 		}
