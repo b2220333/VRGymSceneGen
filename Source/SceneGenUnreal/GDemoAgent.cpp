@@ -133,6 +133,10 @@ void AGDemoAgent::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("interact", IE_Pressed, this, &AGDemoAgent::interact);
 	PlayerInputComponent->BindAction("swing", IE_Pressed, this, &AGDemoAgent::swing);
 
+	PlayerInputComponent->BindAction("preScratch", IE_Pressed, this, &AGDemoAgent::preScratch);
+	PlayerInputComponent->BindAction("scratch", IE_Pressed, this, &AGDemoAgent::scratch);
+
+
 	// from third person
 	PlayerInputComponent->BindAxis("MoveForward", this, &AGDemoAgent::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AGDemoAgent::MoveRight);
@@ -317,4 +321,13 @@ void AGDemoAgent::interact()
 void AGDemoAgent::swing()
 {
 	playAnimation("swing", false);
+}
+
+void AGDemoAgent::preScratch()
+{
+	playAnimation("preHeadScratch", false);
+}
+void AGDemoAgent::scratch()
+{
+	playAnimation("headScratch", true);
 }

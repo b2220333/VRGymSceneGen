@@ -167,4 +167,8 @@ private:
 	AGymObj* candyBar;
 	AGymObj* cereal;
 
+	AGymObj* stone;
+	AGymObj* book;
+	AGymObj* grater;
+
 };

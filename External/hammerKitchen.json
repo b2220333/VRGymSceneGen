@@ -9,17 +9,14 @@
 			"name" : "tableArea",
 			"yCenter" : 25,
 			"xCenter" : 30,
-			"zCenter" : 10,
 			"shapenetActors" : [
 				{
 					"name" : "table",
 					"type" : "gymobj",
-					"zCenter" : 50,
 					"actorParams" : {
 						"meshPath" : "/Game/DemoAssets/Tables/indoor/model_normalized.model_normalized",
 						"worldScale" : 1.75,
-						"physicsEnabled" : false,
-						"autoHeight" : false
+						"physicsEnabled" : false
 					}
 				}
 			],
@@ -32,14 +29,16 @@
 					},
 					"shapenetActors": [
 						{
-							"name" : "Lstone",
+							"name" : "hammer",
 							"xCenter" : 20,
-							"yCenter" : -10,
+							"yCenter" : -20,
 							"type" : "gymobj",
 							"actorParams" : {
-								"meshPath" : "/Game/DemoAssets/stone/rock1.rock1",
+								"meshPath" : "/Game/DemoAssets/Hammer/Hammer.Hammer",
 								"autoHeight" : false,
-								"worldScale" : 0.4
+								"worldScale" : 2.5,
+								"roll" : 90,
+								"yaw" : 135
 							}
 						}
 					],
@@ -49,117 +48,108 @@
 							"yCenter" : 30,
 							"shapenetActors" : [
 								{
-									"name" : "rack",
+									"name" : "scissors",
 									"type" : "gymobj",
-									"xCenter" : -20,
-									"yCenter" : 10,
+									"xCenter" : -30,
+									"yCenter" : -60,
+									"zCenter" : -1,
 									"actorParams" :{
-										"meshPath" : "/Game/Assets/oven/rack_new.rack_new",
+										"meshPath" : "/Game/DemoAssets/scissors/scissors.scissors",
 										"autoHeight" : false,
-										"worldScale" : 1.5
+										"worldScale" : 0.2,
+										"yaw" : 90
 									}
+
 								},
 								{
-									"name" : "book",
+									"name" : "wrench",
 									"type" : "gymobj",
-									"xCenter" : 30,
-									"yCenter" : 0,
+									"zCenter" : -1,
+									"xCenter" : -20,
+									"yCenter" : -25,
 									"actorParams" : {
-										"meshPath" : "/Game/DemoAssets/Book2/FbxBook.FbxBook",
+										"meshPath" : "/Game/DemoAssets/wrench/wrench.wrench",
 										"autoHeight" : false,
-										"worldScale" : 2,
 										"yaw" : 45
 									}
 								},
 								{
-									"name" : "bowl",
+									"name" : "blender",
 									"type" : "gymobj",
-									"xCenter" : -35,
-									"yCenter" : -40,
+									"xCenter" : -20,
+									"yCenter" : 10,
 									"actorParams" : {
-										"meshPath" : "/Game/Assets/bowl/bowlgreen1.bowlgreen1",
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/blender/blender.blender",
 										"autoHeight" : false,
-										"worldScale" : 0.25
-									}
-								},
-								{
-									"name" : "Lknife",
-									"type" : "gymobj",
-									"xCenter" : 30,
-									"yCenter" : -40,
-									"zCenter" : 3,
-									"actorParams" : {
-										"meshPath" : "/Game/Assets/sunCG/kitchenUtilities/cutboard/245Knife.245Knife",
-										"autoHeight" : false,
-										"roll" : 90,
-										"yaw" : -45,
-										"worldScale" : 0.75
-									}
-								},
-								{
-									"name" : "cup",
-									"type" : "gymobj",
-									"xCenter" : 0,
-									"yCenter" : -25,
-									"actorParams" : {
-										"meshPath" : "/Game/Assets/cofeemug/Cup_and_Saucer_Mesh2_paratiisi_cup_Paratiisi_Cup_and_Saucer_Model.Cup_and_Saucer_Mesh2_paratiisi_cup_Paratiisi_Cup_and_Saucer_Model",
-										"autoHeight" : false,
-										"worldScale" : 0.1,
+										"worldScale" : 0.15,
 										"roll" : 90
 									}
 								},
 								{
-									"name" : "Lgrater",
-									"type" : "gymobj",
-									"xCenter" : -30,
-									"yCenter" : -60,
-									"zCenter" : 7,
-									"actorParams" : {
-										"meshPath" : "/Game/DemoAssets/grater/grater1.grater1",
-										"autoHeight" : false,
-										"worldScale" : 0.25
-									}
-								},
-								{
-									"name" : "funnel",
+									"name" : "sponge",
 									"type" : "gymobj",
 									"xCenter" : 20,
-									"yCenter" : -20,
-									"zCenter" : 8,
+									"zCenter" : -2,
+									"yCenter" : -30,
 									"actorParams" : {
-										"meshPath" : "/Game/DemoAssets/funnel/Funnel1.Funnel1",
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/sponge/KITCHEN+SPONGE.KITCHEN+SPONGE",
 										"autoHeight" : false,
-										"roll" : -90,
-										"worldScale" : 6
+										"roll" : 90,
+										"yaw" : 90,
+										"worldScale" : 3
 									}
 								},
 								{
-									"name" : "fork",
+									"name" : "soda",
 									"type" : "gymobj",
-									"xCenter" : -5,
-									"yCenter" : -40,
+									"zCenter" : -1,
+									"xCenter" : -20,
+									"yCenter" : -45,
 									"actorParams" : {
-										"meshPath" : "/Game/DemoAssets/fork/DesertFork.DesertFork",
+										"meshPath" : "StaticMesh'/Game/Scenes/Small_Items/Distractor/coke/latinha+coca+cola2.latinha+coca+cola2'",
 										"autoHeight" : false,
-										"worldScale" : 0.05,
+										"roll" : 90
+									}
+								},
+								{
+									"name" : "mug",
+									"type" : "gymobj",
+									"xCenter" : 10,
+									"yCenter" : -45,
+									"zCenter" : -1,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/jug2/jug2.jug2",
+										"autoHeight" : false,
+										"roll" : 90
+									}
+								},
+								{
+									"name" : "ladle",
+									"type" : "gymobj",
+									"xCenter" : 40,
+									"yCenter" : 0,
+									"zCenter" : -2,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/ladle/ladle.ladle",
+										"autoHeight" : false,
+										"worldScale" : 2,
+										"roll" : 90
+									}
+								},
+								{
+									"name" : "ketchup",
+									"type" : "gymobj",
+									"xCenter" : 25,
+									"yCenter" : -20,
+									"zCenter" : 20,
+									"actorParams" : {
+										"meshPath" : "/Game/Scenes/Small_Items/Distractor/catchup/Heinz20ozFridgeBottle.Heinz20ozFridgeBottle",
+										"autoHeight" : false,
+										"worldScale" : 0.25,
 										"yaw" : 90
 									}
-								},
-								{
-									"name" : "flask",
-									"type" : "gymobj",
-									"xCenter" : 20,
-									"yCenter" : -60,
-									"zCenter" : 10,
-									"actorParams" : {
-										"meshPath" : "/Game/DemoAssets/flask/thermal+vacuum+flask1.thermal+vacuum+flask1",
-										"autoHeight" : false
-									}
+
 								}
-
-
-
-
 							]
 						}
 					]

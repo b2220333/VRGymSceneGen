@@ -64,6 +64,9 @@ public:
 
 	void swing();
 
+	void preScratch();
+	void scratch();
+
 private:
 	// whether the agent is holding an object
 	bool isHoldingObject;

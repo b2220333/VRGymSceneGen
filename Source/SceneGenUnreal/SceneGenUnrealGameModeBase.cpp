@@ -613,11 +613,11 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 				spawnedObj->setMaterial("/Game/DemoAssets/Walnut/newwalnutmat.newwalnutmat");
 			}
 			else if (displayName == "brick") {
-				brick = spawnedObj;
+				//brick = spawnedObj;
 				//spawnedObj->setMaterial("/Game/Kitchen/Material/Wood_Cherry_Original.Wood_Cherry_Original");
 			}
 			else if (displayName == "hammer") {
-				//hammer = spawnedObj;
+				hammer = spawnedObj;
 			} 
 			else if (displayName == "banana") {
 				//banana = spawnedObj;
@@ -637,6 +637,18 @@ void ASceneGenUnrealGameModeBase::importShapenetActor(json::object_t actor, FVec
 			}
 			else if (displayName == "outside" || displayName == "outside2") {
 				spawnedObj->SetActorScale3D(FVector(0.6, 0.6, 0.9));
+			}
+			else if (displayName == "knife") {
+				knife = spawnedObj;
+			}
+			else if (displayName == "book") {
+				book = spawnedObj;
+			}
+			else if (displayName == "grater") {
+				grater = spawnedObj;
+			}
+			else if (displayName == "stone") {
+				stone = spawnedObj;
 			}
 			
 		}
@@ -954,7 +966,7 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 {
 	FVector socketLocation = agent->baseMesh->GetSocketLocation("hand_rSocket");
 
-	float distances[12] = {-1, -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+	float distances[15] = {-1,-1,-1,-1, -1,-1,-1,-1,-1,-1,-1,-1,-1,-1, -1};
 
 	if (meat) {
 		distances[0] = FVector::Dist(socketLocation, meat->GetActorLocation());
@@ -974,6 +986,7 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 
 	if (knife) {
 		distances[4] = FVector::Dist(socketLocation, knife->GetActorLocation());
+		UE_LOG(LogTemp, Warning, TEXT("knife check"))
 	}
 
 	if (hammer) {
@@ -1011,14 +1024,27 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 		distances[11] = FVector::Dist(socketLocation, cereal->GetActorLocation());
 	}
 
-	
+	if (stone) {
+		distances[12] = FVector::Dist(socketLocation, stone->GetActorLocation());
+	}
+
+	if (book) {
+		distances[13] = FVector::Dist(socketLocation, book->GetActorLocation());
+		UE_LOG(LogTemp, Warning, TEXT("book check"))
+	}
+
+
+	if (grater) {
+		distances[14] = FVector::Dist(socketLocation, grater->GetActorLocation());
+		UE_LOG(LogTemp, Warning, TEXT("grater check"))
+	}
 
 
 
 
 	float min = -1;
 	int index = 0;
-	for (int32 i = 0; i < 12; i++) {
+	for (int32 i = 0; i < 15; i++) {
 		if (min == -1 || (distances[i] < min && distances[i] != -1)) {
 			min = distances[i];
 			index = i;
@@ -1041,6 +1067,9 @@ void ASceneGenUnrealGameModeBase::attachToAgent(AGDemoAgent* agent)
 		case 9: closest = banana; break;
 		case 10: closest = candyBar; break;
 		case 11: closest = cereal; break;
+		case 12: closest = stone; break;
+		case 13: closest = book; break;
+		case 14: closest = grater; break;
 	}
 	
 	if (closest) {
@@ -1068,14 +1097,18 @@ void ASceneGenUnrealGameModeBase::asyncAttach(AGDemoAgent* agent, AGymObj* close
 		case 1: closest->SetActorRelativeLocation(FVector(5, 0, 0)); closest->SetActorRelativeRotation(FRotator(0, -120, 35)); break;
 		case 2: closest->SetActorRelativeLocation(FVector(3, -5, -4)); closest->SetActorRelativeRotation(FRotator(45, 0, 45)); break;
 		case 3: closest->SetActorRelativeLocation(FVector(-5, 4, 5)); closest->SetActorRelativeRotation(FRotator(-36.08, -42.12, -43.12)); break;
-		case 4: closest->SetActorRelativeLocation(FVector(2, 25, 8)); closest->SetActorRelativeRotation(FRotator(30.64, 81.62, -92.7)); break;
-		case 5: closest->SetActorRelativeLocation(FVector(-9.1, 6, 2)); closest->SetActorRelativeRotation(FRotator(20.66, -124, 99.2)); break;
+		case 4: //closest->SetActorRelativeLocation(FVector(2, 25, 8)); closest->SetActorRelativeRotation(FRotator(30.64, 81.62, -92.7)); break;
+				closest->SetActorRelativeLocation(FVector(-8, 18, 2)); closest->SetActorRelativeRotation(FRotator(8, 101.2, -140.8)); break;
+		case 5: closest->SetActorRelativeLocation(FVector(-9.1, 6, 2)); closest->SetActorRelativeRotation(FRotator(24.3, -125.4, 107.9)); break;
 		case 6: closest->SetActorRelativeLocation(FVector(7, 2, -2)); closest->SetActorRelativeRotation(FRotator(45.6, 25.1, 43.7)); break;
 		case 7: break;
 		case 8: closest->SetActorRelativeLocation(FVector(15, -4.4, -6.2)); closest->SetActorRelativeRotation(FRotator(-46.6, 97.2, 39.9)); break;
 		case 9: closest->SetActorRelativeLocation(FVector(4, 1, -2)); closest->SetActorRelativeRotation(FRotator(-6.7, -115.4, 22.6)); break;
 		case 10: closest->SetActorRelativeLocation(FVector(3, -7, -8)); closest->SetActorRelativeRotation(FRotator(-32, -36.5, 88.5)); break;
 		case 11: closest->SetActorRelativeLocation(FVector(33.7, 30.0, -24.2)); closest->SetActorRelativeRotation(FRotator(27.5, -119.8, 30.3)); break;
+		case 12: closest->SetActorRelativeLocation(FVector(0, 3, 0)); closest->SetActorRelativeRotation(FRotator(-27.2, -13.5, -6.4)); break;
+		case 13:  closest->SetActorRelativeLocation(FVector(-1.3, 5.2, 5.8)); closest->SetActorRelativeRotation(FRotator(4.2, -119.9, 39)); break;
+		case 14:  closest->SetActorRelativeLocation(FVector(0, 0, 2)); closest->SetActorRelativeRotation(FRotator(55.8, -25.6, -3)); break;
 	}
 	agent->setHeldObject(closest);
 	UE_LOG(LogTemp, Warning, TEXT("Attached"))
